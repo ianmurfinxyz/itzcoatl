@@ -17,7 +17,7 @@ bool Snake::onInit()
   _activeScreenid = gfx::createScreen(worldSize_rx);
 
   loadSpritesheets();
-  _snakeHero = MONTEZUMA;
+  _snakeHero = ITZCOATL;
   return true;
 }
 

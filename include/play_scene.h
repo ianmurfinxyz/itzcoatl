@@ -3,6 +3,7 @@
 
 #include <array>
 #include "pxr_gfx.h"
+#include "pxr_input.h"
 #include "snake.h"
 
 class PlayScene final : public pxr::Scene
@@ -33,6 +34,7 @@ private:
 private:
   void initializeSnake();
   void stepSnake();
+  void handleInput();
 
   Snake::Direction findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour);
   void updateSnakeBlockSpriteIDs();
@@ -48,7 +50,8 @@ private:
   static constexpr size_t SNAKE_HEAD_BLOCK {0};
   std::array<SnakeBlock, Snake::maxSnakeLength> _snake;
   int _snakeLength;
-  Snake::Direction _moveDirection;
+  Snake::Direction _nextMoveDirection;
+  Snake::Direction _currentMoveDirection;
 
   float _stepClock_s;
 };

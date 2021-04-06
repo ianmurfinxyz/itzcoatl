@@ -150,7 +150,7 @@ void Engine::initialize(std::unique_ptr<Game> game)
   Duration_t tickPeriod {static_cast<int64_t>(1.0e9 / static_cast<double>(_fpsLockHz))};
   log::log(log::INFO, log::msg_eng_locking_fps, std::to_string(_fpsLockHz) + "hz");
 
-  _updateTicker = Ticker{&Engine::onSplashUpdateTick, this, tickPeriod, 1, true};
+  _updateTicker = Ticker{&Engine::onSplashUpdateTick, this, tickPeriod, 5, true};
   _drawTicker = Ticker{&Engine::onSplashDrawTick, this, tickPeriod, 1, false};
 
   //_splashSoundKey = sfx::loadSound(splashName);

@@ -25,6 +25,7 @@
 #include "pxr_game.h"
 #include "pxr_gfx.h"
 #include "pxr_vec.h"
+#include "pxr_input.h"
 
 using namespace pxr;
 
@@ -55,6 +56,15 @@ public:
 
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // CONTROLS       
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  static constexpr pxr::input::KeyCode moveLeftKey  {pxr::input::KEY_LEFT };
+  static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT};
+  static constexpr pxr::input::KeyCode moveUpKey    {pxr::input::KEY_UP   };
+  static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKE BLOCKS 
