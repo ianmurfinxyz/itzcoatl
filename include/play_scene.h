@@ -2,6 +2,7 @@
 #define _PLAY_SCENE_H_
 
 #include <array>
+#include "pxr_gfx.h"
 #include "snake.h"
 
 class PlayScene final : public pxr::Scene
@@ -10,8 +11,9 @@ class PlayScene final : public pxr::Scene
 
 public:
   PlayScene(pxr::Game* owner);
-  ~PlayScene();
+  ~PlayScene() = default;
 
+  bool onInit();
   void onEnter();
   void onUpdate(double now, float dt);
   void onDraw(double now, float dt, int screenid);
@@ -33,18 +35,20 @@ private:
   void stepSnake();
 
   Snake::Direction findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour);
-  void updateBlockSpriteIDs();
+  void updateSnakeBlockSpriteIDs();
 
-  void animateTongue();
+  void animateTongue(){}
 
-  void drawTongue();
-  void drawSnake();
+  void drawTongue(){}
+  void drawSnake(int screenid);
 
 private:
+  Snake* _sk;
+
   static constexpr size_t SNAKE_HEAD_BLOCK {0};
-  std::array<SnakeBlock, makeSnakeLength> _snake;
+  std::array<SnakeBlock, Snake::maxSnakeLength> _snake;
   int _snakeLength;
-  Direction _moveDirection;
+  Snake::Direction _moveDirection;
 
   float _stepClock_s;
 };

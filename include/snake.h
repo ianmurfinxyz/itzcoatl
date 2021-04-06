@@ -1,3 +1,6 @@
+#ifndef _SNAKE_H_
+#define _SNAKE_H_
+
 //----------------------------------------------------------------------------------------------//
 //                  _                                                                           //
 //                 | |                                                                          //
@@ -18,8 +21,12 @@
 //                                                                                              //
 //----------------------------------------------------------------------------------------------//
 
+#include <array>
 #include "pxr_game.h"
+#include "pxr_gfx.h"
 #include "pxr_vec.h"
+
+using namespace pxr;
 
 class Snake final : public pxr::Game
 {
@@ -36,10 +43,18 @@ public:
   static constexpr Vector2i boardSize          {60, 60};
   static constexpr int      blockSize_rx       {4};
 
+  static constexpr Vector2i boardPosition {
+    (worldSize_rx._x - (boardSize._x * blockSize_rx)) / 2,
+    (worldSize_rx._x - (boardSize._x * blockSize_rx)) / 2
+  };
+
   static constexpr int      maxSnakeLength     {100};
-  static constexpr int      babySnakeLength    {3};
+  static constexpr int      babySnakeLength    {6};
   static constexpr float    stepFrequency_hz   {10.f};
-  static constexpr float    stepPeriod_s       {1.f/ stepFrequency};
+  static constexpr float    stepPeriod_s       {1.f / stepFrequency_hz};
+
+  static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
+  static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKE BLOCKS 
@@ -159,10 +174,15 @@ public:
     SID_SOUTHWARD_TONGUE = 17
   };
 
+  //
+  // Total number of sprites in the snakes spritesheet.
+  //
+  static constexpr int SID_COUNT = 18;
+
   enum Direction { NORTH, SOUTH, EAST, WEST, DIRECTION_COUNT };
 
   //
-  // Defines a tree which maps all possible neighbour configurations for body blocks (blocJJks 
+  // Defines a tree which maps all possible neighbour configurations for body blocks (blocks
   // with 2 neighbours) to snake spritesheet sprite ids.
   //
   // The tree has the structure,
@@ -187,7 +207,7 @@ public:
   // neighbour and a southward tail neighbour,
   //     sid = snakeBodyBlockTree[NORTH][SOUTH]
   //
-  static constexpr std::array<std::array<SnakeBlockSpriteID, DIRECTION_COUNT>> snakeBodyBlockTree {
+  static constexpr std::array<std::array<SnakeBlockSpriteID, DIRECTION_COUNT>, DIRECTION_COUNT> snakeBodyBlockTree {{
     // NORTH [head]
     {
       SID_NULL, 
@@ -216,22 +236,10 @@ public:
     SID_HEAD_WEST_THIS_EAST_TAIL,
     SID_NULL
     }
-  };
+  }};
 
   //
   // Maps the neighbour configurations for blocks with a single head neighbour but no tail
-  // neighbour to snake spritesheet sprite ids. This is not really much of a tree however as
-  // it only has a single layer.
-  //
-  static constexpr std::array<SnakeBlockSpriteID, DIRECTION_COUNT> snakeHeadBlockTree {
-    SID_HEAD_NORTH_THIS,
-    SID_HEAD_SOUTH_THIS,
-    SID_HEAD_EAST_THIS,
-    SID_HEAD_WEST_THIS
-  };
-
-  //
-  // Maps the neighbour configurations for blocks with a single tail neighbour but no head
   // neighbour to snake spritesheet sprite ids. This is not really much of a tree however as
   // it only has a single layer.
   //
@@ -242,7 +250,55 @@ public:
     SID_THIS_WEST_TAIL
   };
 
+  //
+  // Maps the neighbour configurations for blocks with a single tail neighbour but no head
+  // neighbour to snake spritesheet sprite ids. This is not really much of a tree however as
+  // it only has a single layer.
+  //
+  static constexpr std::array<SnakeBlockSpriteID, DIRECTION_COUNT> snakeTailBlockTree {
+    SID_HEAD_NORTH_THIS,
+    SID_HEAD_SOUTH_THIS,
+    SID_HEAD_EAST_THIS,
+    SID_HEAD_WEST_THIS
+  };
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // SPRITESHEETS
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //
+  // Spritesheet gfx::ResourceKeys are assigned at runtime and so cannot be cleanly made compile
+  // time constants. Thus these IDs must not be used raw but instead be used with a call to,
+  //    getSpritesheetKey(SpritesheetID sheetID)
+  //
+  enum SpritesheetID
+  {
+    SSID_SNAKES,
+    SSID_COUNT
+  };
+
+  static constexpr std::array<gfx::ResourceName_t, SSID_COUNT> spritesheetNames {
+    "snakes"
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // SNAKES        
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //
+  // The heroes availible to play as.
+  //
+  enum SnakeHero
+  {
+    MONTEZUMA,
+    ITZCOATL
+  };
+
+
 public:
+  Snake() = default;
+  ~Snake() = default;
+
   bool onInit();
   void onShutdown();
 
@@ -250,6 +306,16 @@ public:
   int getVersionMajor() const {return versionMajor;}
   int getVersionMinor() const {return versionMinor;}
 
+  gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
+
+  SnakeHero getSnakeHero() const {return _snakeHero;}
+
 private:
+  void loadSpritesheets();
+
+private:
+  std::array<gfx::ResourceKey_t, SSID_COUNT> _spritesheetKeys;
+  SnakeHero _snakeHero;
 };
 
+#endif

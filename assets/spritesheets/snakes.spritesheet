@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<spritesheet>
+
+  <!--
+    Each set of sprites is a complete set of segments for a different snake.
+  -->
+
+  <!-- snake: Montezuma (Angry Archer Lord) -->
+  <sprite x="0"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="0" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Itzcoatl (Obsidian Serpent) -->
+  <sprite x="0"  y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="4" w="4" h="4" ox="0" oy="0"/>
+</spritesheet>
