@@ -1,0 +1,31 @@
+
+  ##### ##### ####  #####
+    #   #   # #   # #   #
+    #   #   # #   # #   #
+    #   ##### ####  #####
+
+[06-04-2021]
+- investigate the visual anomaly when wrapping in which the segments appear to seperate,
+  it must be a side effect of the wrap logic combined with the draw lerping.
+- draw a background
+- add some nuggets to eat
+- idea for scoring: can make different nuggets last for different durations, shorter lived 
+  nuggets can be worth more points, and can gain bonus points for collecting nuggets in quick
+  succession. Thus the goal is to collect as many nuggets as fast as possible, prioritising
+  those nuggets which are more valuable whilst balancing this against those which are closer.
+  Since if a valuable nugget is far away you may want to beeline for it to get the score, but
+  doing so may break your combo.
+- will want a UI/HUD that shows the combo timer and your score.
+- could unlock more snakes to play as by gaining higher scores.
+- like the idea of gold piling up on the edges of the map (outside the map) as you collect
+  more points.
+- could also add power up nuggets which give you a boost to speed to help with combos.
+- add a cracking music score - some aztec themed stuff.
+- sound effect for score/eating and dying etc.
+- menu and score reg/board states (no splash state).
+- strip out the old openal sfx module and replace it with a sdl_mixer module, the latter is 
+  simpler to use and easier to install and distribute so people downloading the game will have
+  an easier time compiling it. I also seem to have problems getting openal running on my system
+  and don't want the headache.
+
+
