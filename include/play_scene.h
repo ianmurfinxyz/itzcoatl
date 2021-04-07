@@ -23,7 +23,6 @@ public:
   std::string getName() const {return name;}
 
 private:
-
   struct SnakeBlock
   {
     gfx::SpriteID_t _spriteid;
@@ -44,19 +43,22 @@ private:
 
 private:
   void initializeSnake();
+  void initializeNuggets();
   void stepSnake();
+  void growSnake();
+  void spawnNugget();
   void handleInput();
-
   Snake::Direction findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour);
   void updateSnakeBlockSpriteIDs();
-
+  bool collideSnakeNuggets();
+  void eatNugget(Nugget& nugget);
   void animateTongue(){}
-
   void drawBackground();
   void drawForeground();
   void drawTongue(){}
-  void drawSnake(int screenid);
-  void drawSmoothSnake(int screenid);
+  void drawSnake(gfx::ScreenID_t screenid);
+  void drawSmoothSnake(gfx::ScreenID_t screenid);
+  void drawNuggets(gfx::ScreenID_t screenid);
 
 private:
   Snake* _sk;
@@ -67,6 +69,9 @@ private:
   Snake::Direction _nextMoveDirection;
   Snake::Direction _currentMoveDirection;
   bool _isSnakeSmoothMover;
+
+  std::array<Nugget, Snake::maxNuggetsInWorld> _nuggets;
+  int _numNuggetsInWorld;
 
   float _stepClock_s;
 

@@ -51,13 +51,15 @@ public:
   static constexpr int      boardMarginLoY     {boardPosition._y};
   static constexpr int      boardMarginHiY     {boardPosition._y + (boardSize._y * blockSize_rx)};
 
-  static constexpr int      maxSnakeLength     {100};
+  static constexpr int      maxSnakeLength     {400};
   static constexpr int      babySnakeLength    {6};
   static constexpr float    stepFrequency_hz   {10.f};
   static constexpr float    stepPeriod_s       {1.f / stepFrequency_hz};
 
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
+
+  static constexpr int      maxNuggetsInWorld  {5};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
@@ -309,6 +311,7 @@ public:
   enum SpritesheetID
   {
     SSID_SNAKES,
+    SSID_NUGGETS,
     SSID_BACKGROUND,
     SSID_FOREGROUND,
     SSID_COUNT
@@ -316,6 +319,7 @@ public:
 
   static constexpr std::array<gfx::ResourceName_t, SSID_COUNT> spritesheetNames {
     "snakes",
+    "nuggets",
     "background",
     "foreground"
   };
@@ -343,6 +347,7 @@ public:
     SID_NUGGET_SILVER,
     SID_NUGGET_OBSIDIAN,
     SID_NUGGET_RUBY,
+    SID_NUGGET_JADE,
     SID_NUGGET_LAPIS,
     SID_NUGGET_AMETHYST
   };
@@ -353,17 +358,33 @@ public:
     NUGGET_SILVER,
     NUGGET_OBSIDIAN,
     NUGGET_RUBY,
+    NUGGET_JADE,
     NUGGET_LAPIS,
     NUGGET_AMETHYST
   };
+
+  static constexpr int nuggetClassCount {7};
 
   struct NuggetClass
   {
     gfx::SpriteID_t _spriteid; 
     float _lifetime;
-    int _score;
     int _spawnChance;
+    int _score;
   };
+
+  static constexpr std::array<NuggetClass, nuggetClassCount> nuggetClasses {{
+  //----------------------------------------------------------------------------------------------
+  // spriteid             lifetime   chance   score
+  //----------------------------------------------------------------------------------------------
+    {SID_NUGGET_GOLD    , 2.f,          10,   70 },
+    {SID_NUGGET_SILVER  , 3.f,          20,   60 },
+    {SID_NUGGET_OBSIDIAN, 4.f,          30,   50 },
+    {SID_NUGGET_RUBY    , 5.f,          40,   40 },
+    {SID_NUGGET_JADE    , 6.f,          50,   30 },
+    {SID_NUGGET_LAPIS   , 7.f,          70,   20 },
+    {SID_NUGGET_AMETHYST, 8.f,         100,   10 }
+  }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // GFX SCREENS       
@@ -397,12 +418,17 @@ public:
 
   SnakeHero getSnakeHero() const {return _snakeHero;}
 
+  void addScore(int score) {_score += score;}
+  int getScore() const {return _score;}
+
 private:
   void loadSpritesheets();
 
 private:
   std::array<gfx::ResourceKey_t, SSID_COUNT> _spritesheetKeys;
   SnakeHero _snakeHero;
+
+  int _score;
 };
 
 #endif

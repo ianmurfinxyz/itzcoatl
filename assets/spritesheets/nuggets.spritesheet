@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<spritesheet>
+  <!-- nugget: gold -->
+  <sprite x="0"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: silver -->
+  <sprite x="4"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: obsidian -->
+  <sprite x="8"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: ruby -->
+  <sprite x="12"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: emerald -->
+  <sprite x="16" y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: lapis -->
+  <sprite x="20" y="0" w="4" h="4" ox="0" oy="0"/>
+  <!-- nugget: amethyst -->
+  <sprite x="24" y="0" w="4" h="4" ox="0" oy="0"/>
+</spritesheet>

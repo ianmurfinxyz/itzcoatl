@@ -1,6 +1,7 @@
 #include <cassert>
 #include "play_scene.h"
 #include "pxr_mathutil.h"
+#include "pxr_rand.h"
 
 #include <iostream>
 
@@ -29,6 +30,7 @@ void PlayScene::onEnter()
   _nextMoveDirection = Snake::WEST;
   _currentMoveDirection = Snake::WEST;
   initializeSnake();
+  initializeNuggets();
   drawBackground();
   drawForeground();
 }
@@ -39,14 +41,20 @@ void PlayScene::onUpdate(double now, float dt)
 
   _stepClock_s += dt;
   if(_stepClock_s > Snake::stepPeriod_s){
+    if(collideSnakeNuggets()) growSnake();
     stepSnake();
     _stepClock_s = 0.f;
   }
+
+  while(_numNuggetsInWorld < Snake::maxNuggetsInWorld)
+    spawnNugget();
 }
 
 void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>& screens)
 {
   gfx::clearScreenTransparent(screens[Snake::SCREEN_STAGE]);
+
+  drawNuggets(screens[Snake::SCREEN_STAGE]);
 
   if(_isSnakeSmoothMover)
     drawSmoothSnake(screens[Snake::SCREEN_STAGE]);
@@ -66,6 +74,13 @@ void PlayScene::initializeSnake()
     _snake[block]._row = Snake::snakeHeadSpawnRow;
   }
   updateSnakeBlockSpriteIDs();
+}
+
+void PlayScene::initializeNuggets()
+{
+  _numNuggetsInWorld = 0;
+  for(auto& nugget : _nuggets)
+    nugget._isAlive = false;
 }
 
 void PlayScene::stepSnake()
@@ -102,6 +117,89 @@ void PlayScene::stepSnake()
   _currentMoveDirection = _nextMoveDirection;
 
   updateSnakeBlockSpriteIDs();
+}
+
+void PlayScene::growSnake()
+{
+  _snakeLength = std::min(_snakeLength + 1, Snake::maxSnakeLength - 1);
+}
+
+void PlayScene::spawnNugget()
+{
+  assert(_numNuggetsInWorld < Snake::maxNuggetsInWorld);
+
+  int choice = rand::uniformSignedInt(
+      0, Snake::nuggetClasses[Snake::nuggetClassCount - 1]._spawnChance
+  );
+
+  Snake::NuggetClassID newNuggetClassID;
+  for(int i {Snake::NUGGET_GOLD}; i < Snake::nuggetClassCount; ++i){
+    if(choice <= Snake::nuggetClasses[i]._spawnChance){
+      newNuggetClassID = static_cast<Snake::NuggetClassID>(i);
+      break;
+    }
+  }
+
+  int row, col;
+  bool isRowValid {false}, isColValid {false};
+  while(!isRowValid || !isColValid){
+    row = rand::uniformSignedInt(0, Snake::boardSize._y - 1);
+    col = rand::uniformSignedInt(0, Snake::boardSize._x - 1);
+
+    //
+    // do not spawn in front of the snake; the player must always have to take action to get
+    // a nugget.
+    //
+    isRowValid = !(
+      row == _snake[SNAKE_HEAD_BLOCK]._row && 
+      (_currentMoveDirection == Snake::EAST || 
+      _currentMoveDirection == Snake::WEST)
+     );
+    isColValid = !(
+      col == _snake[SNAKE_HEAD_BLOCK]._col  && 
+      (_currentMoveDirection == Snake::NORTH || 
+      _currentMoveDirection == Snake::SOUTH)
+     );
+    if(!isRowValid || !isColValid) continue;
+
+    //
+    // nuggets cannot overlap.
+    //
+    for(const auto& nugget : _nuggets){
+      if(!nugget._isAlive) continue;
+      if(row == nugget._row && col == nugget._col){
+        isRowValid = isColValid = false;
+        break;
+      }
+    }
+    if(!isRowValid || !isColValid) continue;
+
+    //
+    // nuggets cannot spawn on the snake.
+    //
+    for(int block {SNAKE_HEAD_BLOCK}; block < _snakeLength; ++block){
+      if(row == _snake[block]._row && col == _snake[block]._col){
+        isRowValid = isColValid = false;
+        break;
+      }
+    }
+    if(!isRowValid || !isColValid) continue;
+  }
+
+  bool spawnDone {false};
+  for(int i{0}; i < Snake::maxNuggetsInWorld; ++i){
+    if(_nuggets[i]._isAlive) continue;
+    _nuggets[i]._classID = newNuggetClassID;
+    _nuggets[i]._row = row;
+    _nuggets[i]._col = col;
+    _nuggets[i]._flashClock = 0.f;
+    _nuggets[i]._isVisible = true;
+    _nuggets[i]._isAlive = true;
+    ++_numNuggetsInWorld;
+    spawnDone = true;
+    break;
+  }
+  assert(spawnDone);
 }
 
 void PlayScene::handleInput()
@@ -177,6 +275,29 @@ void PlayScene::updateSnakeBlockSpriteIDs()
   _snake[_snakeLength - 1]._currentMoveDirection = headDir;
 }
 
+bool PlayScene::collideSnakeNuggets()
+{
+  for(auto& nugget : _nuggets){
+    if(!nugget._isAlive) continue;
+    bool collision = _snake[SNAKE_HEAD_BLOCK]._row == nugget._row &&
+                     _snake[SNAKE_HEAD_BLOCK]._col == nugget._col;
+    if(collision){ 
+      eatNugget(nugget);
+      return true;
+    }
+  }
+  return false;
+}
+
+void PlayScene::eatNugget(Nugget& nugget)
+{
+  const auto& nc = Snake::nuggetClasses[nugget._classID];
+  _sk->addScore(nc._score);
+  std::cout << "score=" << _sk->getScore() << std::endl;
+  nugget._isAlive = false;
+  --_numNuggetsInWorld;
+}
+
 void PlayScene::drawBackground()
 {
   gfx::drawSprite(
@@ -197,10 +318,9 @@ void PlayScene::drawForeground()
   );
 }
 
-void PlayScene::drawSnake(int screenid)
+void PlayScene::drawSnake(gfx::ScreenID_t screenid)
 {
   for(int block {SNAKE_HEAD_BLOCK}; block < _snakeLength; ++block){
-    std::cout << block << std::endl;
     Vector2i position {
       Snake::boardPosition._x + (_snake[block]._col * Snake::blockSize_rx),
       Snake::boardPosition._y + (_snake[block]._row * Snake::blockSize_rx)
@@ -214,10 +334,9 @@ void PlayScene::drawSnake(int screenid)
   }
 }
 
-void PlayScene::drawSmoothSnake(int screenid)
+void PlayScene::drawSmoothSnake(gfx::ScreenID_t screenid)
 {
   for(int block {_snakeLength - 1}; block >= SNAKE_HEAD_BLOCK; --block){
-    std::cout << block << std::endl;
     Vector2i position {
       Snake::boardPosition._x + (_snake[block]._col * Snake::blockSize_rx),
       Snake::boardPosition._y + (_snake[block]._row * Snake::blockSize_rx)
@@ -257,5 +376,22 @@ void PlayScene::drawSmoothSnake(int screenid)
       screenid
     );
   }
+}
 
+void PlayScene::drawNuggets(gfx::ScreenID_t screenid)
+{
+  for(const auto& nugget : _nuggets){
+    if(!nugget._isAlive) continue;
+    const auto& nc = Snake::nuggetClasses[nugget._classID];
+    Vector2i position {
+      Snake::boardPosition._x + (nugget._col * Snake::blockSize_rx),
+      Snake::boardPosition._y + (nugget._row * Snake::blockSize_rx)
+    };
+    gfx::drawSprite(
+      position,
+      _sk->getSpritesheetKey(Snake::SSID_NUGGETS),
+      nc._spriteid,
+      screenid
+    );
+  }
 }

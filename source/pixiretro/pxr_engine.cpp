@@ -10,6 +10,7 @@
 #include "pxr_gfx.h"
 #include "pxr_sfx.h"
 #include "pxr_color.h"
+#include "pxr_rand.h"
 
 #include <iostream>
 
@@ -113,6 +114,21 @@ void Engine::initialize(std::unique_ptr<Game> game)
   //  log::log(log::FATAL, log::msg_sfx_fail_init);
   //  exit(EXIT_FAILURE);
   //}
+
+  // 
+  // Testing the seed_seq on my system shows it just produces the same results with every run, 
+  // which is obviously useless. However I get different results with std::random_device so have 
+  // opted to use that instead. I am lead to believe however that this may differ on different 
+  // systems.
+  //
+  // std::seed_seq seq{1, 2, 3, 4, 5};
+  // randGenerator.seed(seq);
+  //
+  std::random_device rd{};
+  rand::xorwow::state_type seedstate {};
+  for(auto& seed : seedstate)
+    seed = rd();
+  rand::generator.seed(seedstate);
 
   _game = std::move(game);
 
