@@ -9,15 +9,17 @@ using namespace pxr;
 
 bool Snake::onInit()
 {
- _active = std::shared_ptr<pxr::Scene>(new PlayScene(this));
-  if(!_active->onInit()) return false;
-  _active->onEnter();
-  _scenes.emplace(_active->getName(), _active);
-
-  _activeScreenid = gfx::createScreen(worldSize_rx);
+  for(int i {Snake::SCREEN_BACKGROUND}; i < Snake::SCREEN_COUNT; ++i)
+    _screens.push_back(gfx::createScreen(worldSize_rx));
 
   loadSpritesheets();
   _snakeHero = ITZCOATL;
+
+ _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
+  if(!_activeScene->onInit()) return false;
+  _activeScene->onEnter();
+  _scenes.emplace(_activeScene->getName(), _activeScene);
+
   return true;
 }
 
@@ -29,6 +31,11 @@ gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetid)
 {
   assert(0 <= sheetid && sheetid < SSID_COUNT);
   return _spritesheetKeys[sheetid];
+}
+
+gfx::ScreenID_t Snake::getScreenID(GFXScreenName screenName)
+{
+  return _screens[screenName];
 }
 
 void Snake::loadSpritesheets()

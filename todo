@@ -29,3 +29,13 @@
   and don't want the headache.
 
 
+- add some LittleRobotSoundFactory music loops:
+https://freesound.org/people/LittleRobotSoundFactory/packs/18000/
+https://freesound.org/people/LittleRobotSoundFactory/packs/18177/?page=2#sound
+- jungle war drums mix seems like it would go well
+https://freesound.org/people/LittleRobotSoundFactory/packs/18000/
+
+ancient people loop suits really well, use this one,
+https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
+
+- add a music mixer module which will fade in/out a sequence of music loops.

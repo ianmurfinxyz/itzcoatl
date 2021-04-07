@@ -1,7 +1,7 @@
 #ifndef _SNAKE_H_
 #define _SNAKE_H_
 
-//----------------------------------------------------------------------------------------------//
+//////////////////////////////////////////////////////////////////////////////////////////////////
 //                  _                                                                           //
 //                 | |                                                                          //
 //  ___ _ __   __ _| | _____     __                                                             //
@@ -13,13 +13,10 @@
 //  \_______ \                                                                                  //
 //          \|                                                                                  //
 //                                                                                              //
-// FILE: snake.cpp                                                                              //
+// FILE: snake.h                                                                                //
 // AUTHOR: Ian Murfin - github.com/pixrex                                                       //
 //                                                                                              //
-// CREATED: 6th Apr 2021                                                                        //
-// UPDATED: 6th Apr 2021                                                                        //
-//                                                                                              //
-//----------------------------------------------------------------------------------------------//
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <array>
 #include "pxr_game.h"
@@ -40,14 +37,19 @@ public:
   // CONFIGURATION
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-  static constexpr Vector2i worldSize_rx       {256, 256};
-  static constexpr Vector2i boardSize          {60, 60};
+  static constexpr Vector2i worldSize_rx       {200, 200};
+  static constexpr Vector2i boardSize          {40, 36};
   static constexpr int      blockSize_rx       {4};
 
   static constexpr Vector2i boardPosition {
     (worldSize_rx._x - (boardSize._x * blockSize_rx)) / 2,
     (worldSize_rx._x - (boardSize._x * blockSize_rx)) / 2
   };
+
+  static constexpr int      boardMarginLoX     {boardPosition._x};
+  static constexpr int      boardMarginHiX     {boardPosition._x + (boardSize._x * blockSize_rx)};
+  static constexpr int      boardMarginLoY     {boardPosition._y};
+  static constexpr int      boardMarginHiY     {boardPosition._y + (boardSize._y * blockSize_rx)};
 
   static constexpr int      maxSnakeLength     {100};
   static constexpr int      babySnakeLength    {6};
@@ -65,6 +67,8 @@ public:
   static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT};
   static constexpr pxr::input::KeyCode moveUpKey    {pxr::input::KEY_UP   };
   static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN };
+
+  static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s    };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKE BLOCKS 
@@ -187,7 +191,7 @@ public:
   //
   // Total number of sprites in the snakes spritesheet.
   //
-  static constexpr int SID_COUNT = 18;
+  static constexpr int SID_SNAKE_SHEET_COUNT = 18;
 
   enum Direction { NORTH, SOUTH, EAST, WEST, DIRECTION_COUNT };
 
@@ -271,6 +275,27 @@ public:
     SID_HEAD_EAST_THIS,
     SID_HEAD_WEST_THIS
   };
+
+  //
+  // Used when drawing smooth moving snakes. For smooth movement the sprite used depends only on
+  // the direction of a block's movement not on the block's neighbour configuration.
+  //
+  static constexpr std::array<SnakeBlockSpriteID, DIRECTION_COUNT> smoothSnakeBodyBlockTree {
+    SID_HEAD_NORTH_THIS_SOUTH_TAIL,
+    SID_HEAD_SOUTH_THIS_NORTH_TAIL,
+    SID_HEAD_EAST_THIS_WEST_TAIL,
+    SID_HEAD_WEST_THIS_EAST_TAIL
+  };
+
+  //
+  // Used when drawing the head for smooth moving snakes.
+  //
+  static constexpr std::array<SnakeBlockSpriteID, DIRECTION_COUNT> smoothSnakeHeadBlockTree {
+    SID_THIS_SOUTH_TAIL,
+    SID_THIS_NORTH_TAIL,
+    SID_THIS_WEST_TAIL,
+    SID_THIS_EAST_TAIL
+  };
   
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // SPRITESHEETS
@@ -284,11 +309,15 @@ public:
   enum SpritesheetID
   {
     SSID_SNAKES,
+    SSID_BACKGROUND,
+    SSID_FOREGROUND,
     SSID_COUNT
   };
 
   static constexpr std::array<gfx::ResourceName_t, SSID_COUNT> spritesheetNames {
-    "snakes"
+    "snakes",
+    "background",
+    "foreground"
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -304,6 +333,53 @@ public:
     ITZCOATL
   };
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // NUGGETS       
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  enum NuggetSpriteID
+  {
+    SID_NUGGET_GOLD,
+    SID_NUGGET_SILVER,
+    SID_NUGGET_OBSIDIAN,
+    SID_NUGGET_RUBY,
+    SID_NUGGET_LAPIS,
+    SID_NUGGET_AMETHYST
+  };
+
+  enum NuggetClassID
+  {
+    NUGGET_GOLD, 
+    NUGGET_SILVER,
+    NUGGET_OBSIDIAN,
+    NUGGET_RUBY,
+    NUGGET_LAPIS,
+    NUGGET_AMETHYST
+  };
+
+  struct NuggetClass
+  {
+    gfx::SpriteID_t _spriteid; 
+    float _lifetime;
+    int _score;
+    int _spawnChance;
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // GFX SCREENS       
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //
+  // Screens are created in the order they are defined in this enum, this means they will also
+  // be drawn in this order, meaning the first defined is the bottom of the screen layers.
+  //
+  enum GFXScreenName
+  {
+    SCREEN_BACKGROUND,
+    SCREEN_STAGE,
+    SCREEN_FOREGROUND,
+    SCREEN_COUNT
+  };
 
 public:
   Snake() = default;
@@ -317,6 +393,7 @@ public:
   int getVersionMinor() const {return versionMinor;}
 
   gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
+  gfx::ScreenID_t getScreenID(GFXScreenName screenName);
 
   SnakeHero getSnakeHero() const {return _snakeHero;}
 

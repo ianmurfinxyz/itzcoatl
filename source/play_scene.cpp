@@ -13,7 +13,8 @@ PlayScene::PlayScene(pxr::Game* owner) :
   _snakeLength{0},
   _nextMoveDirection{Snake::WEST},
   _currentMoveDirection{Snake::WEST},
-  _stepClock_s{0.f}
+  _stepClock_s{0.f},
+  _isSnakeSmoothMover{true}
 {}
 
 bool PlayScene::onInit()
@@ -28,6 +29,8 @@ void PlayScene::onEnter()
   _nextMoveDirection = Snake::WEST;
   _currentMoveDirection = Snake::WEST;
   initializeSnake();
+  drawBackground();
+  drawForeground();
 }
 
 void PlayScene::onUpdate(double now, float dt)
@@ -41,10 +44,14 @@ void PlayScene::onUpdate(double now, float dt)
   }
 }
 
-void PlayScene::onDraw(double now, float dt, int screenid)
+void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>& screens)
 {
-  gfx::clearScreenTransparent(screenid);
-  drawSnake(screenid);
+  gfx::clearScreenTransparent(screens[Snake::SCREEN_STAGE]);
+
+  if(_isSnakeSmoothMover)
+    drawSmoothSnake(screens[Snake::SCREEN_STAGE]);
+  else
+    drawSnake(screens[Snake::SCREEN_STAGE]);
 }
 
 void PlayScene::onExit()
@@ -86,7 +93,7 @@ void PlayScene::stepSnake()
     case Snake::WEST:
       _snake[SNAKE_HEAD_BLOCK]._col--;
       if(_snake[SNAKE_HEAD_BLOCK]._col < 0)
-        _snake[SNAKE_HEAD_BLOCK]._col = Snake::boardSize._x;
+        _snake[SNAKE_HEAD_BLOCK]._col = Snake::boardSize._x - 1;
       break;
     default:
       assert(0);
@@ -112,6 +119,8 @@ void PlayScene::handleInput()
   if(rkey && _currentMoveDirection != Snake::WEST) _nextMoveDirection = Snake::EAST;
   if(ukey && _currentMoveDirection != Snake::SOUTH) _nextMoveDirection = Snake::NORTH;
   if(dkey && _currentMoveDirection != Snake::NORTH) _nextMoveDirection = Snake::SOUTH;
+
+  if(pxr::input::isKeyPressed(Snake::smoothToggle)) _isSnakeSmoothMover = !_isSnakeSmoothMover;
 }
 
 Snake::Direction PlayScene::findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour)
@@ -154,31 +163,77 @@ void PlayScene::updateSnakeBlockSpriteIDs()
 
   tailDir = findNeighbourDirection(_snake[SNAKE_HEAD_BLOCK], _snake[SNAKE_HEAD_BLOCK + 1]);
   _snake[SNAKE_HEAD_BLOCK]._spriteid = Snake::snakeHeadBlockTree[tailDir];
+  _snake[SNAKE_HEAD_BLOCK]._currentMoveDirection = _currentMoveDirection;
 
   for(int block {SNAKE_HEAD_BLOCK + 1}; block < _snakeLength - 1; ++block){
     headDir = findNeighbourDirection(_snake[block], _snake[block - 1]);
     tailDir = findNeighbourDirection(_snake[block], _snake[block + 1]);
     _snake[block]._spriteid = Snake::snakeBodyBlockTree[headDir][tailDir];
+    _snake[block]._currentMoveDirection = headDir;
   }
 
   headDir = findNeighbourDirection(_snake[_snakeLength - 1], _snake[_snakeLength - 2]);
   _snake[_snakeLength - 1]._spriteid = Snake::snakeTailBlockTree[headDir];
+  _snake[_snakeLength - 1]._currentMoveDirection = headDir;
+}
+
+void PlayScene::drawBackground()
+{
+  gfx::drawSprite(
+    Vector2f{0.f, 0.f},
+    _sk->getSpritesheetKey(Snake::SSID_BACKGROUND),
+    0,
+    _sk->getScreenID(Snake::SCREEN_BACKGROUND)
+  );
+}
+
+void PlayScene::drawForeground()
+{
+  gfx::drawSprite(
+    Vector2f{0.f, 0.f},
+    _sk->getSpritesheetKey(Snake::SSID_FOREGROUND),
+    0,
+    _sk->getScreenID(Snake::SCREEN_FOREGROUND)
+  );
 }
 
 void PlayScene::drawSnake(int screenid)
 {
   for(int block {SNAKE_HEAD_BLOCK}; block < _snakeLength; ++block){
+    std::cout << block << std::endl;
     Vector2i position {
-      _snake[block]._col * Snake::blockSize_rx,
-      _snake[block]._row * Snake::blockSize_rx
+      Snake::boardPosition._x + (_snake[block]._col * Snake::blockSize_rx),
+      Snake::boardPosition._y + (_snake[block]._row * Snake::blockSize_rx)
+    };
+    gfx::drawSprite(
+      position,
+      _sk->getSpritesheetKey(Snake::SSID_SNAKES),
+      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
+      screenid
+    );
+  }
+}
+
+void PlayScene::drawSmoothSnake(int screenid)
+{
+  for(int block {_snakeLength - 1}; block >= SNAKE_HEAD_BLOCK; --block){
+    std::cout << block << std::endl;
+    Vector2i position {
+      Snake::boardPosition._x + (_snake[block]._col * Snake::blockSize_rx),
+      Snake::boardPosition._y + (_snake[block]._row * Snake::blockSize_rx)
     };
 
-    //
-    // smooth the motion between block positions by lerping between them.
-    //
+    gfx::SpriteID_t spriteid;
+    if(block == SNAKE_HEAD_BLOCK)
+      spriteid = Snake::smoothSnakeHeadBlockTree[_snake[block]._currentMoveDirection];
+    else if(block == _snakeLength - 1)
+      spriteid = Snake::snakeTailBlockTree[_snake[block]._currentMoveDirection];
+    else
+      spriteid = Snake::smoothSnakeBodyBlockTree[_snake[block]._currentMoveDirection];
+
     float t = _stepClock_s / Snake::stepPeriod_s;
     float limit = static_cast<float>(Snake::blockSize_rx) - 1.f;
-    switch(_currentMoveDirection){
+    switch(_snake[block]._currentMoveDirection){
       case Snake::NORTH:
         position._y += lerp(0.f, limit, t);
         break;
@@ -198,8 +253,9 @@ void PlayScene::drawSnake(int screenid)
     gfx::drawSprite(
       position,
       _sk->getSpritesheetKey(Snake::SSID_SNAKES),
-      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_COUNT),
+      spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
       screenid
     );
   }
+
 }
