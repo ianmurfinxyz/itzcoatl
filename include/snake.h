@@ -174,21 +174,27 @@ public:
     SID_THIS_EAST_TAIL  = 11,
     SID_THIS_NORTH_TAIL = 12,
     SID_THIS_SOUTH_TAIL = 13, 
-  };
 
-  //
-  // The tongue block IDs are also indicies into the snake spritesheet to access the tongue
-  // sprites for the snake. These IDs are seperate because the tongue is an addon to the snake
-  // and depends only on the direction of travel. The direction in the enum names corresponds
-  // to the snake's direction of travel.
-  //
-  enum SnakeTongueBlockSpriteID
-  {
+    //
+    // TONGUE BLOCKS
+    //
     SID_WESTWARD_TONGUE  = 14,
     SID_EASTWARD_TONGUE  = 15,
     SID_NORTHWARD_TONGUE = 16,
-    SID_SOUTHWARD_TONGUE = 17
+    SID_SOUTHWARD_TONGUE = 17,
+
+    //
+    // BLOOD BLOCK
+    //
+    SID_BLOOD_BLOCK = 18
   };
+
+  //
+  // The offset between the sprites for each hero snake. So for example if Montezuma's sprites
+  // start at spriteid = 0, then the next snakes sprites will start at spriteid = 0 + 
+  // SID_SNAKE_OFFSET.
+  //
+  static constexpr int SID_SNAKE_OFFSET {18};
 
   //
   // Total number of sprites in the snakes spritesheet.

@@ -39,3 +39,12 @@ ancient people loop suits really well, use this one,
 https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 
 - add a music mixer module which will fade in/out a sequence of music loops.
+- the nuggets need to flash and time out.
+- think I need more nuggets so should increase the spawn number.
+- detect snake eating itself.
+- implement the flow of the play scene - do I want to instantly switch to another scene upon
+  death or do a death state where some animtion or something plays? or maybe even just a short
+  delay?
+- have added a blood block so when the snake bites itself I can sever the snake at that point,
+  clear a few blocks either side, and set the ends to the blood block. Then spray out some
+  nuggets via a particle like effect. Implement this!
