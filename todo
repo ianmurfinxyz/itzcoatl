@@ -48,3 +48,6 @@ https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 - have added a blood block so when the snake bites itself I can sever the snake at that point,
   clear a few blocks either side, and set the ends to the blood block. Then spray out some
   nuggets via a particle like effect. Implement this!
+
+[09-04-2021]
+- once pixiretro engine is done compile it into a library and link against it.

@@ -1,8 +1,9 @@
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <cmath>
 #include <cassert>
 #include <vector>
+#include <algorithm>
 #include <SDL2/SDL_mixer.h>
 #include "pxr_sfx.h"
 #include "pxr_log.h"
@@ -38,7 +39,7 @@ static ResourceKey_t errorSoundKey {0};
 // The set of all loaded sounds accessed via their resource key.
 //
 ResourceKey_t nextResourceKey {0};
-static std::map<ResourceKey_t, SoundResource> sounds;
+static std::unordered_map<ResourceKey_t, SoundResource> sounds;
 
 //
 // The configuration this module was initialized with.
@@ -78,7 +79,7 @@ void onChannelFinished(int channel)
 // Generates a short sinusoidal beep.
 //
 template<typename T>
-MixChunk* generateSineBeep(int waveFreq_hz, float waveDuration_s)
+Mix_Chunk* generateSineBeep(int waveFreq_hz, float waveDuration_s)
 {
   static_assert(std::numeric_limits<T>::is_integer);
 
@@ -87,7 +88,7 @@ MixChunk* generateSineBeep(int waveFreq_hz, float waveDuration_s)
   float samplePeriod_s = 1.f / sfxconfiguration._samplingFreq_hz;
   T* pcm = new T[sampleCount];
   for(int s = 0; s < sampleCount; ++s){
-    float sf = sinf(wavFreq_rad_per_s * (s * samplePeriod_s));   // wave equation = sin(wt)
+    float sf = sinf(waveFreq_rad_per_s * (s * samplePeriod_s));   // wave equation = sin(wt)
     if(std::numeric_limits<T>::is_signed){
       if(sf < 0.f)  pcm[s] = static_cast<T>(sf * std::numeric_limits<T>::min());
       if(sf >= 0.f) pcm[s] = static_cast<T>(sf * std::numeric_limits<T>::max());
@@ -98,10 +99,10 @@ MixChunk* generateSineBeep(int waveFreq_hz, float waveDuration_s)
   }
 
   Mix_Chunk* chunk = new Mix_Chunk();
-  chunk.allocated = 1;
-  chunk.abuf = static_cast<uint8_t*>(pcm);
-  chunk.alen = sampleCount * sizeof(T);
-  chunk.volume = errorSoundVolume;
+  chunk->allocated = 1;
+  chunk->abuf = reinterpret_cast<uint8_t*>(pcm);
+  chunk->alen = sampleCount * sizeof(T);
+  chunk->volume = errorSoundVolume;
   return chunk;
 }
 
@@ -113,10 +114,7 @@ static void generateErrorSound(SampleFormat format)
     case SAMPLE_FORMAT_S8     : {chunk = generateSineBeep<int8_t  >(errorSoundFreq_hz, errorSoundDuration_s); break;}
     case SAMPLE_FORMAT_U16LSB : {chunk = generateSineBeep<uint16_t>(errorSoundFreq_hz, errorSoundDuration_s); break;}
     case SAMPLE_FORMAT_S16LSB : {chunk = generateSineBeep<int16_t >(errorSoundFreq_hz, errorSoundDuration_s); break;}
-    case SAMPLE_FORMAT_U16    : {chunk = generateSineBeep<uint16_t>(errorSoundFreq_hz, errorSoundDuration_s); break;}
-    case SAMPLE_FORMAT_S16    : {chunk = generateSineBeep<int16_t >(errorSoundFreq_hz, errorSoundDuration_s); break;}
     case SAMPLE_FORMAT_S32LSB : {chunk = generateSineBeep<int32_t >(errorSoundFreq_hz, errorSoundDuration_s); break;}
-    case SAMPLE_FORMAT_S32    : {chunk = generateSineBeep<int32_t >(errorSoundFreq_hz, errorSoundDuration_s); break;}
     default: assert(0);
   }
   SoundResource resource {};
@@ -131,8 +129,8 @@ static void freeErrorSound()
 {
   auto search = sounds.find(errorSoundKey);
   assert(search != sounds.end());
-  auto& resource = search.second;
-  delete[] resource._chunk.abuf;
+  auto& resource = search->second;
+  delete[] resource._chunk->abuf;
   delete resource._chunk;
   resource._chunk = nullptr;
   sounds.erase(search);
@@ -141,14 +139,14 @@ static void freeErrorSound()
 static void logSpec()
 {
   const SDL_version* version = Mix_Linked_Version();
-  log::log(LOG::INFO, "SDL_Mixer Version:");
-  log::log(LOG::INFO, "major:", std::to_string(version->major));
-  log::log(LOG::INFO, "minor:", std::to_string(version->minor));
-  log::log(LOG::INFO, "patch:", std::to_string(version->patch));
+  log::log(log::INFO, "SDL_Mixer Version:");
+  log::log(log::INFO, "major:", std::to_string(version->major));
+  log::log(log::INFO, "minor:", std::to_string(version->minor));
+  log::log(log::INFO, "patch:", std::to_string(version->patch));
 
   int freq, channels; uint16_t format;
   if(!Mix_QuerySpec(&freq, &format, &channels)){
-    log::log(Log::WARN, msg_sfx_fail_query_spec, std::string{Mix_GetError()});
+    log::log(log::WARN, log::msg_sfx_fail_query_spec, std::string{Mix_GetError()});
     return;
   }
   
@@ -158,21 +156,8 @@ static void logSpec()
     case SAMPLE_FORMAT_S8    : {formatString = "S8";     break;}
     case SAMPLE_FORMAT_U16LSB: {formatString = "U16LSB"; break;}
     case SAMPLE_FORMAT_S16LSB: {formatString = "S16LSB"; break;}
-    case SAMPLE_FORMAT_U16MSB: {formatString = "U16MSB"; break;}
-    case SAMPLE_FORMAT_S16MSB: {formatString = "S16MSB"; break;}
-    case SAMPLE_FORMAT_U16   : {formatString = "U16";    break;}
-    case SAMPLE_FORMAT_S16   : {formatString = "S16";    break;}
     case SAMPLE_FORMAT_S32LSB: {formatString = "S32LSB"; break;}
-    case SAMPLE_FORMAT_S32MSB: {formatString = "S32MSB"; break;}
-    case SAMPLE_FORMAT_S32   : {formatString = "S32";    break;}
-    case SAMPLE_FORMAT_F32LSB: {formatString = "F32LSB"; break;}
-    case SAMPLE_FORMAT_F32MSB: {formatString = "F32MSB"; break;}
-    case SAMPLE_FORMAT_F32   : {formatString = "F32";    break;}
-    case SAMPLE_FORMAT_U16SYS: {formatString = "U16SYS"; break;}
-    case SAMPLE_FORMAT_S16SYS: {formatString = "S16SYS"; break;}
-    case SAMPLE_FORMAT_S32SYS: {formatString = "S32SYS"; break;}
-    case SAMPLE_FORMAT_F32SYS: {formatString = "F32SYS"; break;}
-    default                    {formatString = "unknown format";}
+    default                  : {formatString = "unknown format";}
   }
 
   const char* modeString {nullptr};
@@ -182,10 +167,10 @@ static void logSpec()
     default:                 {modeString = "unknown mode";}
   }
 
-  log::log(LOG::INFO, "SDL_Mixer Audio Device Spec: ");
-  log::log(LOG::INFO, "sample frequency: ", to_string(freq));
-  log::log(LOG::INFO, "sample format: ", formatString);
-  log::log(LOG::INFO, "output mode: ", modeString);
+  log::log(log::INFO, "SDL_Mixer Audio Device Spec: ");
+  log::log(log::INFO, "sample frequency: ", std::to_string(freq));
+  log::log(log::INFO, "sample format: ", formatString);
+  log::log(log::INFO, "output mode: ", modeString);
 }
 
 bool initialize(SFXConfiguration sfxconf)
@@ -196,20 +181,20 @@ bool initialize(SFXConfiguration sfxconf)
   int result = Mix_OpenAudio(
     sfxconf._samplingFreq_hz, 
     sfxconf._sampleFormat, 
-    sfxconf.outputMode, 
+    sfxconf._outputMode, 
     sfxconf._chunkSize
   );
   if(result != 0){
-    log->log(Log::ERROR, log::sfx_fail_init, std::string{Mix_GetError()});
+    log::log(log::ERROR, log::msg_sfx_fail_init, std::string{Mix_GetError()});
     return false;
   }
   Mix_AllocateChannels(sfxconf._numMixChannels);
   Mix_ChannelFinished(&onChannelFinished);
   channelPlayback.resize(sfxconf._numMixChannels, nullResourceKey);
   channelPlayback.shrink_to_fit();
-  channelVolumes.resize(sfxconf._numMixChannels, MAX_VOLUME);
-  channelVolumes.shrink_to_fit();
-  generateErrorSound(sfxconf._sampleFormat);
+  channelVolume.resize(sfxconf._numMixChannels, MAX_VOLUME);
+  channelVolume.shrink_to_fit();
+  generateErrorSound(static_cast<SampleFormat>(sfxconf._sampleFormat));
   logSpec();
   return true;
 }
@@ -227,7 +212,7 @@ void shutdown()
 static void unloadSound(ResourceKey_t soundKey)
 {
   assert(soundKey != errorSoundKey);
-  auto search = sounds(soundKey);
+  auto search = sounds.find(soundKey);
   assert(search != sounds.end());
   Mix_FreeChunk(search->second._chunk);
   sounds.erase(search);
@@ -236,7 +221,7 @@ static void unloadSound(ResourceKey_t soundKey)
 static void unloadUnusedSounds()
 {
   auto first = std::remove_if(unloadQueue.begin(), unloadQueue.end(), [](ResourceKey_t key){
-    return std::find(channelPlayback.begin(), channelPlayback.end(), resourceKey) == channelPlayback.end();
+    return std::find(channelPlayback.begin(), channelPlayback.end(), key) == channelPlayback.end();
   });
   auto first_copy = first;
   while(first_copy != unloadQueue.end()){
@@ -253,7 +238,7 @@ void service(float dt)
 
 static ResourceKey_t returnErrorSound()
 {
-  auto search = sounds(errorSoundKey);
+  auto search = sounds.find(errorSoundKey);
   assert(search != sounds.end());
   search->second._referenceCount++;
   log::log(log::INFO, log::msg_sfx_error_sound_usage, std::to_string(search->second._referenceCount));
@@ -278,12 +263,12 @@ ResourceKey_t loadSoundWAV(ResourceName_t soundName)
   std::string wavpath {};
   wavpath += RESOURCE_PATH_SOUNDS;
   wavpath += soundName;
-  wavpath += Wav::FILE_EXTENSION;
-  resource._chunk = Mix_LoadWav(wavpath.c_str());
+  wavpath += io::Wav::FILE_EXTENSION;
+  resource._chunk = Mix_LoadWAV(wavpath.c_str());
   if(resource._chunk = nullptr){
     log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath);
     log::log(log::INFO, log::msg_sfx_using_error_sound, wavpath);
-    return useErrorSound();
+    return returnErrorSound();
   }
   resource._name = soundName;
   resource._referenceCount = 1;
@@ -338,7 +323,7 @@ SoundChannel_t playSound(ResourceKey_t soundKey, int loops)
   auto* chunk = findChunk(soundKey);
   if(chunk == nullptr) return NULL_CHANNEL;
   SoundChannel_t channel = Mix_PlayChannel(-1, chunk, loops);
-  if(channel == -1) return onPlayError();
+  if(channel == -1) return onPlayError(soundKey);
   assert(channelPlayback[channel] == nullResourceKey);
   channelPlayback[channel] = soundKey;
   return channel;
@@ -349,7 +334,7 @@ SoundChannel_t playSoundTimed(ResourceKey_t soundKey, int loops, int playDuratio
   auto* chunk = findChunk(soundKey);
   if(chunk == nullptr) return NULL_CHANNEL;
   SoundChannel_t channel = Mix_PlayChannelTimed(-1, chunk, loops, playDuration_ms);
-  if(channel == -1) return onPlayError();
+  if(channel == -1) return onPlayError(soundKey);
   assert(channelPlayback[channel] == nullResourceKey);
   channelPlayback[channel] = soundKey;
   return channel;
@@ -360,7 +345,7 @@ SoundChannel_t playSoundFadeIn(ResourceKey_t soundKey, int loops, int fadeDurati
   auto* chunk = findChunk(soundKey);
   if(chunk == nullptr) return NULL_CHANNEL;
   SoundChannel_t channel = Mix_FadeInChannel(-1, chunk, loops, fadeDuration_ms);
-  if(channel == -1) return onPlayError();
+  if(channel == -1) return onPlayError(soundKey);
   assert(channelPlayback[channel] == nullResourceKey);
   channelPlayback[channel] = soundKey;
   return channel;
@@ -371,7 +356,7 @@ SoundChannel_t playSoundFadeInTimed(ResourceKey_t soundKey, int loops, int fadeD
   auto* chunk = findChunk(soundKey);
   if(chunk == nullptr) return NULL_CHANNEL;
   SoundChannel_t channel = Mix_FadeInChannelTimed(-1, chunk, loops, fadeDuration_ms, playDuration_ms);
-  if(channel == -1) return onPlayError();
+  if(channel == -1) return onPlayError(soundKey);
   assert(channelPlayback[channel] == nullResourceKey);
   channelPlayback[channel] = soundKey;
   return channel;

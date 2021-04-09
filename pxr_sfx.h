@@ -41,9 +41,14 @@ enum OutputMode
 //
 // See SDL_audio.h for more details of audio sample formats.
 //
-// note: This module only supports little-endian integer output formats.
+// note: This module only supports little-endian integer output formats (designed for x86).
+// 
+// note: U16 == U16LSB
+//       U32 == U32LSB
+//       S32 == S32LSB
+// i.e. they are equivilent.
 //
-enum SampleFormat
+enum SampleFormat : uint16_t
 {
   SAMPLE_FORMAT_U8     = AUDIO_U8,     // Unsigned 8-bit samples.
   SAMPLE_FORMAT_S8     = AUDIO_S8,     // Signed 8-bit samples.
