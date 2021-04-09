@@ -97,7 +97,7 @@ void service(float dt);
 //
 // Helper definition for use with play functions (both sounds and music).
 //
-static constexpr int INIFINITE_LOOPS {-1};
+static constexpr int INFINITE_LOOPS {-1};
 static constexpr int NO_LOOPS {0};
 
 //
@@ -116,6 +116,11 @@ static constexpr int NULL_CHANNEL {-2};
 //
 static constexpr int MIN_VOLUME {0};
 static constexpr int MAX_VOLUME {128};
+
+//
+// Can be used with play functions to play the error sound.
+//
+extern ResourceKey_t errorSoundKey;
 
 //
 // Load a WAV sound.

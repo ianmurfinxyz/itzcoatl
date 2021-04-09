@@ -13,6 +13,7 @@ bool Snake::onInit()
     _screens.push_back(gfx::createScreen(worldSize_rx));
 
   loadSpritesheets();
+  loadSoundEffects();
   _snakeHero = ITZCOATL;
 
  _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
@@ -25,6 +26,12 @@ bool Snake::onInit()
 
 void Snake::onShutdown()
 {
+}
+
+sfx::ResourceKey_t Snake::getSoundEffectKey(SoundEffectID sfxid)
+{
+  assert(0 <= sfxid && sfxid < SFX_COUNT);
+  return _soundEffectKeys[sfxid];
 }
 
 gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetid)
@@ -40,6 +47,12 @@ gfx::ScreenID_t Snake::getScreenID(GFXScreenName screenName)
 
 void Snake::loadSpritesheets()
 {
-  for(int ssid {SSID_SNAKES}; ssid < SSID_COUNT; ++ssid)
+  for(int ssid {0}; ssid < SSID_COUNT; ++ssid)
     _spritesheetKeys[ssid] = gfx::loadSpritesheet(spritesheetNames[ssid]);
+}
+
+void Snake::loadSoundEffects()
+{
+  for(int sfxid {0}; sfxid < SFX_COUNT; ++sfxid)
+    _soundEffectKeys[sfxid] = sfx::loadSoundWAV(soundEffectNames[sfxid]);
 }

@@ -110,10 +110,10 @@ void Engine::initialize(std::unique_ptr<Game> game)
     exit(EXIT_FAILURE);
   }
 
-  //if(!sfx::initialize()){
-  //  log::log(log::FATAL, log::msg_sfx_fail_init);
-  //  exit(EXIT_FAILURE);
-  //}
+  if(!sfx::initialize()){
+    log::log(log::FATAL, log::msg_sfx_fail_init);
+    exit(EXIT_FAILURE);
+  }
 
   // 
   // Testing the seed_seq on my system shows it just produces the same results with every run, 
@@ -208,7 +208,7 @@ void Engine::shutdown()
 {
   _game->onShutdown();
   gfx::shutdown();
-  //sfx::shutdown();
+  sfx::shutdown();
   log::shutdown();
 }
 
@@ -367,6 +367,7 @@ void Engine::onUpdateTick(float tickPeriodSeconds)
   double nowSeconds = durationToSeconds(_gameClock.getNow());
   _game->onUpdate(nowSeconds, tickPeriodSeconds);
   input::onUpdate();
+  sfx::service(tickPeriodSeconds);
 }
 
 void Engine::onDrawTick(float tickPeriodSeconds)

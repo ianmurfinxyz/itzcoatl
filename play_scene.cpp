@@ -219,6 +219,9 @@ void PlayScene::handleInput()
   if(dkey && _currentMoveDirection != Snake::NORTH) _nextMoveDirection = Snake::SOUTH;
 
   if(pxr::input::isKeyPressed(Snake::smoothToggle)) _isSnakeSmoothMover = !_isSnakeSmoothMover;
+
+  if(pxr::input::isKeyPressed(input::KEY_a)) 
+    sfx::stopChannel(sfx::ALL_CHANNELS);
 }
 
 Snake::Direction PlayScene::findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour)
@@ -293,9 +296,9 @@ void PlayScene::eatNugget(Nugget& nugget)
 {
   const auto& nc = Snake::nuggetClasses[nugget._classID];
   _sk->addScore(nc._score);
-  std::cout << "score=" << _sk->getScore() << std::endl;
   nugget._isAlive = false;
   --_numNuggetsInWorld;
+  sfx::SoundChannel_t channel = sfx::playSound(_sk->getSoundEffectKey(Snake::SFX_SCORE_BEEP));
 }
 
 void PlayScene::drawBackground()

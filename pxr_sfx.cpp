@@ -33,7 +33,7 @@ static constexpr int errorSoundFreq_hz {200};
 static constexpr float errorSoundDuration_s {0.5f};
 static constexpr int errorSoundVolume {MAX_VOLUME};
 static ResourceName_t errorSoundName {"sfxerror"};
-static ResourceKey_t errorSoundKey {0};
+ResourceKey_t errorSoundKey {0};
 
 //
 // The set of all loaded sounds accessed via their resource key.
@@ -185,7 +185,7 @@ bool initialize(SFXConfiguration sfxconf)
     sfxconf._chunkSize
   );
   if(result != 0){
-    log::log(log::ERROR, log::msg_sfx_fail_init, std::string{Mix_GetError()});
+    log::log(log::ERROR, log::msg_sfx_fail_open_audio, std::string{Mix_GetError()});
     return false;
   }
   Mix_AllocateChannels(sfxconf._numMixChannels);
@@ -265,7 +265,7 @@ ResourceKey_t loadSoundWAV(ResourceName_t soundName)
   wavpath += soundName;
   wavpath += io::Wav::FILE_EXTENSION;
   resource._chunk = Mix_LoadWAV(wavpath.c_str());
-  if(resource._chunk = nullptr){
+  if(resource._chunk == nullptr){
     log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath);
     log::log(log::INFO, log::msg_sfx_using_error_sound, wavpath);
     return returnErrorSound();
@@ -290,9 +290,14 @@ ResourceKey_t loadSoundWAV(ResourceName_t soundName)
 void queueUnloadSound(ResourceKey_t soundKey)
 {
   assert(soundKey != errorSoundKey);
-  auto search = sounds.find(soundKey);
-  if(search == sounds.end()){
+  auto search0 = sounds.find(soundKey);
+  if(search0 == sounds.end()){
     log::log(log::WARN, log::msg_sfx_unloading_nonexistent_sound, std::to_string(soundKey));
+    return;
+  }
+  auto search1 = std::find(unloadQueue.begin(), unloadQueue.end(), soundKey);
+  if(search1 != unloadQueue.end()){
+    log::log(log::WARN, log::msg_sfx_already_unloading_sound, std::to_string(soundKey));
     return;
   }
   unloadQueue.push_back(soundKey);

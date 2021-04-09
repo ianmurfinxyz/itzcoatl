@@ -1,5 +1,14 @@
 Error : failed to open an rc file : engine
 Info : using property default values
+Info : initializing sfx module
+Info : SDL_Mixer Version:
+Info : major: : 2
+Info : minor: : 0
+Info : patch: : 4
+Info : SDL_Mixer Audio Device Spec: 
+Info : sample frequency:  : 22050
+Info : sample format:  : S16LSB
+Info : output mode:  : mono
 Info : initializing gfx module
 Info : creating window : {w:500,h:500}
 Info : successfully created window : {w:500,h:500}
@@ -25,6 +34,8 @@ Info : successfully loaded spritesheet : [name:key]=[background:5]
 Info : loading spritesheet : foreground
 Info : parsing xml asset file : assets/spritesheets/foreground.spritesheet
 Info : successfully loaded spritesheet : [name:key]=[foreground:6]
+Info : loading sound : scorebeep
+Info : successfully loaded sound : [name:key]=[scorebeep:1]
 Info : created vscreen : resolution:500x200vpx mem:1171kib
 Info : created vscreen : resolution:100x60vpx mem:70kib
 Info : locking fps to : 60hz

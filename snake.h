@@ -21,6 +21,7 @@
 #include <array>
 #include "pxr_game.h"
 #include "pxr_gfx.h"
+#include "pxr_sfx.h"
 #include "pxr_vec.h"
 #include "pxr_input.h"
 
@@ -331,6 +332,20 @@ public:
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
+  // SOUNDS        
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  enum SoundEffectID
+  {
+    SFX_SCORE_BEEP,
+    SFX_COUNT
+  };
+
+  static constexpr std::array<sfx::ResourceName_t, SFX_COUNT> soundEffectNames {
+    "scorebeep"
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKES        
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -419,6 +434,7 @@ public:
   int getVersionMajor() const {return versionMajor;}
   int getVersionMinor() const {return versionMinor;}
 
+  sfx::ResourceKey_t getSoundEffectKey(SoundEffectID sfxID);
   gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
   gfx::ScreenID_t getScreenID(GFXScreenName screenName);
 
@@ -429,11 +445,13 @@ public:
 
 private:
   void loadSpritesheets();
+  void loadSoundEffects();
 
 private:
   std::array<gfx::ResourceKey_t, SSID_COUNT> _spritesheetKeys;
-  SnakeHero _snakeHero;
+  std::array<sfx::ResourceKey_t, SFX_COUNT> _soundEffectKeys;
 
+  SnakeHero _snakeHero;
   int _score;
 };
 
