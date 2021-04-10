@@ -14,6 +14,7 @@ bool Snake::onInit()
 
   loadSpritesheets();
   loadSoundEffects();
+  loadMusicLoops();
   _snakeHero = ITZCOATL;
 
  _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
@@ -34,6 +35,12 @@ sfx::ResourceKey_t Snake::getSoundEffectKey(SoundEffectID sfxid)
   return _soundEffectKeys[sfxid];
 }
 
+sfx::ResourceKey_t Snake::getMusicLoopKey(MusicLoopID musicID)
+{
+  assert(0 <= musicID && musicID < MUSIC_COUNT);
+  return _musicLoopKeys[musicID];
+}
+
 gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetid)
 {
   assert(0 <= sheetid && sheetid < SSID_COUNT);
@@ -43,6 +50,22 @@ gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetid)
 gfx::ScreenID_t Snake::getScreenID(GFXScreenName screenName)
 {
   return _screens[screenName];
+}
+
+sfx::MusicSequence_t Snake::getMusicSequence(MusicSequenceID sequenceID)
+{
+  assert(0 <= sequenceID && sequenceID <= MUSIC_SEQUENCE_COUNT);
+  const MusicIDSequence_t& idSequence = musicIDSequences[sequenceID];
+  sfx::MusicSequence_t sequence {};
+  for(const auto& node : idSequence){
+    sequence.push_back({
+      getMusicLoopKey(node._musicID),
+      static_cast<int>(node._fadeInDuration_s * 1000),
+      static_cast<int>(node._playDuration_s * 1000),
+      static_cast<int>(node._fadeOutDuration_s * 1000)
+    });
+  }
+  return sequence;
 }
 
 void Snake::loadSpritesheets()
@@ -56,3 +79,10 @@ void Snake::loadSoundEffects()
   for(int sfxid {0}; sfxid < SFX_COUNT; ++sfxid)
     _soundEffectKeys[sfxid] = sfx::loadSoundWAV(soundEffectNames[sfxid]);
 }
+
+void Snake::loadMusicLoops()
+{
+  for(int musicID {0}; musicID < MUSIC_COUNT; ++musicID)
+    _musicLoopKeys[musicID] = sfx::loadMusicWAV(musicLoopNames[musicID]);
+}
+

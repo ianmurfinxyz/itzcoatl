@@ -209,38 +209,23 @@ static constexpr float PLAY_MUSIC_FOREVER {std::numeric_limits<float>::max()};
 struct MusicSequenceNode
 {
   ResourceKey_t _musicKey;
-  float _fadeInDuration_ms;
-  float _playDuration_ms;
-  float _fadeOutDuration_ms;
+  int _fadeInDuration_ms;
+  int _playDuration_ms;
+  int _fadeOutDuration_ms;
 };
 
 using MusicSequence_t = std::vector<MusicSequenceNode>;
 
 ResourceKey_t loadMusicWAV(ResourceName_t musicName);
 void queueUnloadMusic(ResourceKey_t musicKey);
-
-//
-//
-//
 void playMusic(MusicSequence_t sequence, bool loop = true);
-
-//
-//
-//
 void stopMusic();
-
-//
-//
-//
 void pauseMusic();
 void resumeMusic();
-
-
 bool isMusicPlaying();
 bool isMusicPaused();
 bool isMusicFadingIn();
 bool isMusicFadingOut();
-
 void setMusicVolume(int volume);
 
 } // namespace sfx

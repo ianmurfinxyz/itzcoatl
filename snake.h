@@ -346,6 +346,55 @@ public:
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
+  // MUSIC         
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  enum MusicLoopID
+  {
+    MUSIC_JUNGLE_DRUMS_0,
+    MUSIC_JUNGLE_DRUMS_1,
+    MUSIC_JUNGLE_DRUMS_2,
+    MUSIC_JUNGLE_DRUMS_3,
+    MUSIC_COUNT
+  };
+
+  static constexpr std::array<sfx::ResourceName_t, MUSIC_COUNT> musicLoopNames {
+    "jungle_drums_0",
+    "jungle_drums_1",
+    "jungle_drums_2",
+    "jungle_drums_3"
+  };
+
+  enum MusicSequenceID
+  {
+    MUSIC_SEQUENCE_JUNGLE,
+    MUSIC_SEQUENCE_COUNT
+  };
+
+  struct MusicIDSequenceNode
+  {
+    MusicLoopID _musicID;
+    float _fadeInDuration_s;
+    float _playDuration_s;
+    float _fadeOutDuration_s;
+  };
+
+  //using MusicIDSequence_t = std::vector<MusicIDSequenceNode>;
+  using MusicIDSequence_t = std::array<MusicIDSequenceNode, 4>;
+
+  static constexpr std::array<MusicIDSequence_t, MUSIC_SEQUENCE_COUNT> musicIDSequences {{
+  //----------------------------------------------------------------------------------------------
+  //    loopID                 fadeIn   playDuration   fadeOut
+  //----------------------------------------------------------------------------------------------
+    {{
+       {{MUSIC_JUNGLE_DRUMS_0}, 1.f,    25.f,           1.f  },
+       {{MUSIC_JUNGLE_DRUMS_1}, 1.f,    25.f,           1.f  },
+       {{MUSIC_JUNGLE_DRUMS_2}, 1.f,    25.f,           1.f  },
+       {{MUSIC_JUNGLE_DRUMS_3}, 1.f,    25.f,           1.f  }
+    }}
+  }};
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKES        
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -435,8 +484,11 @@ public:
   int getVersionMinor() const {return versionMinor;}
 
   sfx::ResourceKey_t getSoundEffectKey(SoundEffectID sfxID);
+  sfx::ResourceKey_t getMusicLoopKey(MusicLoopID sfxID);
   gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
   gfx::ScreenID_t getScreenID(GFXScreenName screenName);
+
+  sfx::MusicSequence_t getMusicSequence(MusicSequenceID sequenceID);
 
   SnakeHero getSnakeHero() const {return _snakeHero;}
 
@@ -446,10 +498,12 @@ public:
 private:
   void loadSpritesheets();
   void loadSoundEffects();
+  void loadMusicLoops();
 
 private:
   std::array<gfx::ResourceKey_t, SSID_COUNT> _spritesheetKeys;
   std::array<sfx::ResourceKey_t, SFX_COUNT> _soundEffectKeys;
+  std::array<sfx::ResourceKey_t, MUSIC_COUNT> _musicLoopKeys;
 
   SnakeHero _snakeHero;
   int _score;

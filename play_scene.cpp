@@ -32,6 +32,7 @@ void PlayScene::onEnter()
   initializeNuggets();
   drawBackground();
   drawForeground();
+  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE));
 }
 
 void PlayScene::onUpdate(double now, float dt)
@@ -63,6 +64,7 @@ void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>&
 
 void PlayScene::onExit()
 {
+  sfx::stopMusic();
 }
 
 void PlayScene::initializeSnake()

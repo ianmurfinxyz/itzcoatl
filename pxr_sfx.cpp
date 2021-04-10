@@ -9,6 +9,8 @@
 #include "pxr_log.h"
 #include "pxr_wav.h"
 
+#include <iostream>
+
 namespace pxr
 {
 namespace sfx
@@ -35,7 +37,7 @@ struct MusicResource
 class MusicSequencePlayer
 {
 public:
-  enum State { STOPPED, PAUSED, PLAYING };
+  enum State { STOPPED, PAUSED, PLAYING, FADING_OUT };
   MusicSequencePlayer();
   void onUpdate(float dt);
   void play(MusicSequence_t sequence, bool loop);
@@ -47,6 +49,8 @@ public:
 private:
   void playNode(const MusicSequenceNode* node);
   void stopNode(const MusicSequenceNode* node);
+  void onPlayingUpdate(float dt);
+  void onFadingOutUpdate(float dt);
 private:
   State _state;
   MusicSequence_t _sequence;
@@ -205,6 +209,7 @@ static bool isChannelPlayingSound(ResourceKey_t soundKey)
 
 static void unloadUnusedSounds()
 {
+  if(soundUnloadQueue.size() == 0) return;
   soundUnloadQueue.erase(std::remove_if(soundUnloadQueue.begin(), soundUnloadQueue.end(), [](ResourceKey_t soundKey){
     return !isChannelPlayingSound(soundKey) && unloadSound(soundKey);
   }));
@@ -240,7 +245,7 @@ ResourceKey_t loadSoundWAV(ResourceName_t soundName)
   wavpath += io::Wav::FILE_EXTENSION;
   resource._chunk = Mix_LoadWAV(wavpath.c_str());
   if(resource._chunk == nullptr){
-    log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath);
+    log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath + " : " + Mix_GetError());
     log::log(log::INFO, log::msg_sfx_using_error_sound, wavpath);
     return returnErrorSound();
   }
@@ -426,6 +431,7 @@ static void onMusicPlayError(ResourceKey_t musicKey)
 
 static void playMusic__(ResourceKey_t musicKey, int loops)
 {
+  Mix_HaltMusic(); // to prevent the mixer play function blocking.
   Mix_Music* music = findMusic(musicKey);
   if(music == nullptr) return;
   if(Mix_PlayMusic(music, loops) != 0) return onMusicPlayError(musicKey);
@@ -433,6 +439,7 @@ static void playMusic__(ResourceKey_t musicKey, int loops)
 
 static void playMusicFadeIn__(ResourceKey_t musicKey, int loops, int fadeDuration_ms)
 {
+  Mix_HaltMusic(); // to prevent the mixer play function blocking.
   Mix_Music* music = findMusic(musicKey);
   if(music == nullptr) return;
   if(Mix_FadeInMusic(music, loops, fadeDuration_ms) != 0) return onMusicPlayError(musicKey);
@@ -468,21 +475,22 @@ MusicSequencePlayer::MusicSequencePlayer() :
 
 void MusicSequencePlayer::onUpdate(float dt)
 {
-  if(_state != PLAYING) return;
-  assert(0 <= _currentNode && _currentNode < _sequence.size());
-  const MusicSequenceNode* node = &_sequence[_currentNode];
-  _musicClock_s += dt;
-  if(_musicClock_s > (node->_playDuration_ms - node->_fadeOutDuration_ms) * 1000.f){
-    stopNode(node);
-    ++_currentNode;
-    if(_currentNode >= _sequence.size()){
-      if(!_isLooping) return stop();
-      _currentNode = 0;
-    }
-    node = &_sequence[_currentNode];
-    playNode(node);
-    _musicClock_s = 0.f;
+  // note: requires a fading out state here because the SDL_mixer play functions will block
+  // if there is currently music fading out, sleeping until the fade out is complete so it can
+  // start playing the new music. To prevent blocking I wait for the fade out myself without
+  // blocking.
+
+  switch(_state){
+    case PLAYING: 
+      onPlayingUpdate(dt); 
+      break;
+    case FADING_OUT: 
+      onFadingOutUpdate(dt); 
+      break;
+    default:
+      break;
   }
+  std::cout << "music clock = " << _musicClock_s << std::endl;
 }
 
 void MusicSequencePlayer::play(MusicSequence_t sequence, bool loop)
@@ -538,6 +546,7 @@ void MusicSequencePlayer::playNode(const MusicSequenceNode* node)
     playMusicFadeIn__(node->_musicKey, INFINITE_LOOPS, node->_fadeInDuration_ms);
   else
     playMusic__(node->_musicKey, INFINITE_LOOPS);
+  _state = PLAYING;
 }
 
 void MusicSequencePlayer::stopNode(const MusicSequenceNode* node)
@@ -546,6 +555,37 @@ void MusicSequencePlayer::stopNode(const MusicSequenceNode* node)
     stopMusicFadeOut__(node->_fadeOutDuration_ms);
   else 
     stopMusic__();
+  _state = FADING_OUT;
+}
+
+void MusicSequencePlayer::onPlayingUpdate(float dt)
+{
+  assert(0 <= _currentNode && _currentNode < _sequence.size());
+  const MusicSequenceNode* node {nullptr};
+  node = &_sequence[_currentNode];
+  _musicClock_s += dt;
+  if(_musicClock_s > ((node->_playDuration_ms - node->_fadeOutDuration_ms) / 1000.f)){
+    stopNode(node);
+    _musicClock_s = 0.f;
+  }
+}
+
+void MusicSequencePlayer::onFadingOutUpdate(float dt)
+{
+  assert(0 <= _currentNode && _currentNode < _sequence.size());
+  const MusicSequenceNode* node {nullptr};
+  node = &_sequence[_currentNode];
+  _musicClock_s += dt;
+  if(_musicClock_s > ((node->_fadeOutDuration_ms / 1000.f))){
+    ++_currentNode;
+    if(_currentNode >= _sequence.size()){
+      if(!_isLooping) return stop();
+      _currentNode = 0;
+    }
+    node = &_sequence[_currentNode];
+    playNode(node);
+    _musicClock_s = 0.f;
+  }
 }
 
 ResourceKey_t loadMusicWAV(ResourceName_t musicName)
@@ -569,7 +609,7 @@ ResourceKey_t loadMusicWAV(ResourceName_t musicName)
   wavpath += io::Wav::FILE_EXTENSION;
   resource._music = Mix_LoadMUS(wavpath.c_str());
   if(resource._music == nullptr){
-    log::log(log::ERROR, log::msg_sfx_fail_load_music, wavpath);
+    log::log(log::ERROR, log::msg_sfx_fail_load_music, wavpath + " : " + Mix_GetError());
     log::log(log::WARN, log::msg_sfx_no_error_music);
     return nullResourceKey;
   }
@@ -609,6 +649,7 @@ static bool unloadMusic(ResourceKey_t musicKey)
 
 static void unloadUnusedMusic()
 {
+  if(musicUnloadQueue.size() == 0) return;
   musicUnloadQueue.erase(std::remove_if(musicUnloadQueue.begin(), musicUnloadQueue.end(), [](ResourceKey_t musicKey){
     return !musicSequencePlayer.isUsingMusicResource(musicKey) && unloadMusic(musicKey);
   }));

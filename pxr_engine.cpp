@@ -172,7 +172,7 @@ void Engine::initialize(std::unique_ptr<Game> game)
   //_splashSoundKey = sfx::loadSound(splashName);
   _splashSpriteKey = gfx::loadSpritesheet(splashName);
   if(gfx::isErrorSpritesheet(_splashSpriteKey)){
-    log::log(log::ERROR, log::msg_eng_fail_load_splash);
+    log::log(log::INFO, log::msg_eng_fail_load_splash);
     onSplashExit();
   }
   else{
