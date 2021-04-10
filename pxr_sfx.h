@@ -2,6 +2,7 @@
 #define _PIXIRETRO_SFX_H_
 
 #include <SDL2/SDL_audio.h>
+#include <limits>
 
 namespace pxr
 {
@@ -12,6 +13,7 @@ namespace sfx
 // The relative paths to resource files on disk; save your sound assets to these directories.
 //
 constexpr const char* RESOURCE_PATH_SOUNDS = "assets/sounds/";
+constexpr const char* RESOURCE_PATH_MUSIC = "assets/music/";
 
 //
 // The type of unique keys mapped to sound resources. 
@@ -27,6 +29,19 @@ using ResourceName_t = const char*;
 // The type of unique keys which identify sound channels.
 //
 using SoundChannel_t = int;
+
+//
+// Returned upon failure to load a music file. This key is safe to pass to music functions
+// and will simply cause those functions to be no-ops. It will not be returned upon failure 
+// to load sound effects, instead an error key is returned in that case.
+//
+static constexpr ResourceKey_t nullResourceKey {-1};
+
+//
+// The key returned upon failure to load sound resources. Will link to a generated sine tone
+// which will play in place of any unloaded sounds.
+//
+extern ResourceKey_t errorSoundKey;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // GENERAL       
@@ -88,7 +103,7 @@ void shutdown();
 // Called by the engine every tick to service the module, e.g. to unload any sounds in the
 // unload queue.
 //
-void service(float dt);
+void onUpdate(float dt);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // SOUND EFFECTS
@@ -182,29 +197,51 @@ void setChannelVolume(SoundChannel_t channel, int volume);
 //
 int getChannelVolume(SoundChannel_t channel);
 
+int getMusicVolume();
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// MUSIC        
+// MUSIC FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-// ResourceKey_t loadMusicWAV(ResourceName_t musicName);
-// 
-// void unloadMusic(ResourceKey_t musicKey);
-// 
-// void playMusic(ResourceKey_t musicKey, int loops = INFINITE_LOOPS);
-// void playMusicFadeIn(ResourceKey_t musicKey, int loops);
-// 
-// void stopMusic();
-// void stopMusicFadeOut(int fadeDuration_ms);
-// void pauseMusic();
-// void resumeMusic();
-// 
-// bool isMusicPlaying();
-// bool isMusicPaused();
-// bool isMusicFadingIn();
-// bool isMusicFadingOut();
-// 
-// void setMusicVolume(int volume);
-// int getMusicVolume();
+static constexpr float PLAY_MUSIC_FOREVER {std::numeric_limits<float>::max()};
+
+struct MusicSequenceNode
+{
+  ResourceKey_t _musicKey;
+  float _fadeInDuration_ms;
+  float _playDuration_ms;
+  float _fadeOutDuration_ms;
+};
+
+using MusicSequence_t = std::vector<MusicSequenceNode>;
+
+ResourceKey_t loadMusicWAV(ResourceName_t musicName);
+void queueUnloadMusic(ResourceKey_t musicKey);
+
+//
+//
+//
+void playMusic(MusicSequence_t sequence, bool loop = true);
+
+//
+//
+//
+void stopMusic();
+
+//
+//
+//
+void pauseMusic();
+void resumeMusic();
+
+
+bool isMusicPlaying();
+bool isMusicPaused();
+bool isMusicFadingIn();
+bool isMusicFadingOut();
+
+void setMusicVolume(int volume);
 
 } // namespace sfx
 } // namespace pxr

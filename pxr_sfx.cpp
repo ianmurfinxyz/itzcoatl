@@ -25,6 +25,38 @@ struct SoundResource
   int _referenceCount = 0;
 };
 
+struct MusicResource
+{
+  std::string _name = "";
+  Mix_Music* _music = nullptr;
+  int _referenceCount = 0;
+};
+
+class MusicSequencePlayer
+{
+public:
+  enum State { STOPPED, PAUSED, PLAYING };
+  MusicSequencePlayer();
+  void onUpdate(float dt);
+  void play(MusicSequence_t sequence, bool loop);
+  void stop();
+  void pause();
+  void resume();
+  State getState() const {return _state;} 
+  bool isUsingMusicResource(ResourceKey_t musicKey);
+private:
+  void playNode(const MusicSequenceNode* node);
+  void stopNode(const MusicSequenceNode* node);
+private:
+  State _state;
+  MusicSequence_t _sequence;
+  int _currentNode;
+  float _musicClock_s;
+  bool _isLooping;
+};
+
+static MusicSequencePlayer musicSequencePlayer;
+
 //
 // Nyquist-Shannon sampling theorem states sampling frequency should be atleast twice 
 // that of largest wave frequency. Thus do not make the wave freq > half sampling frequency.
@@ -38,8 +70,20 @@ ResourceKey_t errorSoundKey {0};
 //
 // The set of all loaded sounds accessed via their resource key.
 //
-ResourceKey_t nextResourceKey {0};
+static ResourceKey_t nextResourceKey {0};
 static std::unordered_map<ResourceKey_t, SoundResource> sounds;
+
+//
+// The set of all loaded music accessed via their resource key.
+//
+static std::unordered_map<ResourceKey_t, MusicResource> music;
+
+//
+// Music volume is updated in the update function at the next point in which the update will
+// succeed; volume cannot be set during fade effects.
+//
+static int musicVolume;
+static bool hasMusicVolumeChanged {false};
 
 //
 // The configuration this module was initialized with.
@@ -50,7 +94,6 @@ SFXConfiguration sfxconfiguration;
 // Maintains data on which channel is playing which sound. Channel ids range from 0 up to
 // sfxconfiguration._numMixChannels - 1.
 //
-static ResourceKey_t nullResourceKey {-1};
 static std::vector<ResourceKey_t> channelPlayback;
 
 //
@@ -63,10 +106,11 @@ static std::vector<int> channelVolume;
 // The set of all sounds waiting to be unloaded once all running instances have stopped
 // playback.
 //
-static std::vector<ResourceKey_t> unloadQueue;
+static std::vector<ResourceKey_t> soundUnloadQueue;
+static std::vector<ResourceKey_t> musicUnloadQueue;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-// MODULE FUNCTIONS
+// SOUND FUNCTIONS 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 void onChannelFinished(int channel)
@@ -135,6 +179,503 @@ static void freeErrorSound()
   resource._chunk = nullptr;
   sounds.erase(search);
 }
+
+static bool unloadSound(ResourceKey_t soundKey)
+{
+  assert(soundKey != errorSoundKey);
+  auto search = sounds.find(soundKey);
+  if(search == sounds.end()){
+    log::log(log::WARN, log::msg_sfx_unloading_nonexistent_sound, std::to_string(soundKey));
+  }
+  else{
+    search->second._referenceCount--;
+    if(search->second._referenceCount <= 0){
+      Mix_FreeChunk(search->second._chunk);
+      sounds.erase(search);
+      log::log(log::INFO, log::msg_sfx_sound_unloaded, std::to_string(soundKey));
+    }
+  }
+  return true;
+}
+
+static bool isChannelPlayingSound(ResourceKey_t soundKey)
+{
+  return std::find(channelPlayback.begin(), channelPlayback.end(), soundKey) != channelPlayback.end();
+}
+
+static void unloadUnusedSounds()
+{
+  soundUnloadQueue.erase(std::remove_if(soundUnloadQueue.begin(), soundUnloadQueue.end(), [](ResourceKey_t soundKey){
+    return !isChannelPlayingSound(soundKey) && unloadSound(soundKey);
+  }));
+}
+
+static ResourceKey_t returnErrorSound()
+{
+  auto search = sounds.find(errorSoundKey);
+  assert(search != sounds.end());
+  search->second._referenceCount++;
+  log::log(log::INFO, log::msg_sfx_error_sound_usage, std::to_string(search->second._referenceCount));
+  return errorSoundKey;
+}
+
+ResourceKey_t loadSoundWAV(ResourceName_t soundName)
+{
+  log::log(log::INFO, log::msg_sfx_loading_sound, soundName);
+
+  for(auto& pair : sounds){
+    if(pair.second._name == soundName){
+      pair.second._referenceCount++;
+      std::string addendum {"reference count="};
+      addendum += std::to_string(pair.second._referenceCount);
+      log::log(log::INFO, log::msg_sfx_sound_already_loaded, addendum);
+      return pair.first;
+    }
+  }
+
+  SoundResource resource {};
+  std::string wavpath {};
+  wavpath += RESOURCE_PATH_SOUNDS;
+  wavpath += soundName;
+  wavpath += io::Wav::FILE_EXTENSION;
+  resource._chunk = Mix_LoadWAV(wavpath.c_str());
+  if(resource._chunk == nullptr){
+    log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath);
+    log::log(log::INFO, log::msg_sfx_using_error_sound, wavpath);
+    return returnErrorSound();
+  }
+  resource._name = soundName;
+  resource._referenceCount = 1;
+
+  ResourceKey_t newKey = nextResourceKey++;
+  sounds.emplace(std::make_pair(newKey, resource));
+
+  std::string addendum{};
+  addendum += "[name:key]=[";
+  addendum += soundName;
+  addendum += ":";
+  addendum += std::to_string(newKey);
+  addendum += "]";
+  log::log(log::INFO, log::msg_sfx_load_sound_success, addendum);
+
+  return newKey;
+}
+
+void queueUnloadSound(ResourceKey_t soundKey)
+{
+  assert(soundKey != errorSoundKey);
+  soundUnloadQueue.push_back(soundKey);
+}
+
+static Mix_Chunk* findChunk(ResourceKey_t soundKey)
+{
+  auto search = sounds.find(soundKey);
+  if(search == sounds.end()){
+    log::log(log::WARN, log::msg_sfx_playing_nonexistent_sound, std::to_string(soundKey));
+    return nullptr;
+  }
+  return search->second._chunk;
+}
+
+static SoundChannel_t onSoundPlayError(ResourceKey_t soundKey)
+{
+  std::string addendum{};
+  addendum += std::to_string(soundKey);
+  addendum += " : ";
+  addendum += Mix_GetError();
+  log::log(log::WARN, log::msg_sfx_fail_play_sound, addendum);
+  return NULL_CHANNEL;
+}
+
+SoundChannel_t playSound(ResourceKey_t soundKey, int loops)
+{
+  auto* chunk = findChunk(soundKey);
+  if(chunk == nullptr) return NULL_CHANNEL;
+  SoundChannel_t channel = Mix_PlayChannel(-1, chunk, loops);
+  if(channel == -1) return onSoundPlayError(soundKey);
+  assert(channelPlayback[channel] == nullResourceKey);
+  channelPlayback[channel] = soundKey;
+  return channel;
+}
+
+SoundChannel_t playSoundTimed(ResourceKey_t soundKey, int loops, int playDuration_ms)
+{
+  auto* chunk = findChunk(soundKey);
+  if(chunk == nullptr) return NULL_CHANNEL;
+  SoundChannel_t channel = Mix_PlayChannelTimed(-1, chunk, loops, playDuration_ms);
+  if(channel == -1) return onSoundPlayError(soundKey);
+  assert(channelPlayback[channel] == nullResourceKey);
+  channelPlayback[channel] = soundKey;
+  return channel;
+}
+
+SoundChannel_t playSoundFadeIn(ResourceKey_t soundKey, int loops, int fadeDuration_ms)
+{
+  auto* chunk = findChunk(soundKey);
+  if(chunk == nullptr) return NULL_CHANNEL;
+  SoundChannel_t channel = Mix_FadeInChannel(-1, chunk, loops, fadeDuration_ms);
+  if(channel == -1) return onSoundPlayError(soundKey);
+  assert(channelPlayback[channel] == nullResourceKey);
+  channelPlayback[channel] = soundKey;
+  return channel;
+}
+
+SoundChannel_t playSoundFadeInTimed(ResourceKey_t soundKey, int loops, int fadeDuration_ms, int playDuration_ms)
+{
+  auto* chunk = findChunk(soundKey);
+  if(chunk == nullptr) return NULL_CHANNEL;
+  SoundChannel_t channel = Mix_FadeInChannelTimed(-1, chunk, loops, fadeDuration_ms, playDuration_ms);
+  if(channel == -1) return onSoundPlayError(soundKey);
+  assert(channelPlayback[channel] == nullResourceKey);
+  channelPlayback[channel] = soundKey;
+  return channel;
+}
+
+void stopChannel(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  Mix_HaltChannel(channel);
+}
+
+void stopChannelTimed(SoundChannel_t channel, int durationUntilStop_ms)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  Mix_ExpireChannel(channel, durationUntilStop_ms);
+}
+
+void stopChannelFadeOut(SoundChannel_t channel, int fadeDuration_ms)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  Mix_FadeOutChannel(channel, fadeDuration_ms);
+}
+
+void pauseChannel(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  Mix_Pause(channel);
+}
+
+void resumeChannel(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  Mix_Resume(channel);
+}
+
+bool isChannelPlaying(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return false;
+  if(channel == ALL_CHANNELS) return false;
+  assert(0 <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  return Mix_Playing(channel) == 1;
+}
+
+bool isChannelPaused(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return false;
+  if(channel == ALL_CHANNELS) return false;
+  assert(0 <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  return Mix_Paused(channel) == 1;
+}
+
+void setChannelVolume(SoundChannel_t channel, int volume)
+{
+  if(channel == NULL_CHANNEL) return;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  int vol = std::clamp(volume, MIN_VOLUME, MAX_VOLUME);
+  channelVolume[channel] = Mix_Volume(channel, vol); 
+}
+
+int getChannelVolume(SoundChannel_t channel)
+{
+  if(channel == NULL_CHANNEL) return 0;
+  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
+  return channelVolume[channel];
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// MUSIC FUNCTIONS 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+static Mix_Music* findMusic(ResourceKey_t musicKey)
+{
+  if(musicKey == nullResourceKey){
+    log::log(log::WARN, log::msg_sfx_playing_nonexistent_music, std::to_string(musicKey));
+    return nullptr;
+  }
+  auto search = music.find(musicKey);
+  if(search == music.end()){
+    log::log(log::WARN, log::msg_sfx_playing_nonexistent_music, std::to_string(musicKey));
+    return nullptr;
+  }
+  return search->second._music;
+}
+
+static void onMusicPlayError(ResourceKey_t musicKey)
+{
+  std::string addendum{};
+  addendum += std::to_string(musicKey);
+  addendum += " : ";
+  addendum += Mix_GetError();
+  log::log(log::WARN, log::msg_sfx_fail_play_music, addendum);
+}
+
+static void playMusic__(ResourceKey_t musicKey, int loops)
+{
+  Mix_Music* music = findMusic(musicKey);
+  if(music == nullptr) return;
+  if(Mix_PlayMusic(music, loops) != 0) return onMusicPlayError(musicKey);
+}
+
+static void playMusicFadeIn__(ResourceKey_t musicKey, int loops, int fadeDuration_ms)
+{
+  Mix_Music* music = findMusic(musicKey);
+  if(music == nullptr) return;
+  if(Mix_FadeInMusic(music, loops, fadeDuration_ms) != 0) return onMusicPlayError(musicKey);
+}
+
+static void stopMusic__()
+{
+  Mix_HaltMusic();
+}
+
+static void stopMusicFadeOut__(int fadeDuration_ms)
+{
+  Mix_FadeOutMusic(fadeDuration_ms);
+}
+
+static void pauseMusic__()
+{
+  Mix_PauseMusic();
+}
+
+static void resumeMusic__()
+{
+  Mix_ResumeMusic();
+}
+
+MusicSequencePlayer::MusicSequencePlayer() :
+  _state{STOPPED},
+  _sequence{},
+  _currentNode{0},
+  _musicClock_s{0.f},
+  _isLooping{false}
+{}
+
+void MusicSequencePlayer::onUpdate(float dt)
+{
+  if(_state != PLAYING) return;
+  assert(0 <= _currentNode && _currentNode < _sequence.size());
+  const MusicSequenceNode* node = &_sequence[_currentNode];
+  _musicClock_s += dt;
+  if(_musicClock_s > (node->_playDuration_ms - node->_fadeOutDuration_ms) * 1000.f){
+    stopNode(node);
+    ++_currentNode;
+    if(_currentNode >= _sequence.size()){
+      if(!_isLooping) return stop();
+      _currentNode = 0;
+    }
+    node = &_sequence[_currentNode];
+    playNode(node);
+    _musicClock_s = 0.f;
+  }
+}
+
+void MusicSequencePlayer::play(MusicSequence_t sequence, bool loop)
+{
+  stop();
+  _sequence = std::move(sequence);
+  _currentNode = 0;
+  _musicClock_s = 0.f;
+  _isLooping = loop;
+  if(_sequence.size() == 0){ 
+    _state = STOPPED;
+    return;
+  }
+  playNode(&_sequence[_currentNode]);
+}
+
+void MusicSequencePlayer::stop()
+{
+  if(_state != STOPPED){
+    _musicClock_s = 0.f;
+    _currentNode = 0;
+    _state = STOPPED;
+    _sequence.clear();
+    stopMusic__();
+  }
+}
+
+void MusicSequencePlayer::pause()
+{
+  if(_state == PLAYING){
+    _state = PAUSED;
+    pauseMusic__();
+  }
+}
+
+void MusicSequencePlayer::resume()
+{
+  if(_state == PAUSED){
+    _state = PLAYING;
+    resumeMusic__();
+  }
+}
+
+bool MusicSequencePlayer::isUsingMusicResource(ResourceKey_t musicKey)
+{
+  return music.find(musicKey) != music.end();
+}
+
+void MusicSequencePlayer::playNode(const MusicSequenceNode* node)
+{
+  bool result;
+  if(node->_fadeInDuration_ms > 0.f)
+    playMusicFadeIn__(node->_musicKey, INFINITE_LOOPS, node->_fadeInDuration_ms);
+  else
+    playMusic__(node->_musicKey, INFINITE_LOOPS);
+}
+
+void MusicSequencePlayer::stopNode(const MusicSequenceNode* node)
+{
+  if(node->_fadeOutDuration_ms > 0.f) 
+    stopMusicFadeOut__(node->_fadeOutDuration_ms);
+  else 
+    stopMusic__();
+}
+
+ResourceKey_t loadMusicWAV(ResourceName_t musicName)
+{
+  log::log(log::INFO, log::msg_sfx_loading_music, musicName);
+
+  for(auto& pair : music){
+    if(pair.second._name == musicName){
+      pair.second._referenceCount++;
+      std::string addendum {"reference count="};
+      addendum += std::to_string(pair.second._referenceCount);
+      log::log(log::INFO, log::msg_sfx_music_already_loaded, addendum);
+      return pair.first;
+    }
+  }
+
+  MusicResource resource {};
+  std::string wavpath {};
+  wavpath += RESOURCE_PATH_MUSIC;
+  wavpath += musicName;
+  wavpath += io::Wav::FILE_EXTENSION;
+  resource._music = Mix_LoadMUS(wavpath.c_str());
+  if(resource._music == nullptr){
+    log::log(log::ERROR, log::msg_sfx_fail_load_music, wavpath);
+    log::log(log::WARN, log::msg_sfx_no_error_music);
+    return nullResourceKey;
+  }
+  resource._name = musicName;
+  resource._referenceCount = 1;
+
+  ResourceKey_t newKey = nextResourceKey++;
+  music.emplace(std::make_pair(newKey, resource));
+
+  std::string addendum{};
+  addendum += "[name:key]=[";
+  addendum += musicName;
+  addendum += ":";
+  addendum += std::to_string(newKey);
+  addendum += "]";
+  log::log(log::INFO, log::msg_sfx_load_music_success, addendum);
+
+  return newKey;
+}
+
+static bool unloadMusic(ResourceKey_t musicKey)
+{
+  auto search = music.find(musicKey);
+  if(search == music.end()){
+    log::log(log::WARN, log::msg_sfx_unloading_nonexistent_music, std::to_string(musicKey));
+  }
+  else{
+    search->second._referenceCount--;
+    if(search->second._referenceCount <= 0){
+      Mix_FreeMusic(search->second._music);
+      music.erase(search);
+      log::log(log::INFO, log::msg_sfx_music_unloaded, std::to_string(musicKey));
+    }
+  }
+  return true;
+}
+
+static void unloadUnusedMusic()
+{
+  musicUnloadQueue.erase(std::remove_if(musicUnloadQueue.begin(), musicUnloadQueue.end(), [](ResourceKey_t musicKey){
+    return !musicSequencePlayer.isUsingMusicResource(musicKey) && unloadMusic(musicKey);
+  }));
+}
+
+void queueUnloadMusic(ResourceKey_t musicKey)
+{
+  musicUnloadQueue.push_back(musicKey);
+}
+
+void playMusic(MusicSequence_t sequence, bool loop)
+{
+  musicSequencePlayer.play(std::move(sequence), loop);
+}
+
+void stopMusic()
+{
+  musicSequencePlayer.stop();
+}
+
+void pauseMusic()
+{
+  musicSequencePlayer.pause();
+}
+
+void resumeMusic()
+{
+  musicSequencePlayer.resume();
+}
+
+bool isMusicPlaying()
+{
+  return Mix_PlayingMusic() == 1;
+}
+
+bool isMusicPaused()
+{
+  return Mix_PausedMusic() == 1;
+}
+
+bool isMusicFadingIn()
+{
+  return Mix_FadingMusic() == MIX_FADING_IN;
+}
+
+bool isMusicFadingOut()
+{
+  return Mix_FadingMusic() == MIX_FADING_OUT;
+}
+
+void setMusicVolume(int volume)
+{
+  int vol = std::clamp(volume, MIN_VOLUME, MAX_VOLUME);
+  if(vol != musicVolume){
+    musicVolume = vol;
+    hasMusicVolumeChanged = true;
+  }
+}
+
+int getMusicVolume(int volume)
+{
+  return musicVolume;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// GENERAL FUNCTIONS
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void logSpec()
 {
@@ -209,228 +750,17 @@ void shutdown()
   Mix_CloseAudio();
 }
 
-static void unloadSound(ResourceKey_t soundKey)
-{
-  assert(soundKey != errorSoundKey);
-  auto search = sounds.find(soundKey);
-  assert(search != sounds.end());
-  Mix_FreeChunk(search->second._chunk);
-  sounds.erase(search);
-}
-
-static void unloadUnusedSounds()
-{
-  auto first = std::remove_if(unloadQueue.begin(), unloadQueue.end(), [](ResourceKey_t key){
-    return std::find(channelPlayback.begin(), channelPlayback.end(), key) == channelPlayback.end();
-  });
-  auto first_copy = first;
-  while(first_copy != unloadQueue.end()){
-    unloadSound(*first_copy);
-    ++first_copy;
-  }
-  unloadQueue.erase(first, unloadQueue.end());
-}
-
-void service(float dt)
+void onUpdate(float dt)
 {
   unloadUnusedSounds();
-}
+  unloadUnusedMusic();
 
-static ResourceKey_t returnErrorSound()
-{
-  auto search = sounds.find(errorSoundKey);
-  assert(search != sounds.end());
-  search->second._referenceCount++;
-  log::log(log::INFO, log::msg_sfx_error_sound_usage, std::to_string(search->second._referenceCount));
-  return errorSoundKey;
-}
-
-ResourceKey_t loadSoundWAV(ResourceName_t soundName)
-{
-  log::log(log::INFO, log::msg_sfx_loading_sound, soundName);
-
-  for(auto& pair : sounds){
-    if(pair.second._name == soundName){
-      pair.second._referenceCount++;
-      std::string addendum {"reference count="};
-      addendum += std::to_string(pair.second._referenceCount);
-      log::log(log::INFO, log::msg_sfx_sound_already_loaded, addendum);
-      return pair.first;
-    }
+  if(hasMusicVolumeChanged && Mix_FadingMusic() == MIX_NO_FADING){
+    Mix_VolumeMusic(musicVolume);
+    hasMusicVolumeChanged = false;
   }
 
-  SoundResource resource {};
-  std::string wavpath {};
-  wavpath += RESOURCE_PATH_SOUNDS;
-  wavpath += soundName;
-  wavpath += io::Wav::FILE_EXTENSION;
-  resource._chunk = Mix_LoadWAV(wavpath.c_str());
-  if(resource._chunk == nullptr){
-    log::log(log::ERROR, log::msg_sfx_fail_load_sound, wavpath);
-    log::log(log::INFO, log::msg_sfx_using_error_sound, wavpath);
-    return returnErrorSound();
-  }
-  resource._name = soundName;
-  resource._referenceCount = 1;
-
-  ResourceKey_t newKey = nextResourceKey++;
-  sounds.emplace(std::make_pair(newKey, resource));
-
-  std::string addendum{};
-  addendum += "[name:key]=[";
-  addendum += soundName;
-  addendum += ":";
-  addendum += std::to_string(newKey);
-  addendum += "]";
-  log::log(log::INFO, log::msg_sfx_load_sound_success, addendum);
-
-  return newKey;
-}
-
-void queueUnloadSound(ResourceKey_t soundKey)
-{
-  assert(soundKey != errorSoundKey);
-  auto search0 = sounds.find(soundKey);
-  if(search0 == sounds.end()){
-    log::log(log::WARN, log::msg_sfx_unloading_nonexistent_sound, std::to_string(soundKey));
-    return;
-  }
-  auto search1 = std::find(unloadQueue.begin(), unloadQueue.end(), soundKey);
-  if(search1 != unloadQueue.end()){
-    log::log(log::WARN, log::msg_sfx_already_unloading_sound, std::to_string(soundKey));
-    return;
-  }
-  unloadQueue.push_back(soundKey);
-}
-
-static Mix_Chunk* findChunk(ResourceKey_t soundKey)
-{
-  auto search = sounds.find(soundKey);
-  if(search == sounds.end()){
-    log::log(log::WARN, log::msg_sfx_playing_nonexistent_sound, std::to_string(soundKey));
-    return nullptr;
-  }
-  return search->second._chunk;
-}
-
-static SoundChannel_t onPlayError(ResourceKey_t soundKey)
-{
-  std::string addendum{};
-  addendum += std::to_string(soundKey);
-  addendum += " : ";
-  addendum += Mix_GetError();
-  log::log(log::WARN, log::msg_sfx_fail_play_sound, addendum);
-  return NULL_CHANNEL;
-}
-
-SoundChannel_t playSound(ResourceKey_t soundKey, int loops)
-{
-  auto* chunk = findChunk(soundKey);
-  if(chunk == nullptr) return NULL_CHANNEL;
-  SoundChannel_t channel = Mix_PlayChannel(-1, chunk, loops);
-  if(channel == -1) return onPlayError(soundKey);
-  assert(channelPlayback[channel] == nullResourceKey);
-  channelPlayback[channel] = soundKey;
-  return channel;
-}
-
-SoundChannel_t playSoundTimed(ResourceKey_t soundKey, int loops, int playDuration_ms)
-{
-  auto* chunk = findChunk(soundKey);
-  if(chunk == nullptr) return NULL_CHANNEL;
-  SoundChannel_t channel = Mix_PlayChannelTimed(-1, chunk, loops, playDuration_ms);
-  if(channel == -1) return onPlayError(soundKey);
-  assert(channelPlayback[channel] == nullResourceKey);
-  channelPlayback[channel] = soundKey;
-  return channel;
-}
-
-SoundChannel_t playSoundFadeIn(ResourceKey_t soundKey, int loops, int fadeDuration_ms)
-{
-  auto* chunk = findChunk(soundKey);
-  if(chunk == nullptr) return NULL_CHANNEL;
-  SoundChannel_t channel = Mix_FadeInChannel(-1, chunk, loops, fadeDuration_ms);
-  if(channel == -1) return onPlayError(soundKey);
-  assert(channelPlayback[channel] == nullResourceKey);
-  channelPlayback[channel] = soundKey;
-  return channel;
-}
-
-SoundChannel_t playSoundFadeInTimed(ResourceKey_t soundKey, int loops, int fadeDuration_ms, int playDuration_ms)
-{
-  auto* chunk = findChunk(soundKey);
-  if(chunk == nullptr) return NULL_CHANNEL;
-  SoundChannel_t channel = Mix_FadeInChannelTimed(-1, chunk, loops, fadeDuration_ms, playDuration_ms);
-  if(channel == -1) return onPlayError(soundKey);
-  assert(channelPlayback[channel] == nullResourceKey);
-  channelPlayback[channel] = soundKey;
-  return channel;
-}
-
-void stopChannel(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  Mix_HaltChannel(channel);
-}
-
-void stopChannelTimed(SoundChannel_t channel, int durationUntilStop_ms)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  Mix_ExpireChannel(channel, durationUntilStop_ms);
-}
-
-void stopChannelFadeOut(SoundChannel_t channel, int fadeDuration_ms)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  Mix_FadeOutChannel(channel, fadeDuration_ms);
-}
-
-void pauseChannel(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  Mix_Pause(channel);
-}
-
-void resumeChannel(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  Mix_Resume(channel);
-}
-
-bool isChannelPlaying(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return false;
-  if(channel == ALL_CHANNELS) return false;
-  assert(0 <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  return Mix_Playing(channel) == 1;
-}
-
-bool isChannelPaused(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return false;
-  if(channel == ALL_CHANNELS) return false;
-  assert(0 <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  return Mix_Paused(channel) == 1;
-}
-
-void setChannelVolume(SoundChannel_t channel, int volume)
-{
-  if(channel == NULL_CHANNEL) return;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  int vol = std::clamp(volume, MIN_VOLUME, MAX_VOLUME);
-  channelVolume[channel] = Mix_Volume(channel, vol); 
-}
-
-int getChannelVolume(SoundChannel_t channel)
-{
-  if(channel == NULL_CHANNEL) return 0;
-  assert(ALL_CHANNELS <= channel && channel <= sfxconfiguration._numMixChannels - 1);
-  return channelVolume[channel];
+  musicSequencePlayer.onUpdate(dt);
 }
 
 } // namespace sfx

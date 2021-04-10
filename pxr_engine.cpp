@@ -367,7 +367,7 @@ void Engine::onUpdateTick(float tickPeriodSeconds)
   double nowSeconds = durationToSeconds(_gameClock.getNow());
   _game->onUpdate(nowSeconds, tickPeriodSeconds);
   input::onUpdate();
-  sfx::service(tickPeriodSeconds);
+  sfx::onUpdate(tickPeriodSeconds);
 }
 
 void Engine::onDrawTick(float tickPeriodSeconds)
