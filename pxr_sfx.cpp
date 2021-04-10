@@ -490,7 +490,6 @@ void MusicSequencePlayer::onUpdate(float dt)
     default:
       break;
   }
-  std::cout << "music clock = " << _musicClock_s << std::endl;
 }
 
 void MusicSequencePlayer::play(MusicSequence_t sequence, bool loop)
