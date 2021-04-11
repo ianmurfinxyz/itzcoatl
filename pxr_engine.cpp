@@ -102,7 +102,7 @@ void Engine::initialize(std::unique_ptr<Game> game)
   log::initialize();
   input::initialize();
 
-  if(!_rc.load(EngineRC::filename))
+  if(_rc.load(EngineRC::filename) < 0)
     _rc.write(EngineRC::filename);    // generate a default rc file if one doesn't exist.
 
   if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -372,7 +372,7 @@ void Engine::onUpdateTick(float tickPeriodSeconds)
 
 void Engine::onDrawTick(float tickPeriodSeconds)
 {
-  gfx::clearWindowColor(gfx::colors::silver);
+  gfx::clearWindowColor(_clearColor);
 
   double nowSeconds = durationToSeconds(_gameClock.getNow());
   _game->onDraw(nowSeconds, tickPeriodSeconds);
