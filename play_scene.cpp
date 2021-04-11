@@ -25,29 +25,28 @@ bool PlayScene::onInit()
 
 void PlayScene::onEnter()
 {
-  _stepClock_s = 0.f;
-  _nextMoveDirection = Snake::WEST;
-  _currentMoveDirection = Snake::WEST;
-  initializeSnake();
-  initializeNuggets();
   drawBackground();
   drawForeground();
-  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE));
+  _currentState = State::NONE;
+  setNextState(State::PLAYING);
+  switchState();
 }
 
 void PlayScene::onUpdate(double now, float dt)
 {
-  handleInput();
-
-  _stepClock_s += dt;
-  if(_stepClock_s > Snake::stepPeriod_s){
-    if(collideSnakeNuggets()) growSnake();
-    stepSnake();
-    _stepClock_s = 0.f;
+  switch(_currentState){
+    case State::PLAYING:
+      onUpdatePlaying(now, dt);
+      break;
+    case State::GAME_OVER:
+      onUpdateGameOver(now, dt);
+      break;
+    default:
+      assert(0);
   }
 
-  while(_numNuggetsInWorld < Snake::maxNuggetsInWorld)
-    spawnNugget();
+  if(_nextState != _currentState)
+    switchState();
 }
 
 void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>& screens)
@@ -65,6 +64,106 @@ void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>&
 void PlayScene::onExit()
 {
   sfx::stopMusic();
+}
+
+void PlayScene::onEnterPlaying()
+{
+  _stepClock_s = 0.f;
+  _nextMoveDirection = Snake::WEST;
+  _currentMoveDirection = Snake::WEST;
+  initializeSnake();
+  initializeNuggets();
+  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE));
+}
+
+void PlayScene::onUpdatePlaying(double now, float dt)
+{
+  handlePlayingInput();
+
+  _stepClock_s += dt;
+  if(_stepClock_s > Snake::stepPeriod_s){
+    stepSnake();
+    collideSnakeNuggets();
+    collideSnakeSnake();
+    _stepClock_s = 0.f;
+  }
+
+  while(_numNuggetsInWorld < Snake::maxNuggetsInWorld)
+    spawnNugget();
+}
+
+void PlayScene::handlePlayingInput()
+{
+  bool lkey{false}, rkey{false}, ukey{false}, dkey{false};
+  if(pxr::input::isKeyPressed(Snake::moveLeftKey)) lkey = true;
+  if(pxr::input::isKeyPressed(Snake::moveRightKey)) rkey = true;
+  if(pxr::input::isKeyPressed(Snake::moveUpKey)) ukey = true;
+  if(pxr::input::isKeyPressed(Snake::moveDownKey)) dkey = true;
+  
+  int sum {lkey + rkey + ukey + dkey};
+  if(sum > 1) return;
+
+  if(lkey && _currentMoveDirection != Snake::EAST) _nextMoveDirection = Snake::WEST;
+  if(rkey && _currentMoveDirection != Snake::WEST) _nextMoveDirection = Snake::EAST;
+  if(ukey && _currentMoveDirection != Snake::SOUTH) _nextMoveDirection = Snake::NORTH;
+  if(dkey && _currentMoveDirection != Snake::NORTH) _nextMoveDirection = Snake::SOUTH;
+
+  if(pxr::input::isKeyPressed(Snake::smoothToggle)) _isSnakeSmoothMover = !_isSnakeSmoothMover;
+
+  if(pxr::input::isKeyPressed(input::KEY_a)) 
+    sfx::stopChannel(sfx::ALL_CHANNELS);
+}
+
+void PlayScene::onExitPlaying()
+{
+  sfx::stopMusic();
+}
+
+void PlayScene::onEnterGameOver()
+{
+  eatSnake();
+}
+
+void PlayScene::onUpdateGameOver(double now, float dt)
+{
+}
+
+void PlayScene::handleGameOverInput()
+{
+}
+
+void PlayScene::onExitGameOver()
+{
+}
+
+void PlayScene::setNextState(State nextState)
+{
+  _nextState = nextState;
+}
+
+void PlayScene::switchState()
+{
+  switch(_currentState){
+    case State::PLAYING:
+      onExitPlaying();
+      break;
+    case State::GAME_OVER:
+      onExitGameOver();
+      break;
+    default:
+      break;
+  }
+  switch(_nextState){
+    case State::PLAYING:
+      onEnterPlaying();
+      break;
+    case State::GAME_OVER:
+      onEnterGameOver();
+      break;
+    default:
+      assert(0);
+  }
+  _currentState = _nextState;
 }
 
 void PlayScene::initializeSnake()
@@ -86,6 +185,10 @@ void PlayScene::initializeNuggets()
 
 void PlayScene::stepSnake()
 {
+  if(_accumulatedGrowths > 0){
+    _snakeLength = std::min(_snakeLength + 1, Snake::maxSnakeLength - 1);
+    --_accumulatedGrowths; 
+  }
   for(int block {_snakeLength - 1}; block > SNAKE_HEAD_BLOCK; --block){
     _snake[block]._row = _snake[block - 1]._row;
     _snake[block]._col = _snake[block - 1]._col;
@@ -116,13 +219,12 @@ void PlayScene::stepSnake()
   }
 
   _currentMoveDirection = _nextMoveDirection;
-
   updateSnakeBlockSpriteIDs();
 }
 
 void PlayScene::growSnake()
 {
-  _snakeLength = std::min(_snakeLength + 1, Snake::maxSnakeLength - 1);
+  _accumulatedGrowths += Snake::growthsPerNugget;
 }
 
 void PlayScene::spawnNugget()
@@ -203,28 +305,6 @@ void PlayScene::spawnNugget()
   assert(spawnDone);
 }
 
-void PlayScene::handleInput()
-{
-  bool lkey{false}, rkey{false}, ukey{false}, dkey{false};
-  if(pxr::input::isKeyPressed(Snake::moveLeftKey)) lkey = true;
-  if(pxr::input::isKeyPressed(Snake::moveRightKey)) rkey = true;
-  if(pxr::input::isKeyPressed(Snake::moveUpKey)) ukey = true;
-  if(pxr::input::isKeyPressed(Snake::moveDownKey)) dkey = true;
-  
-  int sum {lkey + rkey + ukey + dkey};
-  if(sum > 1) return;
-
-  if(lkey && _currentMoveDirection != Snake::EAST) _nextMoveDirection = Snake::WEST;
-  if(rkey && _currentMoveDirection != Snake::WEST) _nextMoveDirection = Snake::EAST;
-  if(ukey && _currentMoveDirection != Snake::SOUTH) _nextMoveDirection = Snake::NORTH;
-  if(dkey && _currentMoveDirection != Snake::NORTH) _nextMoveDirection = Snake::SOUTH;
-
-  if(pxr::input::isKeyPressed(Snake::smoothToggle)) _isSnakeSmoothMover = !_isSnakeSmoothMover;
-
-  if(pxr::input::isKeyPressed(input::KEY_a)) 
-    sfx::stopChannel(sfx::ALL_CHANNELS);
-}
-
 Snake::Direction PlayScene::findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour)
 {
   int dr = self._row - neighbour._row; 
@@ -277,6 +357,23 @@ void PlayScene::updateSnakeBlockSpriteIDs()
   headDir = findNeighbourDirection(_snake[_snakeLength - 1], _snake[_snakeLength - 2]);
   _snake[_snakeLength - 1]._spriteid = Snake::snakeTailBlockTree[headDir];
   _snake[_snakeLength - 1]._currentMoveDirection = headDir;
+
+  if(_isSnakeSmoothMover)
+    updateSmoothSnakeBlockSpriteIDs();
+}
+
+void PlayScene::updateSmoothSnakeBlockSpriteIDs()
+{
+  for(int block {SNAKE_HEAD_BLOCK}; block < _snakeLength - 1; ++block){
+    gfx::SpriteID_t spriteid;
+    if(block == SNAKE_HEAD_BLOCK)
+      spriteid = Snake::smoothSnakeHeadBlockTree[_snake[block]._currentMoveDirection];
+    else if(block == _snakeLength - 1)
+      spriteid = Snake::snakeTailBlockTree[_snake[block]._currentMoveDirection];
+    else
+      spriteid = Snake::smoothSnakeBodyBlockTree[_snake[block]._currentMoveDirection];
+    _snake[block]._spriteid = spriteid;
+  }
 }
 
 bool PlayScene::collideSnakeNuggets()
@@ -287,6 +384,23 @@ bool PlayScene::collideSnakeNuggets()
                      _snake[SNAKE_HEAD_BLOCK]._col == nugget._col;
     if(collision){ 
       eatNugget(nugget);
+      growSnake();
+      return true;
+    }
+  }
+  return false;
+}
+
+bool PlayScene::collideSnakeSnake()
+{
+  int headRow {_snake[SNAKE_HEAD_BLOCK]._row};
+  int headCol {_snake[SNAKE_HEAD_BLOCK]._col};
+  for(int block{SNAKE_HEAD_BLOCK + 1}; block < _snakeLength; ++block){
+    bool collision = headRow == _snake[block]._row &&
+                     headCol == _snake[block]._col;
+    if(collision){
+      _snakeBlockEaten = block;
+      setNextState(State::GAME_OVER);
       return true;
     }
   }
@@ -300,6 +414,16 @@ void PlayScene::eatNugget(Nugget& nugget)
   nugget._isAlive = false;
   --_numNuggetsInWorld;
   sfx::SoundChannel_t channel = sfx::playSound(_sk->getSoundEffectKey(Snake::SFX_SCORE_BEEP));
+}
+
+void PlayScene::eatSnake()
+{
+  assert(SNAKE_HEAD_BLOCK < _snakeBlockEaten && _snakeBlockEaten < _snakeLength);
+  _snake[_snakeBlockEaten]._spriteid = Snake::SID_EMPTY_BLOCK;
+  if(_snakeBlockEaten - 1 > SNAKE_HEAD_BLOCK)
+    _snake[_snakeBlockEaten - 1]._spriteid = Snake::SID_BLOOD_BLOCK;
+  if(_snakeBlockEaten + 1 < _snakeLength)
+    _snake[_snakeBlockEaten + 1]._spriteid = Snake::SID_BLOOD_BLOCK;
 }
 
 void PlayScene::drawBackground()
@@ -346,14 +470,6 @@ void PlayScene::drawSmoothSnake(gfx::ScreenID_t screenid)
       Snake::boardPosition._y + (_snake[block]._row * Snake::blockSize_rx)
     };
 
-    gfx::SpriteID_t spriteid;
-    if(block == SNAKE_HEAD_BLOCK)
-      spriteid = Snake::smoothSnakeHeadBlockTree[_snake[block]._currentMoveDirection];
-    else if(block == _snakeLength - 1)
-      spriteid = Snake::snakeTailBlockTree[_snake[block]._currentMoveDirection];
-    else
-      spriteid = Snake::smoothSnakeBodyBlockTree[_snake[block]._currentMoveDirection];
-
     float t = _stepClock_s / Snake::stepPeriod_s;
     float limit = static_cast<float>(Snake::blockSize_rx) - 1.f;
     switch(_snake[block]._currentMoveDirection){
@@ -376,7 +492,7 @@ void PlayScene::drawSmoothSnake(gfx::ScreenID_t screenid)
     gfx::drawSprite(
       position,
       _sk->getSpritesheetKey(Snake::SSID_SNAKES),
-      spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
+      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
       screenid
     );
   }

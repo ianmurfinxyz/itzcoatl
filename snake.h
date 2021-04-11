@@ -61,6 +61,7 @@ public:
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
 
   static constexpr int      maxNuggetsInWorld  {5};
+  static constexpr int      growthsPerNugget   {5};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
@@ -185,9 +186,10 @@ public:
     SID_SOUTHWARD_TONGUE = 17,
 
     //
-    // BLOOD BLOCK
+    // MISCELLANEOUS blocks
     //
-    SID_BLOOD_BLOCK = 18
+    SID_BLOOD_BLOCK = 18,
+    SID_EMPTY_BLOCK = 19
   };
 
   //

@@ -23,6 +23,8 @@ public:
   std::string getName() const {return name;}
 
 private:
+  enum class State { PLAYING, GAME_OVER, NONE };
+
   struct SnakeBlock
   {
     gfx::SpriteID_t _spriteid;
@@ -42,16 +44,29 @@ private:
   };
 
 private:
+  void onEnterPlaying();
+  void onUpdatePlaying(double now, float dt);
+  void handlePlayingInput();
+  void onExitPlaying();
+  void onEnterGameOver();
+  void onUpdateGameOver(double now, float dt);
+  void handleGameOverInput();
+  void onExitGameOver();
+  void setNextState(State nextState);
+  void switchState();
+
   void initializeSnake();
   void initializeNuggets();
   void stepSnake();
   void growSnake();
   void spawnNugget();
-  void handleInput();
   Snake::Direction findNeighbourDirection(const SnakeBlock& self, const SnakeBlock& neighbour);
   void updateSnakeBlockSpriteIDs();
+  void updateSmoothSnakeBlockSpriteIDs();
   bool collideSnakeNuggets();
+  bool collideSnakeSnake();
   void eatNugget(Nugget& nugget);
+  void eatSnake();
   void animateTongue(){}
   void drawBackground();
   void drawForeground();
@@ -61,11 +76,16 @@ private:
   void drawNuggets(gfx::ScreenID_t screenid);
 
 private:
+  State _currentState;
+  State _nextState;
+
   Snake* _sk;
 
   static constexpr int SNAKE_HEAD_BLOCK {0};
   std::array<SnakeBlock, Snake::maxSnakeLength> _snake;
   int _snakeLength;
+  int _snakeBlockEaten;
+  int _accumulatedGrowths;
   Snake::Direction _nextMoveDirection;
   Snake::Direction _currentMoveDirection;
   bool _isSnakeSmoothMover;
