@@ -22,7 +22,7 @@ class HUD
 public:
   using uid_t = uint32_t;
 
-  static constexpr float immortalLifetime {0.f};
+  static constexpr float IMMORTAL_LIFETIME {0.f};
 
   class Label
   {
@@ -120,6 +120,9 @@ public:
     void onReset();
     void onUpdate(float dt);
     void onDraw(gfx::ScreenID_t screenid);
+
+  private:
+    void composeDisplayStr();
 
   private:
     gfx::ResourceKey_t _fontKey;

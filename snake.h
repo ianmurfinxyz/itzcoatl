@@ -72,7 +72,7 @@ public:
   static constexpr float    scorePopupLifetime_s {1.f};
   static constexpr float    scorePopupOffset     {blockSize_rx * 2};
 
-  static constexpr gfx::Color4u scorePopupColor   {gfx::colors::black};
+  static constexpr gfx::Color4u scorePopupColor   {127, 52, 0, 255};//{gfx::colors::black};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
@@ -556,6 +556,8 @@ public:
 
   void addScore(int score) {_score += score;}
   int getScore() const {return _score;}
+  int& getScoreReference() {return _score;}
+  int& getNuggetsEatenReference(NuggetClassID classID){return _nuggetsEaten[classID];}
   int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
   int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
 

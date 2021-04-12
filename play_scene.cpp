@@ -29,6 +29,7 @@ void PlayScene::onEnter()
   drawBackground();
   drawForeground();
   _currentState = State::NONE;
+  populateHUD();
   setNextState(State::PLAYING);
   switchState();
 }
@@ -79,6 +80,7 @@ void PlayScene::onEnterPlaying()
   _quickNuggetClock_s = 0.f;
   _quickNuggetCombo = 0;
   _sameNuggetCombo = 0;
+  _currentQuickNuggetBonusAsInt = 0;
 
   //
   // This will allow the gold same nugget bonus to be earned with 1 less nugget upon first
@@ -104,6 +106,9 @@ void PlayScene::onUpdatePlaying(double now, float dt)
     collideSnakeSnake();
     _stepClock_s = 0.f;
   }
+
+  if(_quickNuggetClock_s < 0.f) 
+    _currentQuickNuggetBonusAsInt = 0;
 
   while(_numNuggetsInWorld < Snake::maxNuggetsInWorld)
     spawnNugget();
@@ -198,6 +203,79 @@ void PlayScene::initializeNuggets()
   _numNuggetsInWorld = 0;
   for(auto& nugget : _nuggets)
     nugget._isAlive = false;
+}
+
+void PlayScene::populateHUD()
+{
+  _uidLabels[LID_SCORE] = _hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{33, 182},
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    std::string{"SCORE"},
+    false,
+    _sk->getFontKey(Snake::FID_UTO)
+  ));
+  _uidLabels[LID_SCORE_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
+    Vector2i{66, 182},
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    _sk->getScoreReference(),
+    5,
+    _sk->getFontKey(Snake::FID_UTO)
+  ));
+
+  int sid = Snake::NuggetSpriteID::SID_NUGGET_GOLD;
+  int cid = Snake::NuggetClassID::NUGGET_GOLD;
+  int lid = LID_GOLD_SPRITE;
+  for(int i{0}; i < Snake::nuggetClassCount; ++i){
+    Vector2i position {
+      14 + (25 * i),
+      173
+    };
+    _uidLabels[lid] = _hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+      position,
+      Snake::scorePopupColor,
+      0.f,
+      HUD::IMMORTAL_LIFETIME,
+      _sk->getSpritesheetKey(Snake::SSID_NUGGETS),
+      sid
+    ));
+    position._x += 5; 
+    position._y -= 2;
+    _uidLabels[lid + 1] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
+      position,
+      Snake::scorePopupColor,
+      0.f,
+      HUD::IMMORTAL_LIFETIME,
+      _sk->getNuggetsEatenReference(static_cast<Snake::NuggetClassID>(cid)),
+      3,
+      _sk->getFontKey(Snake::FID_UTO)
+    ));
+    ++sid;
+    ++cid;
+    lid += 2;
+  }
+
+  _uidLabels[LID_QUICK_BONUS] = _hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{142, 182},
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    std::string{"+    %"},
+    false,
+    _sk->getFontKey(Snake::FID_UTO)
+  ));
+  _uidLabels[LID_QUICK_BONUS_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
+    Vector2i{150, 182},
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    _currentQuickNuggetBonusAsInt,
+    3,
+    _sk->getFontKey(Snake::FID_UTO)
+  ));
 }
 
 void PlayScene::stepSnake()
@@ -449,6 +527,7 @@ int PlayScene::applyScoreBonuses(const Nugget& eaten)
     _quickNuggetCombo = 0;
   }
   _quickNuggetClock_s = Snake::quickNuggetCooldown_s;
+  _currentQuickNuggetBonusAsInt = (quickNuggetBonus - 1.f) * 100;
 
   const auto& nc = Snake::nuggetClasses[eaten._classID];
   return nc._score * sameNuggetBonus * quickNuggetBonus;

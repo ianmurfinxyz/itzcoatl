@@ -128,8 +128,11 @@ HUD::IntLabel::IntLabel(
   Label(position, color, activationDelay, lifetime),
   _fontKey{fontKey},
   _sourceValue{sourceValue},
+  _displayValue{sourceValue},
   _precision{precision}
-{}
+{
+  composeDisplayStr();
+}
 
 void HUD::IntLabel::onReset()
 {
@@ -143,18 +146,7 @@ void HUD::IntLabel::onUpdate(float dt)
   if(!_isActive) return;
 
   if(_displayValue != _sourceValue){
-    std::string valueStr = std::to_string(_sourceValue);
-    _displayStr.clear();
-    int sign{0};
-    if(_sourceValue < 0){
-      assert(valueStr.front() == '-');
-      sign = 1;
-      _displayStr += '-';
-    }
-    for(int i{0}; i < _precision - (valueStr.length() - sign); ++i){
-      _displayStr += '0';
-    }
-    _displayStr.append(valueStr.begin() + sign, valueStr.end());
+    composeDisplayStr();
     _displayValue = _sourceValue;
   }
 }
@@ -163,6 +155,22 @@ void HUD::IntLabel::onDraw(gfx::ScreenID_t screenid)
 {
   if(_isActive && !_isHidden && _flashState)
     gfx::drawText(_position, _displayStr, _fontKey, _color, screenid);
+}
+
+void HUD::IntLabel::composeDisplayStr()
+{
+  std::string valueStr = std::to_string(_sourceValue);
+  _displayStr.clear();
+  int sign{0};
+  if(_sourceValue < 0){
+    assert(valueStr.front() == '-');
+    sign = 1;
+    _displayStr += '-';
+  }
+  for(int i{0}; i < _precision - (valueStr.length() - sign); ++i){
+    _displayStr += '0';
+  }
+  _displayStr.append(valueStr.begin() + sign, valueStr.end());
 }
 
 HUD::BitmapLabel::BitmapLabel(

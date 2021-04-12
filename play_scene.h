@@ -57,6 +57,8 @@ private:
 
   void initializeSnake();
   void initializeNuggets();
+  void populateHUD();
+  void clearHUD();
   void stepSnake();
   void growSnake();
   void spawnNugget();
@@ -78,11 +80,37 @@ private:
   void drawNuggets(gfx::ScreenID_t screenid);
 
 private:
+
+  enum LabelID
+  {
+    LID_SCORE,
+    LID_SCORE_VALUE,
+    LID_GOLD_SPRITE,
+    LID_GOLD_COUNT,
+    LID_SILVER_SPRITE,
+    LID_SILVER_COUNT,
+    LID_OBSIDIAN_SPRITE,
+    LID_OBSIDIAN_COUNT,
+    LID_RUBY_SPRITE,
+    LID_RUBY_COUNT,
+    LID_JADE_SPRITE,
+    LID_JADE_COUNT,
+    LID_LAPIS_SPRITE,
+    LID_LAPIS_COUNT,
+    LID_AMETHYST_SPRITE,
+    LID_AMETHYST_COUNT,
+    LID_QUICK_BONUS,
+    LID_QUICK_BONUS_VALUE,
+    LID_COUNT
+  };
+
+  HUD* _hud;
+  std::array<HUD::uid_t, LID_COUNT> _uidLabels;
+
   State _currentState;
   State _nextState;
 
   Snake* _sk;
-  HUD* _hud;
 
   static constexpr int SNAKE_HEAD_BLOCK {0};
   std::array<SnakeBlock, Snake::maxSnakeLength> _snake;
@@ -98,6 +126,7 @@ private:
 
   float _stepClock_s;
   float _quickNuggetClock_s;
+  int _currentQuickNuggetBonusAsInt;      // used to provide the bonus value or the HUD.
   int _quickNuggetCombo;                  // the number of nuggets eaten in quick succession.
   int _sameNuggetCombo;                   // the number of the same nugget eaten in sequence.
   Snake::NuggetClassID _lastNuggetEaten;
