@@ -80,6 +80,7 @@ private:
   State _nextState;
 
   Snake* _sk;
+  HUD* _hud;
 
   static constexpr int SNAKE_HEAD_BLOCK {0};
   std::array<SnakeBlock, Snake::maxSnakeLength> _snake;

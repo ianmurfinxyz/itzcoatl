@@ -158,7 +158,7 @@ public:
   };
 
 public:
-  HUD(gfx::ResourceKey_t fontKey, float flashPeriod, float phaseInPeriod);
+  HUD(float flashPeriod, float phaseInPeriod);
 
   void onReset();
   void onUpdate(float dt);
@@ -183,7 +183,6 @@ private:
 
 private:
   std::vector<std::unique_ptr<Label>> _labels;
-  gfx::ResourceKey_t _fontKey;
   uid_t _nextUid;
   long _flashNo;
   long _phaseInNo;

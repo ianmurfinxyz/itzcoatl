@@ -13,9 +13,12 @@ bool Snake::onInit()
     _screens.push_back(gfx::createScreen(worldSize_rx));
 
   loadSpritesheets();
+  loadFonts();
   loadSoundEffects();
   loadMusicLoops();
-  _snakeHero = ITZCOATL;
+  _snakeHero = MONTEZUMA;
+
+  _hud = new HUD(hudFlashPeriod, hudPhaseInPeriod);
 
  _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
   if(!_activeScene->onInit()) return false;
@@ -29,10 +32,10 @@ void Snake::onShutdown()
 {
 }
 
-sfx::ResourceKey_t Snake::getSoundEffectKey(SoundEffectID sfxid)
+sfx::ResourceKey_t Snake::getSoundEffectKey(SoundEffectID sfxID)
 {
-  assert(0 <= sfxid && sfxid < SFX_COUNT);
-  return _soundEffectKeys[sfxid];
+  assert(0 <= sfxID && sfxID < SFX_COUNT);
+  return _soundEffectKeys[sfxID];
 }
 
 sfx::ResourceKey_t Snake::getMusicLoopKey(MusicLoopID musicID)
@@ -41,10 +44,16 @@ sfx::ResourceKey_t Snake::getMusicLoopKey(MusicLoopID musicID)
   return _musicLoopKeys[musicID];
 }
 
-gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetid)
+gfx::ResourceKey_t Snake::getSpritesheetKey(SpritesheetID sheetID)
 {
-  assert(0 <= sheetid && sheetid < SSID_COUNT);
-  return _spritesheetKeys[sheetid];
+  assert(0 <= sheetID && sheetID < SSID_COUNT);
+  return _spritesheetKeys[sheetID];
+}
+
+gfx::ResourceKey_t Snake::getFontKey(FontID fontID)
+{
+  assert(0 <= fontID && fontID < FID_COUNT);
+  return _fontKeys[fontID];
 }
 
 gfx::ScreenID_t Snake::getScreenID(GFXScreenName screenName)
@@ -72,6 +81,12 @@ void Snake::loadSpritesheets()
 {
   for(int ssid {0}; ssid < SSID_COUNT; ++ssid)
     _spritesheetKeys[ssid] = gfx::loadSpritesheet(spritesheetNames[ssid]);
+}
+
+void Snake::loadFonts()
+{
+  for(int fid{0}; fid < FID_COUNT; ++fid)
+    _fontKeys[fid] = gfx::loadFont(fontNames[fid]);
 }
 
 void Snake::loadSoundEffects()

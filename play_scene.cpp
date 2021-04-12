@@ -14,12 +14,13 @@ PlayScene::PlayScene(pxr::Game* owner) :
   _nextMoveDirection{Snake::WEST},
   _currentMoveDirection{Snake::WEST},
   _stepClock_s{0.f},
-  _isSnakeSmoothMover{true}
+  _isSnakeSmoothMover{false}
 {}
 
 bool PlayScene::onInit()
 {
   _sk = static_cast<Snake*>(_owner);
+  _hud = _sk->getHUD();
   return true;
 }
 
@@ -45,6 +46,8 @@ void PlayScene::onUpdate(double now, float dt)
       assert(0);
   }
 
+  _hud->onUpdate(dt);
+
   if(_nextState != _currentState)
     switchState();
 }
@@ -59,6 +62,8 @@ void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>&
     drawSmoothSnake(screens[Snake::SCREEN_STAGE]);
   else
     drawSnake(screens[Snake::SCREEN_STAGE]);
+
+  _hud->onDraw(screens[Snake::SCREEN_STAGE]);
 }
 
 void PlayScene::onExit()
@@ -450,8 +455,25 @@ void PlayScene::eatNugget(Nugget& nugget)
 
   int score = nc._score * sameNuggetBonus * quickNuggetBonus;
 
+  Vector2i popupPosition {
+    Snake::boardPosition._x + (nugget._col * Snake::blockSize_rx),
+    Snake::boardPosition._y + (nugget._row * Snake::blockSize_rx)
+  };
+  if(nugget._col > (Snake::boardSize._x / 2)) popupPosition._x -= Snake::blockSize_rx;
+  else                                        popupPosition._x += Snake::blockSize_rx;
+  if(nugget._row > (Snake::boardSize._y / 2)) popupPosition._y -= 2 * Snake::blockSize_rx;
+  else                                        popupPosition._y += 2 * Snake::blockSize_rx;
+  _hud->addLabel(std::make_unique<HUD::TextLabel>(
+    popupPosition,
+    Snake::scorePopupColor,
+    0.f,
+    Snake::scorePopupLifetime_s,
+    std::to_string(score),
+    false,
+    _sk->getFontKey(Snake::FID_UTO)
+  ));
+
   _sk->addScore(score);
-  // TODO HUD popup showing score earned
   _sk->addNuggetEaten(nugget._classID, 1);
   nugget._isAlive = false;
   --_numNuggetsInWorld;

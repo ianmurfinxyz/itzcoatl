@@ -24,6 +24,7 @@
 #include "pxr_sfx.h"
 #include "pxr_vec.h"
 #include "pxr_input.h"
+#include "pxr_hud.h"
 
 using namespace pxr;
 
@@ -63,8 +64,14 @@ public:
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
 
-  static constexpr int      maxNuggetsInWorld  {5};
-  static constexpr int      growthsPerNugget   {5};
+  static constexpr int      maxNuggetsInWorld    {5};
+  static constexpr int      growthsPerNugget     {5};
+
+  static constexpr float    hudFlashPeriod       {1.f};
+  static constexpr float    hudPhaseInPeriod     {0.5f};
+  static constexpr float    scorePopupLifetime_s {1.f};
+
+  static constexpr gfx::Color4u scorePopupColor   {gfx::colors::black};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
@@ -76,6 +83,20 @@ public:
   static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN };
 
   static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s    };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+  // FONTS
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  enum FontID
+  {
+    FID_UTO, 
+    FID_COUNT
+  };
+
+  static constexpr std::array<gfx::ResourceName_t, FID_COUNT> fontNames {{
+    "uto"
+  }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // SNAKE BLOCKS 
@@ -522,9 +543,10 @@ public:
   int getVersionMajor() const {return versionMajor;}
   int getVersionMinor() const {return versionMinor;}
 
+  gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
+  gfx::ResourceKey_t getFontKey(FontID fontID);
   sfx::ResourceKey_t getSoundEffectKey(SoundEffectID sfxID);
   sfx::ResourceKey_t getMusicLoopKey(MusicLoopID sfxID);
-  gfx::ResourceKey_t getSpritesheetKey(SpritesheetID sheetID);
   gfx::ScreenID_t getScreenID(GFXScreenName screenName);
 
   sfx::MusicSequence_t getMusicSequence(MusicSequenceID sequenceID);
@@ -536,13 +558,19 @@ public:
   int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
   int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
 
+  HUD* getHUD() {return _hud;}
+
 private:
   void loadSpritesheets();
+  void loadFonts();
   void loadSoundEffects();
   void loadMusicLoops();
 
 private:
+  HUD* _hud;
+
   std::array<gfx::ResourceKey_t, SSID_COUNT> _spritesheetKeys;
+  std::array<gfx::ResourceKey_t, FID_COUNT> _fontKeys;
   std::array<sfx::ResourceKey_t, SFX_COUNT> _soundEffectKeys;
   std::array<sfx::ResourceKey_t, MUSIC_COUNT> _musicLoopKeys;
 

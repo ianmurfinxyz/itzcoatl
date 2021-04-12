@@ -18,7 +18,7 @@ HUD::Label::Label(
   _activationClock{0.f},
   _age{0.f},
   _lifetime{std::max(0.f, lifetime)},
-  _flashState{false},
+  _flashState{true},
   _isActive{_activationDelay == 0.f},
   _isHidden{false},
   _isFlashing{false},
@@ -61,6 +61,7 @@ void HUD::Label::startFlashing()
 void HUD::Label::stopFlashing()
 {
   _isFlashing = false;
+  _flashState = true;
 }
 
 void HUD::Label::initialize(const HUD* owner, uid_t uid)
@@ -81,7 +82,7 @@ HUD::TextLabel::TextLabel(
   Label(position, color, activationDelay, lifetime),
   _fontKey{fontKey},
   _fullText{text},
-  _visibleText{phaseIn ? text : std::string{}},
+  _visibleText{phaseIn ? std::string{} : text},
   _nextCharToShow{0},
   _isPhasingIn{phaseIn}
 {}
@@ -197,9 +198,8 @@ void HUD::BitmapLabel::onDraw(gfx::ScreenID_t screenid)
     gfx::drawSprite(_position, _sheetKey, _spriteid, screenid, _mirrorX, _mirrorY);
 }
 
-HUD::HUD(gfx::ResourceKey_t fontKey, float flashPeriod, float phaseInPeriod) :
+HUD::HUD(float flashPeriod, float phaseInPeriod) :
   _labels{},
-  _fontKey{fontKey},
   _nextUid{0},
   _flashNo{0},
   _phaseInNo{0},

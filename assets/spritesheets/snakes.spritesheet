@@ -24,6 +24,8 @@
   <sprite x="60" y="0" w="4" h="4" ox="0" oy="0"/>
   <sprite x="64" y="0" w="4" h="4" ox="0" oy="0"/>
   <sprite x="68" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="0" w="4" h="4" ox="0" oy="0"/>
 
   <!-- snake: Itzcoatl (Obsidian Serpent) -->
   <sprite x="0"  y="4" w="4" h="4" ox="0" oy="0"/>
@@ -44,11 +46,7 @@
   <sprite x="60" y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="64" y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="68" y="4" w="4" h="4" ox="0" oy="0"/>
-
-  <!-- blood block -->
-  <sprite x="0" y="60" w="4" h="4" ox="0" oy="0"/>
-
-  <!-- empty block -->
-  <sprite x="4" y="60" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="4" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="4" w="4" h="4" ox="0" oy="0"/>
 
 </spritesheet>
