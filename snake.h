@@ -93,12 +93,12 @@ public:
 
   enum FontID
   {
-    FID_UTO, 
+    FID_KONGTEXT, 
     FID_COUNT
   };
 
   static constexpr std::array<gfx::ResourceName_t, FID_COUNT> fontNames {{
-    "uto"
+    "kongtext"
   }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////

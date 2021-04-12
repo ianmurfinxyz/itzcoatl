@@ -206,13 +206,13 @@ void PlayScene::initializeNuggets()
 void PlayScene::populateHUD()
 {
   _uidLabels[LID_SCORE] = _hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{33, 182},
+    Vector2i{24, 182},
     Snake::scorePopupColor,
     0.f,
     HUD::IMMORTAL_LIFETIME,
     std::string{"SCORE"},
     false,
-    _sk->getFontKey(Snake::FID_UTO)
+    _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
   _uidLabels[LID_SCORE_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
     Vector2i{66, 182},
@@ -221,7 +221,7 @@ void PlayScene::populateHUD()
     HUD::IMMORTAL_LIFETIME,
     _sk->getScoreReference(),
     5,
-    _sk->getFontKey(Snake::FID_UTO)
+    _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
 
   int sid = Snake::NuggetSpriteID::SID_NUGGET_GOLD;
@@ -229,7 +229,7 @@ void PlayScene::populateHUD()
   int lid = LID_GOLD_SPRITE;
   for(int i{0}; i < Snake::nuggetClassCount; ++i){
     Vector2i position {
-      14 + (25 * i),
+      6 + (27 * i),
       173
     };
     _uidLabels[lid] = _hud->addLabel(std::make_unique<HUD::BitmapLabel>(
@@ -249,7 +249,7 @@ void PlayScene::populateHUD()
       HUD::IMMORTAL_LIFETIME,
       _sk->getNuggetsEatenReference(static_cast<Snake::NuggetClassID>(cid)),
       3,
-      _sk->getFontKey(Snake::FID_UTO)
+      _sk->getFontKey(Snake::FID_KONGTEXT)
     ));
     ++sid;
     ++cid;
@@ -263,7 +263,7 @@ void PlayScene::populateHUD()
     HUD::IMMORTAL_LIFETIME,
     std::string{"+    %"},
     false,
-    _sk->getFontKey(Snake::FID_UTO)
+    _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
   _uidLabels[LID_QUICK_BONUS_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
     Vector2i{150, 182},
@@ -272,7 +272,7 @@ void PlayScene::populateHUD()
     HUD::IMMORTAL_LIFETIME,
     _currentQuickNuggetBonusAsInt,
     3,
-    _sk->getFontKey(Snake::FID_UTO)
+    _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
 
   updateQuickBar(0, false);
@@ -582,7 +582,7 @@ void PlayScene::spawnNuggetScorePopup(const Nugget& eaten, int score)
     Snake::scorePopupLifetime_s,
     std::to_string(score),
     false,
-    _sk->getFontKey(Snake::FID_UTO)
+    _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
 }
 
