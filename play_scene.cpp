@@ -47,6 +47,7 @@ void PlayScene::onUpdate(double now, float dt)
       assert(0);
   }
 
+  updateQuickBonusHUD();
   _hud->onUpdate(dt);
 
   if(_nextState != _currentState)
@@ -106,9 +107,6 @@ void PlayScene::onUpdatePlaying(double now, float dt)
     collideSnakeSnake();
     _stepClock_s = 0.f;
   }
-
-  if(_quickNuggetClock_s < 0.f) 
-    _currentQuickNuggetBonusAsInt = 0;
 
   while(_numNuggetsInWorld < Snake::maxNuggetsInWorld)
     spawnNugget();
@@ -276,6 +274,8 @@ void PlayScene::populateHUD()
     3,
     _sk->getFontKey(Snake::FID_UTO)
   ));
+
+  updateQuickBar(0, false);
 }
 
 void PlayScene::stepSnake()
@@ -500,6 +500,38 @@ bool PlayScene::collideSnakeSnake()
     }
   }
   return false;
+}
+
+void PlayScene::updateQuickBar(int quickBarState, bool removeFirst)
+{
+  if(removeFirst)
+    _hud->removeLabel(_uidLabels[LID_QUICKBAR]);
+
+  _uidLabels[LID_QUICKBAR] = _hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+    Vector2i{110, 183},
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    _sk->getSpritesheetKey(Snake::SSID_QUICKBAR),
+    quickBarState
+  ));
+
+  _currentQuickBarState = quickBarState;
+}
+
+void PlayScene::updateQuickBonusHUD()
+{
+  int quickBarState;
+  if(_quickNuggetClock_s < 0.f){
+    _currentQuickNuggetBonusAsInt = 0;
+    quickBarState = 0;
+  }
+  else{
+    quickBarState = std::ceil(_quickNuggetClock_s / Snake::quickBarStateTimeDelta_s);
+    assert(1 <= quickBarState && quickBarState < Snake::numQuickBarStates);
+  }
+  if(quickBarState != _currentQuickBarState)
+    updateQuickBar(quickBarState);
 }
 
 int PlayScene::applyScoreBonuses(const Nugget& eaten)

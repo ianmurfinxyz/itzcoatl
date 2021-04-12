@@ -64,13 +64,15 @@ public:
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
 
-  static constexpr int      maxNuggetsInWorld    {5};
-  static constexpr int      growthsPerNugget     {5};
+  static constexpr int      maxNuggetsInWorld  {5};
+  static constexpr int      growthsPerNugget   {5};
 
-  static constexpr float    hudFlashPeriod       {1.f};
-  static constexpr float    hudPhaseInPeriod     {0.5f};
-  static constexpr float    scorePopupLifetime_s {1.f};
-  static constexpr float    scorePopupOffset     {blockSize_rx * 2};
+  static constexpr float    hudFlashPeriod           {1.f};
+  static constexpr float    hudPhaseInPeriod         {0.5f};
+  static constexpr float    scorePopupLifetime_s     {1.f};
+  static constexpr float    scorePopupOffset         {blockSize_rx * 2};
+  static constexpr int      numQuickBarStates        {11};
+  static constexpr float    quickBarStateTimeDelta_s {quickNuggetCooldown_s / (numQuickBarStates - 1)};
 
   static constexpr gfx::Color4u scorePopupColor   {127, 52, 0, 255};//{gfx::colors::black};
 
@@ -348,6 +350,7 @@ public:
     SSID_NUGGETS,
     SSID_BACKGROUND,
     SSID_FOREGROUND,
+    SSID_QUICKBAR,
     SSID_COUNT
   };
 
@@ -355,7 +358,8 @@ public:
     "snakes",
     "nuggets",
     "background",
-    "foreground"
+    "foreground",
+    "quickbar"
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
