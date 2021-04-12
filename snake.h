@@ -47,15 +47,18 @@ public:
     (worldSize_rx._x - (boardSize._x * blockSize_rx)) / 2
   };
 
-  static constexpr int      boardMarginLoX     {boardPosition._x};
-  static constexpr int      boardMarginHiX     {boardPosition._x + (boardSize._x * blockSize_rx)};
-  static constexpr int      boardMarginLoY     {boardPosition._y};
-  static constexpr int      boardMarginHiY     {boardPosition._y + (boardSize._y * blockSize_rx)};
+  static constexpr int      boardMarginLoX   {boardPosition._x};
+  static constexpr int      boardMarginHiX   {boardPosition._x + (boardSize._x * blockSize_rx)};
+  static constexpr int      boardMarginLoY   {boardPosition._y};
+  static constexpr int      boardMarginHiY   {boardPosition._y + (boardSize._y * blockSize_rx)};
 
-  static constexpr int      maxSnakeLength     {400};
-  static constexpr int      babySnakeLength    {6};
-  static constexpr float    stepFrequency_hz   {10.f};
-  static constexpr float    stepPeriod_s       {1.f / stepFrequency_hz};
+  static constexpr int      maxSnakeLength         {400};
+  static constexpr int      babySnakeLength        {6};
+  static constexpr float    stepFrequency_hz       {10.f};
+  static constexpr float    stepPeriod_s           {1.f / stepFrequency_hz};
+  static constexpr float    quickNuggetCooldown_s  {5.f};
+  static constexpr int      sameNuggetComboBonus   {2}; 
+  static constexpr int      numSameNuggetsForBonus {3};
 
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
@@ -459,6 +462,40 @@ public:
   }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
+  // SCORE BONUS TABLE
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //
+  // Score bonuses are percentage gains earned by eating nuggets in quick succession. This table
+  // maps the number of nuggets you must eat in quick succession to earn specific score bonuses.
+  //
+  // Each element number in the table corresponds to the number of nuggets plus one you must eat 
+  // to earn the percentage gain stored in that element. So index 0 stores the percentage gain 
+  // for eating 1 nuggets in quick succession, i.e. eating a nugget and then a second nugget 
+  // quickly afterwards (the first in quick succession).
+  //
+  // The percentages in the table are the percentages of the base score earned added to the base
+  // score, so if the base score is 10, and you get a percentage gain of 2.5f == 250% then you
+  // get a score of 10 + (2.5 * 10) = 35.
+  //
+
+  static constexpr int quickNuggetBonusCount {9};
+  static constexpr std::array<float, quickNuggetBonusCount> quickNuggetBonusTable {{
+  //----------------------------------------------------------------------------------------------
+  // bonus
+  //----------------------------------------------------------------------------------------------
+    { 0.1f },
+    { 0.2f },
+    { 0.3f },
+    { 0.5f },
+    { 0.7f },
+    { 1.0f },
+    { 1.4f },
+    { 1.9f },
+    { 2.5f }
+  }};
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   // GFX SCREENS       
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -496,6 +533,8 @@ public:
 
   void addScore(int score) {_score += score;}
   int getScore() const {return _score;}
+  int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
+  int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
 
 private:
   void loadSpritesheets();
@@ -508,7 +547,9 @@ private:
   std::array<sfx::ResourceKey_t, MUSIC_COUNT> _musicLoopKeys;
 
   SnakeHero _snakeHero;
+
   int _score;
+  int _nuggetsEaten[nuggetClassCount];
 };
 
 #endif

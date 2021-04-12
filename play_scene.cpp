@@ -68,9 +68,19 @@ void PlayScene::onExit()
 
 void PlayScene::onEnterPlaying()
 {
-  _stepClock_s = 0.f;
   _nextMoveDirection = Snake::WEST;
   _currentMoveDirection = Snake::WEST;
+  _stepClock_s = 0.f;
+  _quickNuggetClock_s = 0.f;
+  _quickNuggetCombo = 0;
+  _sameNuggetCombo = 0;
+
+  //
+  // This will allow the gold same nugget bonus to be earned with 1 less nugget upon first
+  // entering play state. I will leave this as an easter egg :)
+  //
+  _lastNuggetEaten = Snake::NUGGET_GOLD;
+
   initializeSnake();
   initializeNuggets();
   sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE));
@@ -79,6 +89,8 @@ void PlayScene::onEnterPlaying()
 void PlayScene::onUpdatePlaying(double now, float dt)
 {
   handlePlayingInput();
+
+  _quickNuggetClock_s -= dt;
 
   _stepClock_s += dt;
   if(_stepClock_s > Snake::stepPeriod_s){
@@ -410,7 +422,37 @@ bool PlayScene::collideSnakeSnake()
 void PlayScene::eatNugget(Nugget& nugget)
 {
   const auto& nc = Snake::nuggetClasses[nugget._classID];
-  _sk->addScore(nc._score);
+
+  int sameNuggetBonus {1};
+  if(nugget._classID == _lastNuggetEaten){ 
+    ++_sameNuggetCombo; 
+    if(_sameNuggetCombo >= Snake::numSameNuggetsForBonus){
+      _sameNuggetCombo = 1;
+      sameNuggetBonus = Snake::sameNuggetComboBonus;
+      // TODO INSERT SOUND
+    }
+  }
+  else {
+    _sameNuggetCombo = 1;
+    _lastNuggetEaten = nugget._classID;
+  }
+
+  float quickNuggetBonus {1.f};
+  if(_quickNuggetClock_s > 0.f){
+    assert(0 <= _quickNuggetCombo && _quickNuggetCombo < Snake::quickNuggetBonusCount);
+    quickNuggetBonus += Snake::quickNuggetBonusTable[_quickNuggetCombo];
+    _quickNuggetCombo = std::clamp(_quickNuggetCombo + 1, 0, Snake::quickNuggetBonusCount - 1);
+  }
+  else{
+    _quickNuggetCombo = 0;
+  }
+  _quickNuggetClock_s = Snake::quickNuggetCooldown_s;
+
+  int score = nc._score * sameNuggetBonus * quickNuggetBonus;
+
+  _sk->addScore(score);
+  // TODO HUD popup showing score earned
+  _sk->addNuggetEaten(nugget._classID, 1);
   nugget._isAlive = false;
   --_numNuggetsInWorld;
   sfx::SoundChannel_t channel = sfx::playSound(_sk->getSoundEffectKey(Snake::SFX_SCORE_BEEP));

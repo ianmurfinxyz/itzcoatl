@@ -94,7 +94,10 @@ private:
   int _numNuggetsInWorld;
 
   float _stepClock_s;
-
+  float _quickNuggetClock_s;
+  int _quickNuggetCombo;                  // the number of nuggets eaten in quick succession.
+  int _sameNuggetCombo;                   // the number of the same nugget eaten in sequence.
+  Snake::NuggetClassID _lastNuggetEaten;
 };
 
 #endif
