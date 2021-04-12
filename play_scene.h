@@ -66,6 +66,8 @@ private:
   bool collideSnakeNuggets();
   bool collideSnakeSnake();
   void eatNugget(Nugget& nugget);
+  int applyScoreBonuses(const Nugget& eaten);
+  void spawnNuggetScorePopup(const Nugget& eaten, int score);
   void eatSnake();
   void animateTongue(){}
   void drawBackground();

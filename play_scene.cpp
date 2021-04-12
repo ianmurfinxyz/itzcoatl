@@ -424,27 +424,24 @@ bool PlayScene::collideSnakeSnake()
   return false;
 }
 
-void PlayScene::eatNugget(Nugget& nugget)
+int PlayScene::applyScoreBonuses(const Nugget& eaten)
 {
-  const auto& nc = Snake::nuggetClasses[nugget._classID];
+  float sameNuggetBonus {1.f}, quickNuggetBonus {1.f};
 
-  int sameNuggetBonus {1};
-  if(nugget._classID == _lastNuggetEaten){ 
+  if(eaten._classID == _lastNuggetEaten){ 
     ++_sameNuggetCombo; 
     if(_sameNuggetCombo >= Snake::numSameNuggetsForBonus){
-      _sameNuggetCombo = 1;
       sameNuggetBonus = Snake::sameNuggetComboBonus;
       // TODO INSERT SOUND
+      _sameNuggetCombo = 1;
     }
   }
   else {
     _sameNuggetCombo = 1;
-    _lastNuggetEaten = nugget._classID;
+    _lastNuggetEaten = eaten._classID;
   }
 
-  float quickNuggetBonus {1.f};
   if(_quickNuggetClock_s > 0.f){
-    assert(0 <= _quickNuggetCombo && _quickNuggetCombo < Snake::quickNuggetBonusCount);
     quickNuggetBonus += Snake::quickNuggetBonusTable[_quickNuggetCombo];
     _quickNuggetCombo = std::clamp(_quickNuggetCombo + 1, 0, Snake::quickNuggetBonusCount - 1);
   }
@@ -453,18 +450,22 @@ void PlayScene::eatNugget(Nugget& nugget)
   }
   _quickNuggetClock_s = Snake::quickNuggetCooldown_s;
 
-  int score = nc._score * sameNuggetBonus * quickNuggetBonus;
+  const auto& nc = Snake::nuggetClasses[eaten._classID];
+  return nc._score * sameNuggetBonus * quickNuggetBonus;
+}
 
-  Vector2i popupPosition {
-    Snake::boardPosition._x + (nugget._col * Snake::blockSize_rx),
-    Snake::boardPosition._y + (nugget._row * Snake::blockSize_rx)
+void PlayScene::spawnNuggetScorePopup(const Nugget& eaten, int score)
+{
+  Vector2i position {
+    Snake::boardPosition._x + (eaten._col * Snake::blockSize_rx),
+    Snake::boardPosition._y + (eaten._row * Snake::blockSize_rx)
   };
-  if(nugget._col > (Snake::boardSize._x / 2)) popupPosition._x -= Snake::blockSize_rx;
-  else                                        popupPosition._x += Snake::blockSize_rx;
-  if(nugget._row > (Snake::boardSize._y / 2)) popupPosition._y -= 2 * Snake::blockSize_rx;
-  else                                        popupPosition._y += 2 * Snake::blockSize_rx;
+
+  position._x += (eaten._col > Snake::boardSize._x / 2) ? -Snake::scorePopupOffset : Snake::scorePopupOffset;
+  position._y += (eaten._row > Snake::boardSize._y / 2) ? -Snake::scorePopupOffset : Snake::scorePopupOffset;
+
   _hud->addLabel(std::make_unique<HUD::TextLabel>(
-    popupPosition,
+    position,
     Snake::scorePopupColor,
     0.f,
     Snake::scorePopupLifetime_s,
@@ -472,7 +473,12 @@ void PlayScene::eatNugget(Nugget& nugget)
     false,
     _sk->getFontKey(Snake::FID_UTO)
   ));
+}
 
+void PlayScene::eatNugget(Nugget& nugget)
+{
+  int score = applyScoreBonuses(nugget);
+  spawnNuggetScorePopup(nugget, score);
   _sk->addScore(score);
   _sk->addNuggetEaten(nugget._classID, 1);
   nugget._isAlive = false;

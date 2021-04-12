@@ -58,7 +58,7 @@ public:
   static constexpr float    stepFrequency_hz       {10.f};
   static constexpr float    stepPeriod_s           {1.f / stepFrequency_hz};
   static constexpr float    quickNuggetCooldown_s  {5.f};
-  static constexpr int      sameNuggetComboBonus   {2}; 
+  static constexpr float    sameNuggetComboBonus   {2.f}; 
   static constexpr int      numSameNuggetsForBonus {3};
 
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
@@ -70,6 +70,7 @@ public:
   static constexpr float    hudFlashPeriod       {1.f};
   static constexpr float    hudPhaseInPeriod     {0.5f};
   static constexpr float    scorePopupLifetime_s {1.f};
+  static constexpr float    scorePopupOffset     {blockSize_rx * 2};
 
   static constexpr gfx::Color4u scorePopupColor   {gfx::colors::black};
 
