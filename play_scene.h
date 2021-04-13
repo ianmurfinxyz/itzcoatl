@@ -8,6 +8,7 @@
 
 class PlayScene final : public pxr::Scene
 {
+public:
   static constexpr const char* name {"play_scene"};
 
 public:

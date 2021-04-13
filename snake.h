@@ -431,7 +431,7 @@ public:
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
   //
-  // The heroes availible to play as.
+  // The snakes availible to play as.
   //
   enum SnakeHero
   {
@@ -445,6 +445,28 @@ public:
     SNAKE_CUAUHTEMOC,
     SNAKE_COUNT
   };
+
+  static constexpr std::array<const char*, SNAKE_COUNT> snakeNames {{
+    "Itzcoatl",
+    "Montezuma I",
+    "Axayactl",
+    "Tizoc",
+    "Ahuitzotl",
+    "Montezuma II",
+    "Cuitlahuac",
+    "Cuauhtemoc"
+  }};
+
+  static constexpr std::array<gfx::Color4u, SNAKE_COUNT> snakeColors {{
+    {58 , 50 , 45 , 255},
+    {219, 41 , 0  , 255},
+    {112, 210, 188, 255},
+    {88 , 241, 110, 255},
+    {245, 207, 0  , 255},
+    {224, 17 , 95 , 255},
+    {245, 207, 0  , 255},
+    {236, 236, 236, 255}
+  }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // NUGGETS       
@@ -565,6 +587,7 @@ public:
   sfx::MusicSequence_t getMusicSequence(MusicSequenceID sequenceID);
 
   SnakeHero getSnakeHero() const {return _snakeHero;}
+  void nextSnakeHero();
 
   void addScore(int score) {_score += score;}
   int getScore() const {return _score;}
@@ -572,7 +595,6 @@ public:
   int& getNuggetsEatenReference(NuggetClassID classID){return _nuggetsEaten[classID];}
   int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
   int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
-  void nextSnakeHero();
 
   HUD* getHUD() {return _hud;}
 

@@ -120,8 +120,6 @@ void PlayScene::handlePlayingInput()
   if(pxr::input::isKeyPressed(Snake::moveUpKey)) ukey = true;
   if(pxr::input::isKeyPressed(Snake::moveDownKey)) dkey = true;
 
-  if(pxr::input::isKeyPressed(Snake::menuPressKey)) _sk->nextSnakeHero();
-  
   int sum {lkey + rkey + ukey + dkey};
   if(sum > 1) return;
 

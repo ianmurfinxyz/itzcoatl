@@ -21,11 +21,14 @@ bool Snake::onInit()
 
   _hud = new HUD(hudFlashPeriod, hudPhaseInPeriod);
 
- _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
- //_activeScene = std::shared_ptr<pxr::Scene>(new MenuScene(this));
-  if(!_activeScene->onInit()) return false;
+  _scenes.emplace(PlayScene::name, std::shared_ptr<pxr::Scene>(new PlayScene(this)));
+  _scenes.emplace(MenuScene::name, std::shared_ptr<pxr::Scene>(new MenuScene(this)));
+
+  if(!_scenes[PlayScene::name]->onInit()) return false;
+  if(!_scenes[MenuScene::name]->onInit()) return false;
+
+  _activeScene = _scenes[MenuScene::name];
   _activeScene->onEnter();
-  _scenes.emplace(_activeScene->getName(), _activeScene);
 
   return true;
 }
