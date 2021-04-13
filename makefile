@@ -2,6 +2,7 @@ LDLIBS = -lSDL2 -lSDL2_mixer -lm -lGLX_mesa
 CXXFLAGS = -g -Wall -std=c++20
 SRC = main.cpp \
 			play_scene.cpp \
+			menu_scene.cpp \
 			snake.cpp \
 			pxr_bmp.cpp \
 			pxr_collision.cpp \

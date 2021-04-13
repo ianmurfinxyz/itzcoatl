@@ -80,12 +80,16 @@ public:
   // CONTROLS       
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-  static constexpr pxr::input::KeyCode moveLeftKey  {pxr::input::KEY_LEFT };
-  static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT};
-  static constexpr pxr::input::KeyCode moveUpKey    {pxr::input::KEY_UP   };
-  static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN };
+  static constexpr pxr::input::KeyCode moveLeftKey  {pxr::input::KEY_LEFT  };
+  static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT };
+  static constexpr pxr::input::KeyCode moveUpKey    {pxr::input::KEY_UP    };
+  static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN  };
 
-  static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s    };
+  static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s     };
+
+  static constexpr pxr::input::KeyCode menuUpKey     {pxr::input::KEY_UP   };
+  static constexpr pxr::input::KeyCode menuDownKey   {pxr::input::KEY_DOWN };
+  static constexpr pxr::input::KeyCode menuEnterKey  {pxr::input::KEY_ENTER};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // FONTS

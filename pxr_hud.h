@@ -42,6 +42,8 @@ public:
     bool isHidden() const {return _isHidden;}
     bool isDead() {return _isDead;}
     uid_t getUid() const {return _uid;}
+    void setColor(gfx::Color4u color){_color = color;}
+    gfx::Color4u getColor(){return _color;}
 
   protected:
     Label(
@@ -180,6 +182,11 @@ public:
   void setPhasePeriod(float period) {_phaseInPeriod = period;}
   long getFlashNo() const {return _flashNo;}
   long getPhaseInNo() const {return _phaseInNo;}
+
+  bool setLabelColor(uid_t uid, gfx::Color4u color);
+
+// returns black if label does not exist.
+  gfx::Color4u getLabelColor(uid_t uid); 
 
 private:
   std::vector<std::unique_ptr<Label>>::iterator findLabel(uid_t uid);

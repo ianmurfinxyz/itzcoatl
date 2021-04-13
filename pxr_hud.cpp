@@ -305,6 +305,21 @@ bool HUD::stopLabelFlashing(uid_t uid)
   return true;
 }
 
+bool HUD::setLabelColor(uid_t uid, gfx::Color4u color)
+{
+  auto search = findLabel(uid);
+  if(search == _labels.end()) return false;
+  (*search)->setColor(color);
+  return true;
+}
+
+gfx::Color4u HUD::getLabelColor(uid_t uid)
+{
+  auto search = findLabel(uid);
+  if(search == _labels.end()) return gfx::colors::black;
+  return (*search)->getColor();
+}
+
 std::vector<std::unique_ptr<HUD::Label>>::iterator HUD::findLabel(uid_t uid)
 {
   return std::find_if(_labels.begin(), _labels.end(), [uid](const std::unique_ptr<Label>& label){

@@ -3,7 +3,7 @@
 
 #include "snake.h"
 #include "play_scene.h"
-
+#include "menu_scene.h"
 
 using namespace pxr;
 
@@ -20,7 +20,8 @@ bool Snake::onInit()
 
   _hud = new HUD(hudFlashPeriod, hudPhaseInPeriod);
 
- _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
+ //_activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
+ _activeScene = std::shared_ptr<pxr::Scene>(new MenuScene(this));
   if(!_activeScene->onInit()) return false;
   _activeScene->onEnter();
   _scenes.emplace(_activeScene->getName(), _activeScene);
