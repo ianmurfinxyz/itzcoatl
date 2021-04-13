@@ -5,7 +5,7 @@
     Each set of sprites is a complete set of segments for a different snake.
   -->
 
-  <!-- snake: Montezuma (Angry Archer Lord) -->
+  <!-- snake: Itzcoatl (Obsidian Serpent) -->
   <sprite x="0"  y="0" w="4" h="4" ox="0" oy="0"/>
   <sprite x="4"  y="0" w="4" h="4" ox="0" oy="0"/>
   <sprite x="8"  y="0" w="4" h="4" ox="0" oy="0"/>
@@ -27,7 +27,7 @@
   <sprite x="72" y="0" w="4" h="4" ox="0" oy="0"/>
   <sprite x="76" y="0" w="4" h="4" ox="0" oy="0"/>
 
-  <!-- snake: Itzcoatl (Obsidian Serpent) -->
+  <!-- snake: Montezuma I (Angry Archer Lord) -->
   <sprite x="0"  y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="4"  y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="8"  y="4" w="4" h="4" ox="0" oy="0"/>
@@ -48,5 +48,139 @@
   <sprite x="68" y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="72" y="4" w="4" h="4" ox="0" oy="0"/>
   <sprite x="76" y="4" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Axayactl (Water Faced Individual) -->
+  <sprite x="0"  y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="8" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="8" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Tizoc (Ancient Ruler) -->
+  <sprite x="0"  y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="12" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="12" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Ahuitzotl (Eighth Ruler) -->
+  <sprite x="0"  y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="16" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="16" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Montezuma II (Angy Archer Lord Reborn) -->
+  <sprite x="0"  y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="20" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="20" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- snake: Cuitlahuac (Born Ruler) -->
+  <sprite x="0"  y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="24" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="24" w="4" h="4" ox="0" oy="0"/>
+    
+  <!-- snake: Cuauhtemoc (Falling Eagle) -->
+  <sprite x="0"  y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="4"  y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="8"  y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="12" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="16" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="24" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="28" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="32" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="36" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="40" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="44" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="48" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="52" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="56" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="60" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="64" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="68" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="72" y="28" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="76" y="28" w="4" h="4" ox="0" oy="0"/>
+
+</spritesheet>
 
 </spritesheet>

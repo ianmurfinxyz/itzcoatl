@@ -3,6 +3,7 @@
 
 #include "snake.h"
 #include "play_scene.h"
+#include "pxr_mathutil.h"
 #include "menu_scene.h"
 
 using namespace pxr;
@@ -16,12 +17,12 @@ bool Snake::onInit()
   loadFonts();
   loadSoundEffects();
   loadMusicLoops();
-  _snakeHero = MONTEZUMA;
+  _snakeHero = SNAKE_ITZCOATL;
 
   _hud = new HUD(hudFlashPeriod, hudPhaseInPeriod);
 
- //_activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
- _activeScene = std::shared_ptr<pxr::Scene>(new MenuScene(this));
+ _activeScene = std::shared_ptr<pxr::Scene>(new PlayScene(this));
+ //_activeScene = std::shared_ptr<pxr::Scene>(new MenuScene(this));
   if(!_activeScene->onInit()) return false;
   _activeScene->onEnter();
   _scenes.emplace(_activeScene->getName(), _activeScene);
@@ -76,6 +77,11 @@ sfx::MusicSequence_t Snake::getMusicSequence(MusicSequenceID sequenceID)
     });
   }
   return sequence;
+}
+
+void Snake::nextSnakeHero()
+{
+  _snakeHero = static_cast<SnakeHero>(pxr::wrap<int>(_snakeHero + 1, SNAKE_ITZCOATL, SNAKE_COUNT - 1));
 }
 
 void Snake::loadSpritesheets()

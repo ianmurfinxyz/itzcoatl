@@ -119,6 +119,8 @@ void PlayScene::handlePlayingInput()
   if(pxr::input::isKeyPressed(Snake::moveRightKey)) rkey = true;
   if(pxr::input::isKeyPressed(Snake::moveUpKey)) ukey = true;
   if(pxr::input::isKeyPressed(Snake::moveDownKey)) dkey = true;
+
+  if(pxr::input::isKeyPressed(Snake::menuPressKey)) _sk->nextSnakeHero();
   
   int sum {lkey + rkey + ukey + dkey};
   if(sum > 1) return;
@@ -611,7 +613,7 @@ void PlayScene::drawBackground()
 {
   gfx::drawSprite(
     Vector2f{0.f, 0.f},
-    _sk->getSpritesheetKey(Snake::SSID_BACKGROUND),
+    _sk->getSpritesheetKey(Snake::SSID_PLAY_BACKGROUND),
     0,
     _sk->getScreenID(Snake::SCREEN_BACKGROUND)
   );
@@ -637,7 +639,7 @@ void PlayScene::drawSnake(gfx::ScreenID_t screenid)
     gfx::drawSprite(
       position,
       _sk->getSpritesheetKey(Snake::SSID_SNAKES),
-      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
+      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_OFFSET),
       screenid
     );
   }
@@ -673,7 +675,7 @@ void PlayScene::drawSmoothSnake(gfx::ScreenID_t screenid)
     gfx::drawSprite(
       position,
       _sk->getSpritesheetKey(Snake::SSID_SNAKES),
-      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_SHEET_COUNT),
+      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_OFFSET),
       screenid
     );
   }

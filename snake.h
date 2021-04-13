@@ -89,7 +89,7 @@ public:
 
   static constexpr pxr::input::KeyCode menuUpKey     {pxr::input::KEY_UP   };
   static constexpr pxr::input::KeyCode menuDownKey   {pxr::input::KEY_DOWN };
-  static constexpr pxr::input::KeyCode menuEnterKey  {pxr::input::KEY_ENTER};
+  static constexpr pxr::input::KeyCode menuPressKey  {pxr::input::KEY_ENTER};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // FONTS
@@ -228,12 +228,7 @@ public:
   // start at spriteid = 0, then the next snakes sprites will start at spriteid = 0 + 
   // SID_SNAKE_OFFSET.
   //
-  static constexpr int SID_SNAKE_OFFSET {18};
-
-  //
-  // Total number of sprites in the snakes spritesheet.
-  //
-  static constexpr int SID_SNAKE_SHEET_COUNT = 18;
+  static constexpr int SID_SNAKE_OFFSET {20};
 
   enum Direction { NORTH, SOUTH, EAST, WEST, DIRECTION_COUNT };
 
@@ -352,7 +347,8 @@ public:
   {
     SSID_SNAKES,
     SSID_NUGGETS,
-    SSID_BACKGROUND,
+    SSID_PLAY_BACKGROUND,
+    SSID_MENU_BACKGROUND,
     SSID_FOREGROUND,
     SSID_QUICKBAR,
     SSID_COUNT
@@ -361,7 +357,8 @@ public:
   static constexpr std::array<gfx::ResourceName_t, SSID_COUNT> spritesheetNames {
     "snakes",
     "nuggets",
-    "background",
+    "play_background",
+    "menu_background",
     "foreground",
     "quickbar"
   };
@@ -438,8 +435,15 @@ public:
   //
   enum SnakeHero
   {
-    MONTEZUMA,
-    ITZCOATL
+    SNAKE_ITZCOATL,
+    SNAKE_MONTEZUMA_I,
+    SNAKE_AXAYACTL,
+    SNAKE_TIZOC,
+    SNAKE_AHUITZOTL,
+    SNAKE_MONTEZUMA_II,
+    SNAKE_CUITLAHUAC,
+    SNAKE_CUAUHTEMOC,
+    SNAKE_COUNT
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -568,6 +572,7 @@ public:
   int& getNuggetsEatenReference(NuggetClassID classID){return _nuggetsEaten[classID];}
   int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
   int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
+  void nextSnakeHero();
 
   HUD* getHUD() {return _hud;}
 
