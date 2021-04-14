@@ -165,9 +165,9 @@ void MenuScene::updateDisplay(float dt)
     _currentDisplayID = pxr::wrap<int>(_currentDisplayID + 1, DID_RULES, DID_SPEED);
     switch(_currentDisplayID){
       case DID_RULES:  {populateRulesDisplay(); break;}
-      case DID_SCORES: {populateRulesDisplay(); break;}
-      case DID_COMBOS: {populateRulesDisplay(); break;}
-      case DID_SPEED:  {populateRulesDisplay(); break;}
+      case DID_SCORES: {populateScoresDisplay(); break;}
+      case DID_COMBOS: {populateCombosDisplay(); break;}
+      case DID_SPEED:  {populateSpeedDisplay(); break;}
       default:         assert(0);
     }
     _displayClock_s = 0.f;
@@ -180,9 +180,10 @@ void MenuScene::onHiscoresButtonPressed()
 
 void MenuScene::populateRulesDisplay()
 {
-  float delays_s[5];
-  for(int i {0}; i < 5; ++i)
-    delays_s[i] = i * (Snake::menuDisplayLabelLifetime_s / 5);
+  static constexpr int rulesTextLabelCount {5};
+  float delays_s[rulesTextLabelCount];
+  for(int i {0}; i < rulesTextLabelCount; ++i)
+    delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / rulesTextLabelCount);
 
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
     Vector2i{83, 90},
@@ -233,6 +234,60 @@ void MenuScene::populateRulesDisplay()
 
 void MenuScene::populateScoresDisplay()
 {
+  static constexpr int scoresTextLabelCount {16};
+  float delays_s[scoresTextLabelCount];
+  for(int i {0}; i < scoresTextLabelCount; ++i)
+    delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / scoresTextLabelCount);
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{52, 90},
+    Snake::menuHeaderColor,
+    delays_s[0],
+    Snake::menuDisplayLabelLifetime_s,
+    "NUGGET",
+    true,
+    getMenuFontKey() 
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{113, 90},
+    Snake::menuHeaderColor,
+    delays_s[1],
+    Snake::menuDisplayLabelLifetime_s,
+    "SCORE",
+    true,
+    getMenuFontKey() 
+  )));
+
+  static constexpr int delayOffset {2};
+
+  for(int i {0}; i < Snake::nuggetClassCount; ++i){
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+      Vector2i{51, 81 - (i * 9)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + (i * 2)],
+      Snake::menuDisplayLabelLifetime_s,
+      _sk->getSpritesheetKey(Snake::SSID_NUGGETS),
+      Snake::SID_NUGGET_GOLD + i
+    )));
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+      Vector2i{57, 80 - (i * 9)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + (i * 2)],
+      Snake::menuDisplayLabelLifetime_s,
+      std::string{Snake::nuggetClasses[Snake::NUGGET_GOLD + i]._name},
+      true,
+      getMenuFontKey() 
+    )));
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+      Vector2i{129, 80 - (i * 9)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + ((i * 2) + 1)],
+      Snake::menuDisplayLabelLifetime_s,
+      std::to_string(Snake::nuggetClasses[Snake::NUGGET_GOLD + i]._score),
+      true,
+      getMenuFontKey() 
+    )));
+  }
 }
 
 void MenuScene::populateCombosDisplay()

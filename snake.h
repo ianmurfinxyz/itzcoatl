@@ -508,19 +508,20 @@ public:
     float _lifetime;
     int _spawnChance;
     int _score;
+    const char* _name;
   };
 
   static constexpr std::array<NuggetClass, nuggetClassCount> nuggetClasses {{
   //----------------------------------------------------------------------------------------------
-  // spriteid             lifetime   chance   score
+  // spriteid             lifetime   chance   score   name
   //----------------------------------------------------------------------------------------------
-    {SID_NUGGET_GOLD    , 2.f,          10,   70 },
-    {SID_NUGGET_SILVER  , 3.f,          20,   60 },
-    {SID_NUGGET_OBSIDIAN, 4.f,          30,   50 },
-    {SID_NUGGET_RUBY    , 5.f,          40,   40 },
-    {SID_NUGGET_JADE    , 6.f,          50,   30 },
-    {SID_NUGGET_LAPIS   , 7.f,          70,   20 },
-    {SID_NUGGET_AMETHYST, 8.f,         100,   10 }
+    {SID_NUGGET_GOLD    , 2.f,          10,   70,     "Gold"     },
+    {SID_NUGGET_SILVER  , 3.f,          20,   60,     "Silver"   },
+    {SID_NUGGET_OBSIDIAN, 4.f,          30,   50,     "Obsidian" },
+    {SID_NUGGET_RUBY    , 5.f,          40,   40,     "Ruby"     },
+    {SID_NUGGET_JADE    , 6.f,          50,   30,     "Jade"     },
+    {SID_NUGGET_LAPIS   , 7.f,          70,   20,     "Lapis"    },
+    {SID_NUGGET_AMETHYST, 8.f,         100,   10,     "Amethyst" }
   }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
