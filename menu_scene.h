@@ -2,6 +2,8 @@
 #define _MENU_SCENE_H_
 
 #include <string>
+#include <array>
+#include <vector>
 #include "snake.h"
 
 using namespace pxr;
@@ -82,8 +84,17 @@ private:
   void onHiscoresButtonPressed();
   void onSnakeButtonPressed();
 
+  void updateDisplay(float dt);
+
+  void populateRulesDisplay();
+  void populateScoresDisplay();
+  void populateCombosDisplay();
+  void populateSpeedDisplay();
+
   void buildMenu();
+  void startDisplay();
   void destroyMenu();
+  void destroyDisplay();
 
   void addSnakeNameLabel(bool removeFirst);
   void drawBackground();
@@ -102,6 +113,19 @@ private:
 
   std::array<Button, BID_COUNT> _buttons;
   int _hoveredButtonID;
+
+  enum DisplayID
+  {
+    DID_RULES,
+    DID_SCORES,
+    DID_COMBOS,
+    DID_SPEED,
+    DID_COUNT
+  };
+
+  int _currentDisplayID;
+  float _displayClock_s;
+  std::vector<HUD::uid_t> _uidDisplayLabels;
 
   HUD::uid_t _uidSnakeNameLabel;
 };

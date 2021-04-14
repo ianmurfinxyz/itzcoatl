@@ -88,12 +88,14 @@ bool MenuScene::onInit()
 void MenuScene::onEnter()
 {
   buildMenu();
+  startDisplay();
   drawBackground();
 }
 
 void MenuScene::onUpdate(double now, float dt)
 {
   handleInput();
+  updateDisplay(dt);
   _hud->onUpdate(dt);
 }
 
@@ -106,6 +108,7 @@ void MenuScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>&
 void MenuScene::onExit()
 {
   destroyMenu();
+  destroyDisplay();
 }
 
 void MenuScene::handleInput()
@@ -149,15 +152,95 @@ void MenuScene::onPlayButtonPressed()
   _sk->switchScene(PlayScene::name);
 }
 
-void MenuScene::onHiscoresButtonPressed()
-{
-
-}
-
 void MenuScene::onSnakeButtonPressed()
 {
   _sk->nextSnakeHero();
   addSnakeNameLabel(true);
+}
+
+void MenuScene::updateDisplay(float dt)
+{
+  _displayClock_s += dt;
+  if(_displayClock_s > Snake::menuDisplaySwapInterval_s){
+    _currentDisplayID = pxr::wrap<int>(_currentDisplayID + 1, DID_RULES, DID_SPEED);
+    switch(_currentDisplayID){
+      case DID_RULES:  {populateRulesDisplay(); break;}
+      case DID_SCORES: {populateRulesDisplay(); break;}
+      case DID_COMBOS: {populateRulesDisplay(); break;}
+      case DID_SPEED:  {populateRulesDisplay(); break;}
+      default:         assert(0);
+    }
+    _displayClock_s = 0.f;
+  }
+}
+
+void MenuScene::onHiscoresButtonPressed()
+{
+}
+
+void MenuScene::populateRulesDisplay()
+{
+  float delays_s[5];
+  for(int i {0}; i < 5; ++i)
+    delays_s[i] = i * (Snake::menuDisplayLabelLifetime_s / 5);
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{83, 90},
+    Snake::menuHeaderColor,
+    delays_s[0],
+    Snake::menuDisplayLabelLifetime_s,
+    "RULES",
+    true,
+    getMenuFontKey() 
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{20, 75},
+    Snake::menuTextColor,
+    delays_s[1],
+    Snake::menuDisplayLabelLifetime_s,
+    "Eat nuggets to gain score.",
+    true,
+    getMenuFontKey() 
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{46, 63},
+    Snake::menuTextColor,
+    delays_s[2],
+    Snake::menuDisplayLabelLifetime_s,
+    "Don't eat yourself.",
+    true,
+    getMenuFontKey() 
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{32, 52},
+    Snake::menuTextColor,
+    delays_s[3],
+    Snake::menuDisplayLabelLifetime_s,
+    "Bonus score for speed,",
+    true,
+    getMenuFontKey() 
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{47, 40},
+    Snake::menuTextColor,
+    delays_s[4],
+    Snake::menuDisplayLabelLifetime_s,
+    "and nugget combos.",
+    true,
+    getMenuFontKey() 
+  )));
+}
+
+void MenuScene::populateScoresDisplay()
+{
+}
+
+void MenuScene::populateCombosDisplay()
+{
+}
+
+void MenuScene::populateSpeedDisplay()
+{
 }
 
 void MenuScene::buildMenu()
@@ -185,12 +268,27 @@ void MenuScene::buildMenu()
   addSnakeNameLabel(false);
 }
 
+void MenuScene::startDisplay()
+{
+  _currentDisplayID = DID_RULES;
+  _displayClock_s = 0.f;
+  populateRulesDisplay();
+}
+
 void MenuScene::destroyMenu()
 {
   for(auto& button : _buttons)
     button.uninitialize();
 
   _hud->removeLabel(_uidSnakeNameLabel);
+}
+
+void MenuScene::destroyDisplay()
+{
+  for(auto& uid : _uidDisplayLabels)
+    _hud->removeLabel(uid);
+
+  _uidDisplayLabels.clear();
 }
 
 void MenuScene::addSnakeNameLabel(bool removeFirst)

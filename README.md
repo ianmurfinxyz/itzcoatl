@@ -5,7 +5,9 @@
 
 ## What's this?
 
-Itcoatl is an Aztec themed snake game made to test drive my engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos, and has 8 playable snakes each named after an Aztec emperor.
+Itcoatl is an Aztec themed version of the game Snake made to test drive my engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos.
+
+The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :)) means "Obsidean Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist. I do know how to pronounce Montezuma though, its mont-ee-zooma ... thanks CIV! :)
 
 ## Gameplay
 

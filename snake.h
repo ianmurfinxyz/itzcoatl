@@ -57,7 +57,7 @@ public:
   static constexpr int      babySnakeLength        {6};
   static constexpr float    stepFrequency_hz       {10.f};
   static constexpr float    stepPeriod_s           {1.f / stepFrequency_hz};
-  static constexpr float    quickNuggetCooldown_s  {5.f};
+  static constexpr float    speedBonusCooldown_s  {5.f};
   static constexpr float    sameNuggetComboBonus   {2.f}; 
   static constexpr int      numSameNuggetsForBonus {3};
 
@@ -68,13 +68,19 @@ public:
   static constexpr int      growthsPerNugget   {5};
 
   static constexpr float    hudFlashPeriod           {1.f};
-  static constexpr float    hudPhaseInPeriod         {0.5f};
+  static constexpr float    hudPhaseInPeriod         {0.05f};
   static constexpr float    scorePopupLifetime_s     {1.f};
   static constexpr float    scorePopupOffset         {blockSize_rx * 2};
-  static constexpr int      numQuickBarStates        {11};
-  static constexpr float    quickBarStateTimeDelta_s {quickNuggetCooldown_s / (numQuickBarStates - 1)};
+  static constexpr int      numSpeedBarStates        {11};
+  static constexpr float    speedBarStateTimeDelta_s {speedBonusCooldown_s / (numSpeedBarStates - 1)};
 
-  static constexpr gfx::Color4u scorePopupColor   {127, 52, 0, 255};//{gfx::colors::black};
+  static constexpr float    menuDisplaySwapInterval_s   {15.f};
+  static constexpr float    menuDisplayDrawInterval_s   {10.f};
+  static constexpr float    menuDisplayLabelLifetime_s  {14.f};
+
+  static constexpr gfx::Color4u scorePopupColor   {127, 52, 0, 255};
+  static constexpr gfx::Color4u menuHeaderColor   {219, 41, 0, 255};
+  static constexpr gfx::Color4u menuTextColor     {gfx::colors::black};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
@@ -350,7 +356,7 @@ public:
     SSID_PLAY_BACKGROUND,
     SSID_MENU_BACKGROUND,
     SSID_FOREGROUND,
-    SSID_QUICKBAR,
+    SSID_SPEED_BAR,
     SSID_COUNT
   };
 
@@ -360,7 +366,7 @@ public:
     "play_background",
     "menu_background",
     "foreground",
-    "quickbar"
+    "speedbar"
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -518,7 +524,7 @@ public:
   }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  // SCORE BONUS TABLE
+  // SPEED BONUS TABLE
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
   //
@@ -535,8 +541,8 @@ public:
   // get a score of 10 + (2.5 * 10) = 35.
   //
 
-  static constexpr int quickNuggetBonusCount {9};
-  static constexpr std::array<float, quickNuggetBonusCount> quickNuggetBonusTable {{
+  static constexpr int speedBonusCount {9};
+  static constexpr std::array<float, speedBonusCount> speedBonusTable {{
   //----------------------------------------------------------------------------------------------
   // bonus
   //----------------------------------------------------------------------------------------------

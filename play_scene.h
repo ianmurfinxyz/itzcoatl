@@ -69,8 +69,8 @@ private:
   bool collideSnakeNuggets();
   bool collideSnakeSnake();
   void eatNugget(Nugget& nugget);
-  void updateQuickBar(int quickBarState, bool removeFirst = true);
-  void updateQuickBonusHUD();
+  void updateSpeedBar(int speedBarState, bool removeFirst = true);
+  void updateSpeedBonusHUD();
   int applyScoreBonuses(const Nugget& eaten);
   void spawnNuggetScorePopup(const Nugget& eaten, int score);
   void eatSnake();
@@ -102,9 +102,9 @@ private:
     LID_LAPIS_COUNT,
     LID_AMETHYST_SPRITE,
     LID_AMETHYST_COUNT,
-    LID_QUICK_BONUS,
-    LID_QUICK_BONUS_VALUE,
-    LID_QUICKBAR,
+    LID_SPEED_BONUS,
+    LID_SPEED_BONUS_VALUE,
+    LID_SPEED_BAR,
     LID_COUNT
   };
 
@@ -129,10 +129,10 @@ private:
   int _numNuggetsInWorld;
 
   float _stepClock_s;
-  float _quickNuggetClock_s;
-  int _currentQuickNuggetBonusAsInt;      // used to provide the bonus value or the HUD.
-  int _currentQuickBarState;              // selects the sprite to show for the quick bar.
-  int _quickNuggetCombo;                  // the number of nuggets eaten in quick succession.
+  float _speedClock_s;
+  int _currentSpeedBonusAsInt;            // used to provide the bonus value or the HUD.
+  int _currentSpeedBarState;              // selects the sprite to show for the speed bar.
+  int _speedCombo;                        // the number of nuggets eaten in speed succession.
   int _sameNuggetCombo;                   // the number of the same nugget eaten in sequence.
   Snake::NuggetClassID _lastNuggetEaten;
 };

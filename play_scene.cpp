@@ -47,7 +47,7 @@ void PlayScene::onUpdate(double now, float dt)
       assert(0);
   }
 
-  updateQuickBonusHUD();
+  updateSpeedBonusHUD();
   _hud->onUpdate(dt);
 
   if(_nextState != _currentState)
@@ -78,10 +78,10 @@ void PlayScene::onEnterPlaying()
   _nextMoveDirection = Snake::WEST;
   _currentMoveDirection = Snake::WEST;
   _stepClock_s = 0.f;
-  _quickNuggetClock_s = 0.f;
-  _quickNuggetCombo = 0;
+  _speedClock_s = 0.f;
+  _speedCombo = 0;
   _sameNuggetCombo = 0;
-  _currentQuickNuggetBonusAsInt = 0;
+  _currentSpeedBonusAsInt = 0;
 
   //
   // This will allow the gold same nugget bonus to be earned with 1 less nugget upon first
@@ -98,7 +98,7 @@ void PlayScene::onUpdatePlaying(double now, float dt)
 {
   handlePlayingInput();
 
-  _quickNuggetClock_s -= dt;
+  _speedClock_s -= dt;
 
   _stepClock_s += dt;
   if(_stepClock_s > Snake::stepPeriod_s){
@@ -256,7 +256,7 @@ void PlayScene::populateHUD()
     lid += 2;
   }
 
-  _uidLabels[LID_QUICK_BONUS] = _hud->addLabel(std::make_unique<HUD::TextLabel>(
+  _uidLabels[LID_SPEED_BONUS] = _hud->addLabel(std::make_unique<HUD::TextLabel>(
     Vector2i{142, 182},
     Snake::scorePopupColor,
     0.f,
@@ -265,17 +265,17 @@ void PlayScene::populateHUD()
     false,
     _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
-  _uidLabels[LID_QUICK_BONUS_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
+  _uidLabels[LID_SPEED_BONUS_VALUE] = _hud->addLabel(std::make_unique<HUD::IntLabel>(
     Vector2i{150, 182},
     Snake::scorePopupColor,
     0.f,
     HUD::IMMORTAL_LIFETIME,
-    _currentQuickNuggetBonusAsInt,
+    _currentSpeedBonusAsInt,
     3,
     _sk->getFontKey(Snake::FID_KONGTEXT)
   ));
 
-  updateQuickBar(0, false);
+  updateSpeedBar(0, false);
 }
 
 void PlayScene::stepSnake()
@@ -502,41 +502,41 @@ bool PlayScene::collideSnakeSnake()
   return false;
 }
 
-void PlayScene::updateQuickBar(int quickBarState, bool removeFirst)
+void PlayScene::updateSpeedBar(int speedBarState, bool removeFirst)
 {
   if(removeFirst)
-    _hud->removeLabel(_uidLabels[LID_QUICKBAR]);
+    _hud->removeLabel(_uidLabels[LID_SPEED_BAR]);
 
-  _uidLabels[LID_QUICKBAR] = _hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+  _uidLabels[LID_SPEED_BAR] = _hud->addLabel(std::make_unique<HUD::BitmapLabel>(
     Vector2i{110, 183},
     Snake::scorePopupColor,
     0.f,
     HUD::IMMORTAL_LIFETIME,
-    _sk->getSpritesheetKey(Snake::SSID_QUICKBAR),
-    quickBarState
+    _sk->getSpritesheetKey(Snake::SSID_SPEED_BAR),
+    speedBarState
   ));
 
-  _currentQuickBarState = quickBarState;
+  _currentSpeedBarState = speedBarState;
 }
 
-void PlayScene::updateQuickBonusHUD()
+void PlayScene::updateSpeedBonusHUD()
 {
-  int quickBarState;
-  if(_quickNuggetClock_s < 0.f){
-    _currentQuickNuggetBonusAsInt = 0;
-    quickBarState = 0;
+  int speedBarState;
+  if(_speedClock_s < 0.f){
+    _currentSpeedBonusAsInt = 0;
+    speedBarState = 0;
   }
   else{
-    quickBarState = std::ceil(_quickNuggetClock_s / Snake::quickBarStateTimeDelta_s);
-    assert(1 <= quickBarState && quickBarState < Snake::numQuickBarStates);
+    speedBarState = std::ceil(_speedClock_s / Snake::speedBarStateTimeDelta_s);
+    assert(1 <= speedBarState && speedBarState < Snake::numSpeedBarStates);
   }
-  if(quickBarState != _currentQuickBarState)
-    updateQuickBar(quickBarState);
+  if(speedBarState != _currentSpeedBarState)
+    updateSpeedBar(speedBarState);
 }
 
 int PlayScene::applyScoreBonuses(const Nugget& eaten)
 {
-  float sameNuggetBonus {1.f}, quickNuggetBonus {1.f};
+  float sameNuggetBonus {1.f}, speedBonus {1.f};
 
   if(eaten._classID == _lastNuggetEaten){ 
     ++_sameNuggetCombo; 
@@ -551,18 +551,18 @@ int PlayScene::applyScoreBonuses(const Nugget& eaten)
     _lastNuggetEaten = eaten._classID;
   }
 
-  if(_quickNuggetClock_s > 0.f){
-    quickNuggetBonus += Snake::quickNuggetBonusTable[_quickNuggetCombo];
-    _quickNuggetCombo = std::clamp(_quickNuggetCombo + 1, 0, Snake::quickNuggetBonusCount - 1);
+  if(_speedClock_s > 0.f){
+    speedBonus += Snake::speedBonusTable[_speedCombo];
+    _speedCombo = std::clamp(_speedCombo + 1, 0, Snake::speedBonusCount - 1);
   }
   else{
-    _quickNuggetCombo = 0;
+    _speedCombo = 0;
   }
-  _quickNuggetClock_s = Snake::quickNuggetCooldown_s;
-  _currentQuickNuggetBonusAsInt = (quickNuggetBonus - 1.f) * 100;
+  _speedClock_s = Snake::speedBonusCooldown_s;
+  _currentSpeedBonusAsInt = (speedBonus - 1.f) * 100;
 
   const auto& nc = Snake::nuggetClasses[eaten._classID];
-  return nc._score * sameNuggetBonus * quickNuggetBonus;
+  return nc._score * sameNuggetBonus * speedBonus;
 }
 
 void PlayScene::spawnNuggetScorePopup(const Nugget& eaten, int score)
