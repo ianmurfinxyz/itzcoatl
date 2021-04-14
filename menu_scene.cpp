@@ -292,6 +292,64 @@ void MenuScene::populateScoresDisplay()
 
 void MenuScene::populateCombosDisplay()
 {
+  static constexpr int combosTextLabelCount {5};
+  float delays_s[combosTextLabelCount];
+  for(int i {0}; i < combosTextLabelCount; ++i)
+    delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / combosTextLabelCount);
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{57, 90},
+    Snake::menuHeaderColor,
+    delays_s[0],
+    Snake::menuDisplayLabelLifetime_s,
+    "NUGGET COMBOS",
+    true,
+    getMenuFontKey() 
+  )));
+
+  static constexpr int delayOffset {1};
+
+  static constexpr int comboCount {3};
+  static constexpr std::array<Snake::NuggetSpriteID, comboCount> sids {{
+    Snake::SID_NUGGET_ANY_X3,
+    Snake::SID_NUGGET_ANY_X6,
+    Snake::SID_NUGGET_SET
+  }};
+  static constexpr std::array<const char*, comboCount> strs {{
+    "X3 same, X3 score",
+    "X6 same, X6 score",
+    "in order, x9 score"
+  }};
+
+  for(int i {0}; i < comboCount; ++i){
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+      Vector2i{23, 75 - (i * 11)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + i],
+      Snake::menuDisplayLabelLifetime_s,
+      _sk->getSpritesheetKey(Snake::SSID_NUGGETS),
+      sids[i]
+    )));
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+      Vector2i{65, 75 - (i * 11)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + i],
+      Snake::menuDisplayLabelLifetime_s,
+      strs[i],
+      true,
+      getMenuFontKey() 
+    )));
+  }
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{37, 37},
+    Snake::menuTextColor,
+    delays_s[combosTextLabelCount - 1],
+    Snake::menuDisplayLabelLifetime_s,
+    "Bonus on last nugget",
+    true,
+    getMenuFontKey() 
+  )));
 }
 
 void MenuScene::populateSpeedDisplay()

@@ -1,17 +1,39 @@
 <?xml version="1.0"?>
 <spritesheet>
+
   <!-- nugget: gold -->
-  <sprite x="0"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="30"  y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: silver -->
-  <sprite x="4"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="25"  y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: obsidian -->
-  <sprite x="8"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="20"  y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: ruby -->
-  <sprite x="12"  y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="15"  y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: emerald -->
-  <sprite x="16" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="10" y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: lapis -->
-  <sprite x="20" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="5" y="0" w="4" h="4" ox="0" oy="0"/>
   <!-- nugget: amethyst -->
-  <sprite x="24" y="0" w="4" h="4" ox="0" oy="0"/>
+  <sprite x="0" y="0" w="4" h="4" ox="0" oy="0"/>
+
+  <!-- nuggets complete set -->
+  <sprite x="0" y="0" w="34" h="4" ox="0" oy="0"/>
+
+  <!-- any nuggets x9 -->
+  <sprite x="0" y="4" w="44" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x8 -->
+  <sprite x="0" y="4" w="39" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x7 -->
+  <sprite x="0" y="4" w="34" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x6 -->
+  <sprite x="0" y="4" w="29" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x5 -->
+  <sprite x="0" y="4" w="24" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x4 -->
+  <sprite x="0" y="4" w="19" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x3 -->
+  <sprite x="0" y="4" w="14" h="4" ox="0" oy="0"/>
+  <!-- any nuggets x1 -->
+  <sprite x="0" y="4" w="4" h="4" ox="0" oy="0"/>
+
 </spritesheet>
