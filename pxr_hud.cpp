@@ -263,9 +263,11 @@ HUD::uid_t HUD::addLabel(std::unique_ptr<Label> label)
 
 void HUD::removeLabel(uid_t uid)
 {
-  _labels.erase(std::remove_if(_labels.begin(), _labels.end(), [uid](const std::unique_ptr<Label>& label){
-    return label->getUid() == uid;
-  }));
+  auto search = std::find_if(_labels.begin(), _labels.end(), [uid](const std::unique_ptr<Label>& l){
+      return l->getUid() == uid;
+  });
+  if(search == _labels.end()) return;
+  _labels.erase(search);
 }
 
 void HUD::clear()

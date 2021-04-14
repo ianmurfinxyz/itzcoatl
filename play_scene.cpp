@@ -261,7 +261,7 @@ void PlayScene::populateHUD()
     Snake::scorePopupColor,
     0.f,
     HUD::IMMORTAL_LIFETIME,
-    std::string{"+    %"},
+    std::string{"+      %"},
     false,
     _sk->getFontKey(Snake::FID_KONGTEXT)
   ));

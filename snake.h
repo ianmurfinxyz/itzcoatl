@@ -488,14 +488,14 @@ public:
     SID_NUGGET_LAPIS,
     SID_NUGGET_AMETHYST,
     SID_NUGGET_SET,
-    SID_NUGGET_ANY_X9,
-    SID_NUGGET_ANY_X8,
-    SID_NUGGET_ANY_X7,
-    SID_NUGGET_ANY_X6,
-    SID_NUGGET_ANY_X5,
-    SID_NUGGET_ANY_X4,
+    SID_NUGGET_ANY_X2,
     SID_NUGGET_ANY_X3,
-    SID_NUGGET_ANY_X1
+    SID_NUGGET_ANY_X4,
+    SID_NUGGET_ANY_X5,
+    SID_NUGGET_ANY_X6,
+    SID_NUGGET_ANY_X7,
+    SID_NUGGET_ANY_X8,
+    SID_NUGGET_ANY_X9
   };
 
   enum NuggetClassID
@@ -551,20 +551,19 @@ public:
   // get a score of 10 + (2.5 * 10) = 35.
   //
 
-  static constexpr int speedBonusCount {9};
+  static constexpr int speedBonusCount {8};
   static constexpr std::array<float, speedBonusCount> speedBonusTable {{
   //----------------------------------------------------------------------------------------------
   // bonus
   //----------------------------------------------------------------------------------------------
     { 0.1f },
     { 0.2f },
-    { 0.3f },
-    { 0.5f },
-    { 0.7f },
-    { 1.0f },
-    { 1.4f },
-    { 1.9f },
-    { 2.5f }
+    { 0.4f },
+    { 0.8f },
+    { 1.2f },
+    { 1.6f },
+    { 1.8f },
+    { 2.0f }
   }};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////

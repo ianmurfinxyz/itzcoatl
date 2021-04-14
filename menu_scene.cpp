@@ -186,7 +186,7 @@ void MenuScene::populateRulesDisplay()
     delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / rulesTextLabelCount);
 
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{83, 90},
+    Vector2i{83, 89},
     Snake::menuHeaderColor,
     delays_s[0],
     Snake::menuDisplayLabelLifetime_s,
@@ -195,7 +195,7 @@ void MenuScene::populateRulesDisplay()
     getMenuFontKey() 
   )));
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{20, 75},
+    Vector2i{20, 74},
     Snake::menuTextColor,
     delays_s[1],
     Snake::menuDisplayLabelLifetime_s,
@@ -204,7 +204,7 @@ void MenuScene::populateRulesDisplay()
     getMenuFontKey() 
   )));
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{46, 63},
+    Vector2i{46, 62},
     Snake::menuTextColor,
     delays_s[2],
     Snake::menuDisplayLabelLifetime_s,
@@ -213,7 +213,7 @@ void MenuScene::populateRulesDisplay()
     getMenuFontKey() 
   )));
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{32, 52},
+    Vector2i{32, 51},
     Snake::menuTextColor,
     delays_s[3],
     Snake::menuDisplayLabelLifetime_s,
@@ -222,7 +222,7 @@ void MenuScene::populateRulesDisplay()
     getMenuFontKey() 
   )));
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{47, 40},
+    Vector2i{47, 39},
     Snake::menuTextColor,
     delays_s[4],
     Snake::menuDisplayLabelLifetime_s,
@@ -240,7 +240,7 @@ void MenuScene::populateScoresDisplay()
     delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / scoresTextLabelCount);
 
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{52, 90},
+    Vector2i{52, 89},
     Snake::menuHeaderColor,
     delays_s[0],
     Snake::menuDisplayLabelLifetime_s,
@@ -249,7 +249,7 @@ void MenuScene::populateScoresDisplay()
     getMenuFontKey() 
   )));
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{113, 90},
+    Vector2i{113, 89},
     Snake::menuHeaderColor,
     delays_s[1],
     Snake::menuDisplayLabelLifetime_s,
@@ -262,7 +262,7 @@ void MenuScene::populateScoresDisplay()
 
   for(int i {0}; i < Snake::nuggetClassCount; ++i){
     _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
-      Vector2i{51, 81 - (i * 9)},
+      Vector2i{51, 80 - (i * 9)},
       Snake::menuTextColor,
       delays_s[delayOffset + (i * 2)],
       Snake::menuDisplayLabelLifetime_s,
@@ -270,7 +270,7 @@ void MenuScene::populateScoresDisplay()
       Snake::SID_NUGGET_GOLD + i
     )));
     _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-      Vector2i{57, 80 - (i * 9)},
+      Vector2i{57, 79 - (i * 9)},
       Snake::menuTextColor,
       delays_s[delayOffset + (i * 2)],
       Snake::menuDisplayLabelLifetime_s,
@@ -279,7 +279,7 @@ void MenuScene::populateScoresDisplay()
       getMenuFontKey() 
     )));
     _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-      Vector2i{129, 80 - (i * 9)},
+      Vector2i{129, 79 - (i * 9)},
       Snake::menuTextColor,
       delays_s[delayOffset + ((i * 2) + 1)],
       Snake::menuDisplayLabelLifetime_s,
@@ -298,7 +298,7 @@ void MenuScene::populateCombosDisplay()
     delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / combosTextLabelCount);
 
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{57, 90},
+    Vector2i{57, 89},
     Snake::menuHeaderColor,
     delays_s[0],
     Snake::menuDisplayLabelLifetime_s,
@@ -323,7 +323,7 @@ void MenuScene::populateCombosDisplay()
 
   for(int i {0}; i < comboCount; ++i){
     _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
-      Vector2i{23, 75 - (i * 11)},
+      Vector2i{23, 74 - (i * 11)},
       Snake::menuTextColor,
       delays_s[delayOffset + i],
       Snake::menuDisplayLabelLifetime_s,
@@ -331,7 +331,7 @@ void MenuScene::populateCombosDisplay()
       sids[i]
     )));
     _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-      Vector2i{65, 75 - (i * 11)},
+      Vector2i{65, 74 - (i * 11)},
       Snake::menuTextColor,
       delays_s[delayOffset + i],
       Snake::menuDisplayLabelLifetime_s,
@@ -342,7 +342,7 @@ void MenuScene::populateCombosDisplay()
   }
 
   _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{37, 37},
+    Vector2i{37, 36},
     Snake::menuTextColor,
     delays_s[combosTextLabelCount - 1],
     Snake::menuDisplayLabelLifetime_s,
@@ -354,24 +354,87 @@ void MenuScene::populateCombosDisplay()
 
 void MenuScene::populateSpeedDisplay()
 {
+  static constexpr int speedTextLabelCount {10};
+  float delays_s[speedTextLabelCount];
+  for(int i {0}; i < speedTextLabelCount; ++i)
+    delays_s[i] = i * (Snake::menuDisplayDrawInterval_s / speedTextLabelCount);
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{65, 89},
+    Snake::menuHeaderColor,
+    delays_s[0],
+    Snake::menuDisplayLabelLifetime_s,
+    "SPEED BONUS",
+    true,
+    getMenuFontKey() 
+  )));
+
+  static constexpr int delayOffset {1};
+
+  Vector2i bitmapPosition {25, 77};
+  Vector2i textPosition {56, 76};
+  for(int i{0}; i < Snake::speedBonusCount; ++i){
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+      Vector2i{bitmapPosition._x, bitmapPosition._y - ((i % 4) * 11)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + i],
+      Snake::menuDisplayLabelLifetime_s,
+      _sk->getSpritesheetKey(Snake::SSID_NUGGETS),
+      Snake::SID_NUGGET_ANY_X2 + i
+    )));
+    _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+      Vector2i{textPosition._x, textPosition._y - ((i % 4) * 11)},
+      Snake::menuTextColor,
+      delays_s[delayOffset + i],
+      Snake::menuDisplayLabelLifetime_s,
+      std::string{"+"} + std::to_string(static_cast<int>(Snake::speedBonusTable[i] * 100)) + "%",
+      true,
+      getMenuFontKey() 
+    )));
+    if(i == 3){
+      bitmapPosition._x += 66;
+      textPosition._x += 86;
+    }
+  }
+
+  static constexpr int speedBarState {6};
+
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::BitmapLabel>(
+    Vector2i{29, 30},
+    Snake::menuTextColor,
+    delays_s[speedTextLabelCount - 1],
+    Snake::menuDisplayLabelLifetime_s,
+    _sk->getSpritesheetKey(Snake::SSID_SPEED_BAR),
+    speedBarState
+  )));
+  _uidDisplayLabels.push_back(_hud->addLabel(std::make_unique<HUD::TextLabel>(
+    Vector2i{65, 30},
+    Snake::menuTextColor,
+    delays_s[speedTextLabelCount - 1],
+    Snake::menuDisplayLabelLifetime_s,
+    "2 second cooldown",
+    true,
+    getMenuFontKey() 
+  )));
+
 }
 
 void MenuScene::buildMenu()
 {
   _buttons[BID_PLAY].initialize(
-    Vector2i{87, 139},
+    Vector2i{87, 143},
     "PLAY",
     &MenuScene::onPlayButtonPressed,
     this
   );
   _buttons[BID_HISCORES].initialize(
-    Vector2i{77, 128},
+    Vector2i{77, 132},
     "HISCORES",
     &MenuScene::onHiscoresButtonPressed,
     this
   );
   _buttons[BID_SNAKE].initialize(
-    Vector2i{82, 117},
+    Vector2i{82, 121},
     "SNAKE",
     &MenuScene::onSnakeButtonPressed,
     this
@@ -410,7 +473,7 @@ void MenuScene::addSnakeNameLabel(bool removeFirst)
     _hud->removeLabel(_uidSnakeNameLabel);
 
   _uidSnakeNameLabel = _hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{67, 105},
+    Vector2i{61, 105},
     Snake::snakeColors[_sk->getSnakeHero()],
     0.f, 
     HUD::IMMORTAL_LIFETIME,
