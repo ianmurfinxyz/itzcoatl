@@ -178,6 +178,7 @@ void MenuScene::onEnter()
   drawBackground();
   _northwardSnake.reset();
   _southwardSnake.reset();
+  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_MENU));
 }
 
 void MenuScene::onUpdate(double now, float dt)
@@ -201,6 +202,7 @@ void MenuScene::onExit()
 {
   destroyMenu();
   destroyDisplay();
+  sfx::stopMusic();
 }
 
 void MenuScene::handleInput()
@@ -216,6 +218,7 @@ void MenuScene::handleInput()
 
   if(ekey_pressed){
     _buttons[_hoveredButtonID].onPress();
+    sfx::playSound(_sk->getSoundEffectKey(Snake::SFX_CLICK));
     return;
   }
   if(ekey_released){
@@ -236,6 +239,7 @@ void MenuScene::handleInput()
     _buttons[_hoveredButtonID].onIdle();
     _hoveredButtonID = pxr::wrap<int>(_hoveredButtonID + shift, BID_PLAY, BID_SNAKE);
     _buttons[_hoveredButtonID].onHover();
+    sfx::playSound(_sk->getSoundEffectKey(Snake::SFX_CLICK));
   }
 }
 

@@ -53,3 +53,10 @@ As a bonus (pun intended) the bonuses combine too, so if your speed bonus is max
 ## Compilation
 
 ## Credits
+
+All work is my own with the exception of the sound effects and music which are all from freesound.org. Attributions are listed below.
+
+https://freesound.org/people/craigsmith/sounds/479553/
+https://freesound.org/people/zagi2/sounds/194228/
+https://freesound.org/people/zagi2/sounds/352715/
+https://freesound.org/people/Mellau/sounds/506054/

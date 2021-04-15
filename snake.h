@@ -379,11 +379,13 @@ public:
   enum SoundEffectID
   {
     SFX_SCORE_BEEP,
+    SFX_CLICK,
     SFX_COUNT
   };
 
   static constexpr std::array<sfx::ResourceName_t, SFX_COUNT> soundEffectNames {
-    "scorebeep"
+    "scorebeep",
+    "click"
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,6 +398,8 @@ public:
     MUSIC_JUNGLE_DRUMS_1,
     MUSIC_JUNGLE_DRUMS_2,
     MUSIC_JUNGLE_DRUMS_3,
+    MUSIC_MENU_INTRO,
+    MUSIC_MENU_AMBIENCE,
     MUSIC_COUNT
   };
 
@@ -403,12 +407,15 @@ public:
     "jungle_drums_0",
     "jungle_drums_1",
     "jungle_drums_2",
-    "jungle_drums_3"
+    "jungle_drums_3",
+    "menu_intro",
+    "menu_ambience"
   };
 
   enum MusicSequenceID
   {
     MUSIC_SEQUENCE_JUNGLE,
+    MUSIC_SEQUENCE_MENU,
     MUSIC_SEQUENCE_COUNT
   };
 
@@ -432,6 +439,10 @@ public:
        {{MUSIC_JUNGLE_DRUMS_1}, 1.f,    25.f,           1.f  },
        {{MUSIC_JUNGLE_DRUMS_2}, 1.f,    25.f,           1.f  },
        {{MUSIC_JUNGLE_DRUMS_3}, 1.f,    25.f,           1.f  }
+    }},
+    {{
+       {{MUSIC_MENU_INTRO    }, 1.f,    24.f,           2.f  },
+       {{MUSIC_MENU_AMBIENCE }, 1.f,    999999999999.f, 2.f  }
     }}
   }};
 
