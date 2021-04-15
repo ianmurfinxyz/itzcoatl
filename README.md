@@ -27,7 +27,7 @@ Every time you bite a nugget, the speed timer is reset. Bite another before the 
   <img src="img/hud.png" alt="Diagram of in-game HUD"/>
 </p>
 
-The speed table shows all the speed bonuses you can earn. The +20% bonus, for example, is earned by eating a nugget, then another before the speed timer expires, and then another again before the speed timer expires.
+The speed table below shows all the speed bonuses you can earn. The +20% bonus, for example, is earned by eating a nugget, then another before the speed timer expires, and then another again before the speed timer expires.
 
 <p align="center">
   <img src="img/speed_table.png" alt="Table of Speed Bonuses"/>
