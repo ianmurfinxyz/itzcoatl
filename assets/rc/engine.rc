@@ -9,6 +9,6 @@ clearRed=10
 # default=false min=false max=true
 fullscreen=false
 # default=500 min=300 max=1000
-windowHeight=700
+windowHeight=900
 # default=500 min=300 max=1000
-windowWidth=700
+windowWidth=900

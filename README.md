@@ -18,7 +18,7 @@ As is standard with Snake games the more you eat the more grow. This makes the g
 The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
 
 <p align="center">
-  <img src="img/game_shot.png" alt="Gameplay Screenshot"/>
+  <img src="img/gameplay.gif" alt="Gameplay GIF"/>
 </p>
 
 ### Eat Fast! Eat Smart! :thinking:
