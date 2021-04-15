@@ -11,7 +11,7 @@ The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizo
 
 ## How to Play :joystick:
 
-As is standard with Snake games the more you eat the more grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :moneybag: Among other assorted valuables. The challenge is to max out your score before you grow so long and hungry that you inevitably eat yourself. 
+As is standard with Snake games the more you eat the more you grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :moneybag: Among other assorted valuables. The challenge is to max out your score before you grow so long and so hungry that you inevitably eat yourself! :scream: Oh, the humanity!
 
 The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
 
@@ -19,15 +19,15 @@ The world contains 7 possible edible nuggets, in order of value: Gold, Silver, O
   <img src="img/gameplay.gif" alt="Gameplay GIF"/>
 </p>
 
-### Eat Fast! Eat Smart! :thinking:
+### Eat Fast! Eat Smart! :nerd_face:
 
-Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score, on top of the base value, for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep an keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
+Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score, on top of the base value, for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep a keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
 
 <p align="center">
   <img src="img/hud.png" alt="Diagram of in-game HUD"/>
 </p>
 
-The speed table shows all the speed bonuses you can earn. The +20% bonus, for example, is earned by eating a nugget, then another before the speed timer expires, and then another again before the speed timer expires.
+The speed table below shows all the speed bonuses you can earn. The +20% bonus, for example, is earned by eating a nugget, then another before the speed timer expires, and then another again before the speed timer expires.
 
 <p align="center">
   <img src="img/speed_table.png" alt="Table of Speed Bonuses"/>
