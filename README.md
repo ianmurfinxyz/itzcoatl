@@ -13,7 +13,7 @@ The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizo
 
 ## How to Play 🕹️:joystick:
 
-As is standard with Snake games the more you eat the more grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :money_mouth_face: Among other assorted valuables. The challenge is to max out your score before you grow so long and hungry that you inevitably eat yourself. 
+As is standard with Snake games the more you eat the more grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :money_bag: Among other assorted valuables. The challenge is to max out your score before you grow so long and hungry that you inevitably eat yourself. 
 
 The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
 
