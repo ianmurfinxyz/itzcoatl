@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include "play_scene.h"
 #include "pxr_mathutil.h"
 #include "pxr_rand.h"
@@ -79,15 +80,9 @@ void PlayScene::onEnterPlaying()
   _currentMoveDirection = Snake::WEST;
   _stepClock_s = 0.f;
   _speedClock_s = 0.f;
-  _speedCombo = 0;
-  _sameNuggetCombo = 0;
+  _speedBonusTableIndex = 0;
   _currentSpeedBonusAsInt = 0;
-
-  //
-  // This will allow the gold same nugget bonus to be earned with 1 less nugget upon first
-  // entering play state. I will leave this as an easter egg :)
-  //
-  _lastNuggetEaten = Snake::NUGGET_GOLD;
+  clearEatHistory();
 
   initializeSnake();
   initializeNuggets();
@@ -534,35 +529,130 @@ void PlayScene::updateSpeedBonusHUD()
     updateSpeedBar(speedBarState);
 }
 
-int PlayScene::applyScoreBonuses(const Nugget& eaten)
+bool PlayScene::havePossibleSameCombo()
 {
-  float sameNuggetBonus {1.f}, speedBonus {1.f};
+  if(_eatHistorySize <= 1) 
+    return true;
 
-  if(eaten._classID == _lastNuggetEaten){ 
-    ++_sameNuggetCombo; 
-    if(_sameNuggetCombo >= Snake::numSameNuggetsForBonus){
-      sameNuggetBonus = Snake::sameNuggetComboBonus;
-      // TODO INSERT SOUND
-      _sameNuggetCombo = 1;
-    }
-  }
-  else {
-    _sameNuggetCombo = 1;
-    _lastNuggetEaten = eaten._classID;
+  if(_eatHistorySize == 2)
+    return _eatHistory[0] == _eatHistory[1];
+
+  for(int i{1}; i < _eatHistorySize - 1; ++i)
+    if(_eatHistory[0] != _eatHistory[i]) return false;
+  return true;
+}
+
+bool PlayScene::havePossibleOrderCombo()
+{
+  if(_eatHistorySize == 0) return true;
+
+  if(_eatHistory[0] != Snake::NUGGET_AMETHYST)
+    return false;
+
+  for(int i{1}; i < _eatHistorySize; ++i){
+    if(_eatHistory[i] != Snake::NUGGET_AMETHYST - i)
+      return false;
   }
 
+  return true;
+}
+
+bool PlayScene::haveSame3Combo()
+{
+  if(_eatHistorySize < 4) return false;
+  if(_eatHistorySize > 5) return false; // same6 takes over this case.
+  int sameCount {1};
+  for(int i{1}; i < _eatHistorySize; ++i){
+    if(_eatHistory[0] == _eatHistory[i])
+      ++sameCount;
+    else 
+      break;
+  }
+  if(3 <= sameCount && sameCount < _eatHistorySize)
+    return true;
+
+  return false;
+}
+
+bool PlayScene::haveSame6Combo()
+{
+  if(_eatHistorySize < 6) return false;
+  for(int i{1}; i < 6; ++i)
+    if(_eatHistory[0] != _eatHistory[i]) return false;
+  return true;
+}
+
+bool PlayScene::haveOrderCombo()
+{
+  if(_eatHistorySize < Snake::nuggetClassCount) return false;
+  for(int i{0}; i < Snake::nuggetClassCount; ++i)
+    if(_eatHistory[i] != Snake::NUGGET_AMETHYST - i)
+      return false;
+  return true;
+}
+
+float PlayScene::doSpeedBonus(const Nugget& eaten)
+{
+  float speedBonus {1.f};
   if(_speedClock_s > 0.f){
-    speedBonus += Snake::speedBonusTable[_speedCombo];
-    _speedCombo = std::clamp(_speedCombo + 1, 0, Snake::speedBonusCount - 1);
+    speedBonus += Snake::speedBonusTable[_speedBonusTableIndex];
+    _speedBonusTableIndex = std::clamp(_speedBonusTableIndex + 1, 0, Snake::speedBonusCount - 1);
   }
   else{
-    _speedCombo = 0;
+    _speedBonusTableIndex = 0;
   }
   _speedClock_s = Snake::speedBonusCooldown_s;
-  _currentSpeedBonusAsInt = (speedBonus - 1.f) * 100;
+  _currentSpeedBonusAsInt = std::round((speedBonus - 1.f) * 100.f);
+  return speedBonus;
+}
 
-  const auto& nc = Snake::nuggetClasses[eaten._classID];
-  return nc._score * sameNuggetBonus * speedBonus;
+void PlayScene::clearEatHistory()
+{
+  _eatHistorySize = 0;
+}
+
+void PlayScene::reduceEatHistory()
+{
+  if(_eatHistorySize <= 1) return;
+  while(_eatHistorySize > 1 && !havePossibleOrderCombo()){
+    std::shift_left(_eatHistory.begin(), _eatHistory.begin() + _eatHistorySize, 1); 
+    --_eatHistorySize;
+  }
+}
+
+int PlayScene::applyScoreBonuses(const Nugget& eaten)
+{
+  assert(_eatHistorySize != Snake::longestPossibleCombo);
+  _eatHistory[_eatHistorySize++] = eaten._classID;
+
+  printEatHistory();
+
+  if(!(havePossibleSameCombo() || havePossibleOrderCombo())){
+    reduceEatHistory();
+    printEatHistory();
+  }
+
+  int sum;
+  bool haveSame3, haveSame6, haveOrder;
+  haveSame3 = haveSame3Combo();
+  haveSame6 = haveSame6Combo();
+  haveOrder = haveOrderCombo();
+
+  sum = haveSame3 + haveSame6 + haveOrder; 
+  assert(sum <= 1);
+
+  int comboBonus {1};
+  if     (haveSame3) comboBonus = Snake::same3ComboBonus;
+  else if(haveSame6) comboBonus = Snake::same6ComboBonus;
+  else if(haveOrder) comboBonus = Snake::orderComboBonus;
+
+  if(sum){
+    clearEatHistory();
+    printEatHistory();
+  }
+
+  float speedBonus = doSpeedBonus(eaten);
+  return Snake::nuggetClasses[eaten._classID]._score * comboBonus * speedBonus;
 }
 
 void PlayScene::spawnNuggetScorePopup(const Nugget& eaten, int score)

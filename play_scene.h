@@ -44,6 +44,7 @@ private:
     bool _isAlive;
   };
 
+
 private:
   void onEnterPlaying();
   void onUpdatePlaying(double now, float dt);
@@ -68,11 +69,8 @@ private:
   void updateSmoothSnakeBlockSpriteIDs();
   bool collideSnakeNuggets();
   bool collideSnakeSnake();
-  void eatNugget(Nugget& nugget);
   void updateSpeedBar(int speedBarState, bool removeFirst = true);
   void updateSpeedBonusHUD();
-  int applyScoreBonuses(const Nugget& eaten);
-  void spawnNuggetScorePopup(const Nugget& eaten, int score);
   void eatSnake();
   void animateTongue(){}
   void drawBackground();
@@ -81,6 +79,18 @@ private:
   void drawSnake(gfx::ScreenID_t screenid);
   void drawSmoothSnake(gfx::ScreenID_t screenid);
   void drawNuggets(gfx::ScreenID_t screenid);
+
+  bool havePossibleSameCombo();
+  bool havePossibleOrderCombo();
+  bool haveSame3Combo();
+  bool haveSame6Combo();
+  bool haveOrderCombo();
+  float doSpeedBonus(const Nugget& eaten);
+  void clearEatHistory();
+  void reduceEatHistory();
+  int applyScoreBonuses(const Nugget& eaten);
+  void spawnNuggetScorePopup(const Nugget& eaten, int score);
+  void eatNugget(Nugget& nugget);
 
 private:
 
@@ -129,12 +139,14 @@ private:
   int _numNuggetsInWorld;
 
   float _stepClock_s;
+
+  std::array<Snake::NuggetClassID, Snake::longestPossibleCombo> _eatHistory;
+  int _eatHistorySize;
+
   float _speedClock_s;
-  int _currentSpeedBonusAsInt;            // used to provide the bonus value or the HUD.
-  int _currentSpeedBarState;              // selects the sprite to show for the speed bar.
-  int _speedCombo;                        // the number of nuggets eaten in speed succession.
-  int _sameNuggetCombo;                   // the number of the same nugget eaten in sequence.
-  Snake::NuggetClassID _lastNuggetEaten;
+  int _currentSpeedBonusAsInt;
+  int _currentSpeedBarState;
+  int _speedBonusTableIndex;
 };
 
 #endif

@@ -54,18 +54,19 @@ public:
   static constexpr int      boardMarginHiY   {boardPosition._y + (boardSize._y * blockSize_rx)};
 
   static constexpr int      maxSnakeLength         {400};
-  static constexpr int      babySnakeLength        {6};
+  static constexpr int      babySnakeLength        {4};
   static constexpr float    stepFrequency_hz       {10.f};
   static constexpr float    stepPeriod_s           {1.f / stepFrequency_hz};
-  static constexpr float    speedBonusCooldown_s  {5.f};
-  static constexpr float    sameNuggetComboBonus   {2.f}; 
-  static constexpr int      numSameNuggetsForBonus {3};
+  static constexpr float    speedBonusCooldown_s   {5.f};
+  static constexpr int      same3ComboBonus        {3};
+  static constexpr int      same6ComboBonus        {6};
+  static constexpr int      orderComboBonus        {9};
 
   static constexpr int      snakeHeadSpawnCol  {(boardSize._x / 2) - (babySnakeLength / 2)};
   static constexpr int      snakeHeadSpawnRow  {(boardSize._y / 2)};
 
-  static constexpr int      maxNuggetsInWorld  {5};
-  static constexpr int      growthsPerNugget   {5};
+  static constexpr int      maxNuggetsInWorld  {20};
+  static constexpr int      growthsPerNugget   {1};
 
   static constexpr float    hudFlashPeriod           {1.f};
   static constexpr float    hudPhaseInPeriod         {0.05f};
@@ -81,6 +82,8 @@ public:
   static constexpr gfx::Color4u scorePopupColor   {127, 52, 0, 255};
   static constexpr gfx::Color4u menuHeaderColor   {219, 41, 0, 255};
   static constexpr gfx::Color4u menuTextColor     {gfx::colors::black};
+
+  static constexpr int longestPossibleCombo       {7};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONTROLS       
