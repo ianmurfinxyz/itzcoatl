@@ -21,7 +21,7 @@ The world contains 7 possible edible nuggets, in order of value: Gold, Silver, O
 
 ### Eat Fast! Eat Smart! :thinking:
 
-Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep an keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
+Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score, on top of the base value, for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep an keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
 
 <p align="center">
   <img src="img/hud.png" alt="Diagram of in-game HUD"/>
@@ -42,10 +42,7 @@ Eating smart means thinking nugget combos. There are 3 types of combo you can ea
   <img src="img/nugget_table.png" alt="Table of Nugget Score Values"/>
 </p>
 
-
-There are 7 varieties of nugget to eat in the game with each nugget having a unique score value as shown in the table below. Scores can be multiplied by eating nuggets in quick succession or by eating x3 of a single nugget type in sequence. The quick succession bonus increases with longer chains of quick eats. Eating a single nugget and then a second nugget before the quick bonus cooldown will boost the quick bonus to +10% giving an extra 10% to all future nuggets eaten. Continuing to eat nuggets before the quick cooldown will rack up the quick bonus up to a max of 250%. However if the cooldown drops to zero you lose all accumulated quick bonus and have to build it back up.
-
-The two types of bonuses can be combined too, so if you have a current quick bonus of +250% and then eat x3 of a single nugget type in sequence the +250% applies to the combo bonus too.
+As a bonus (pun intended) the bonuses combine too, so if your speed bonus is maxed out at +200% and you eat one of each nugget type in order of value, that sweet gold bonus becomes 2010 points! :astonished::money_mouth_face::money_mouth_face: Is this broken! Who knows!? :upside_down_face:
 
 <p align="center">
   <img src="img/nuggets.png" alt=""/>
