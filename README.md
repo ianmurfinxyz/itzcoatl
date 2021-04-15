@@ -7,9 +7,16 @@
 
 Itcoatl is an Aztec themed version of the game Snake made to test drive my engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos.
 
-The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :)) means "Obsidean Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist. I do know how to pronounce Montezuma though, its mont-ee-zooma ... thanks CIV! :)
+The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :stuck_out_tongue_winking_eye:) means "Obsidean Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist. I do know how to pronounce Montezuma though, its mont-ee-zooma ... thanks CIV! :grinning:
+
+## Main Menu
 
 ## Gameplay
+
+As is standard with Snake games the more you eat the more grow. This makes the game harder over time. What differs with my version however is that mister snake resides in a world abundant with GOLD! Among other assorted valuables. The challenge is to max out your score before you grow so long and hungry that you inevitably eat yourself. 
+
+The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
+
 
 As is standard with snake games you play as a snake which must eat as many nuggets as possible whilst growing in length with each nugget eaten. In this version the snake does not collide with the world edges opting instead to wrap around to the other side as shown in the screenshot below. The only obstacle in the game is thus yourself with a single bite of your own body resulting in immediete game over.
 
