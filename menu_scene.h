@@ -77,6 +77,41 @@ private:
     MenuScene* _menu;
   };
 
+  class SnakeAnimation
+  {
+  public:
+    static constexpr int numRows {40}; 
+    static constexpr int snakeLength {6};
+    static constexpr int HEAD_BLOCK {0};
+    static constexpr int TAIL_BLOCK {snakeLength - 1};
+
+  public:
+    SnakeAnimation();
+    ~SnakeAnimation();
+    void initialize(Vector2i basePosition, Snake::Direction direction, Snake* sk); 
+    void update(float dt);
+    void draw(gfx::ScreenID_t screenID);
+    void reset();
+
+  private:
+    struct SnakeBlock
+    {
+      int _row;
+      gfx::SpriteID_t _spriteid;
+    };
+
+  private:
+    void moveSnake();
+
+  private:
+    Vector2i _basePosition;
+    std::array<SnakeBlock, snakeLength> _snake;
+    int _direction;
+    int _deltaRow;
+    float _stepClock_s;
+    Snake* _sk;
+  };
+
 private:
   void handleInput();
 
@@ -93,6 +128,7 @@ private:
 
   void buildMenu();
   void startDisplay();
+  void initSnakeAnimations();
   void destroyMenu();
   void destroyDisplay();
 
@@ -126,6 +162,9 @@ private:
   int _currentDisplayID;
   float _displayClock_s;
   std::vector<HUD::uid_t> _uidDisplayLabels;
+
+  SnakeAnimation _northwardSnake;
+  SnakeAnimation _southwardSnake;
 
   HUD::uid_t _uidSnakeNameLabel;
 };

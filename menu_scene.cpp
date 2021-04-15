@@ -70,18 +70,104 @@ void MenuScene::Button::onPress()
   _state = State::PRESSED;
 }
 
+MenuScene::SnakeAnimation::SnakeAnimation() :
+  _basePosition{},
+  _snake{},
+  _direction{},
+  _deltaRow{0},
+  _stepClock_s{0.f},
+  _sk{nullptr}
+{}
+
+void MenuScene::SnakeAnimation::initialize(Vector2i basePosition, Snake::Direction direction, Snake* sk)
+{
+  _basePosition = basePosition;
+  _direction = direction;
+  _sk = sk;
+
+  if(direction == Snake::NORTH) 
+    _deltaRow = 1;
+  else if(direction == Snake::SOUTH) 
+    _deltaRow = -1;
+  else
+    assert(0);
+
+  reset();
+
+  _snake[HEAD_BLOCK]._spriteid = Snake::smoothSnakeHeadBlockTree[direction];
+  _snake[TAIL_BLOCK]._spriteid = Snake::snakeTailBlockTree[direction];
+
+  for(int block{1}; block < snakeLength - 1; ++block)
+    _snake[block]._spriteid = Snake::smoothSnakeBodyBlockTree[direction];
+}
+
+MenuScene::SnakeAnimation::~SnakeAnimation()
+{
+  _sk = nullptr; // explicit - does not own.
+}
+
+void MenuScene::SnakeAnimation::update(float dt)
+{
+  _stepClock_s += dt;
+  if(_stepClock_s > Snake::stepPeriod_s){
+    moveSnake();
+    _stepClock_s = 0.f;
+  }
+}
+
+void MenuScene::SnakeAnimation::moveSnake()
+{
+  for(auto& block : _snake){
+    block._row += _deltaRow;
+    if(block._row >= numRows) 
+      block._row = 0;
+    else if(block._row < 0) 
+      block._row = numRows - 1;
+  }
+}
+
+void MenuScene::SnakeAnimation::draw(gfx::ScreenID_t screenID)
+{
+  assert(_sk != nullptr);
+
+  for(int block {HEAD_BLOCK}; block < snakeLength; ++block){
+    Vector2i position {
+      _basePosition._x,
+      _basePosition._y + (_snake[block]._row * Snake::blockSize_rx)
+    };
+    gfx::drawSprite(
+      position,
+      _sk->getSpritesheetKey(Snake::SSID_SNAKES),
+      _snake[block]._spriteid + (_sk->getSnakeHero() * Snake::SID_SNAKE_OFFSET),
+      screenID
+    );
+  }
+}
+
+void MenuScene::SnakeAnimation::reset()
+{
+  _stepClock_s = 0.f;
+  for(int i{0}; i < snakeLength; ++i){
+    _snake[i]._row = (numRows / 2) - (_deltaRow * i);
+    assert(0 <= _snake[i]._row && _snake[i]._row < numRows);
+  }
+}
+
 MenuScene::MenuScene(pxr::Game* owner) :
   Scene(owner),
   _sk{nullptr},
   _hud{nullptr},
   _buttons{},
-  _hoveredButtonID{0}
+  _hoveredButtonID{0},
+  _northwardSnake{},
+  _southwardSnake{}
 {}
 
 bool MenuScene::onInit()
 {
   _sk = static_cast<Snake*>(_owner);
   _hud = _sk->getHUD();
+  initSnakeAnimations();
   return true;
 }
 
@@ -90,18 +176,24 @@ void MenuScene::onEnter()
   buildMenu();
   startDisplay();
   drawBackground();
+  _northwardSnake.reset();
+  _southwardSnake.reset();
 }
 
 void MenuScene::onUpdate(double now, float dt)
 {
   handleInput();
   updateDisplay(dt);
+  _southwardSnake.update(dt);
+  _northwardSnake.update(dt);
   _hud->onUpdate(dt);
 }
 
 void MenuScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>& screens)
 {
   gfx::clearScreenTransparent(screens[Snake::SCREEN_STAGE]);
+  _southwardSnake.draw(screens[Snake::SCREEN_STAGE]);
+  _northwardSnake.draw(screens[Snake::SCREEN_STAGE]);
   _hud->onDraw(screens[Snake::SCREEN_STAGE]);
 }
 
@@ -449,6 +541,20 @@ void MenuScene::startDisplay()
   _currentDisplayID = DID_RULES;
   _displayClock_s = 0.f;
   populateRulesDisplay();
+}
+
+void MenuScene::initSnakeAnimations()
+{
+  _southwardSnake.initialize(
+    Vector2i{5, 20},
+    Snake::Direction::SOUTH,
+    _sk
+  );
+  _northwardSnake.initialize(
+    Vector2i{191, 20},
+    Snake::Direction::NORTH,
+    _sk
+  );
 }
 
 void MenuScene::destroyMenu()
