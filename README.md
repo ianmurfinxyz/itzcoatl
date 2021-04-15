@@ -19,7 +19,7 @@ The world contains 7 possible edible nuggets, in order of value: Gold, Silver, O
   <img src="img/gameplay.gif" alt="Gameplay GIF"/>
 </p>
 
-### Eat Fast! Eat Smart! :thinking:
+### Eat Fast! Eat Smart! :nerd_face:
 
 Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score, on top of the base value, for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep an keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
 
