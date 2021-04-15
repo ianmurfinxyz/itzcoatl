@@ -625,12 +625,8 @@ int PlayScene::applyScoreBonuses(const Nugget& eaten)
   assert(_eatHistorySize != Snake::longestPossibleCombo);
   _eatHistory[_eatHistorySize++] = eaten._classID;
 
-  printEatHistory();
-
   if(!(havePossibleSameCombo() || havePossibleOrderCombo())){
     reduceEatHistory();
-    printEatHistory();
-  }
 
   int sum;
   bool haveSame3, haveSame6, haveOrder;
@@ -646,10 +642,7 @@ int PlayScene::applyScoreBonuses(const Nugget& eaten)
   else if(haveSame6) comboBonus = Snake::same6ComboBonus;
   else if(haveOrder) comboBonus = Snake::orderComboBonus;
 
-  if(sum){
-    clearEatHistory();
-    printEatHistory();
-  }
+  if(sum) clearEatHistory();
 
   float speedBonus = doSpeedBonus(eaten);
   return Snake::nuggetClasses[eaten._classID]._score * comboBonus * speedBonus;
