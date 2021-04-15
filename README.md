@@ -36,7 +36,7 @@ The speed table shows all the speed bonuses you can earn. The +20% bonus, for ex
 Eating smart means thinking nugget combos. There are 3 types of combo you can earn:
 1. Eat x3-5 of the same nugget, followed by a different nugget, and earn x3 of the different nuggets value.
 2. Eat x6 of the same nugget, and earn x6 of that nuggets value.
-3. Eat all nugget types in order of ascending value and earn x9 of the final nugget's value. The GOLD! nugget :moneybah:. A whopping 630 points! :money_mouth_face:
+3. Eat all nugget types in order of ascending value and earn x9 of the final nugget's value. The GOLD! nugget :moneybag:. A whopping 630 points! :money_mouth_face:
 
 <p align="center">
   <img src="img/nugget_table.png" alt="Table of Nugget Score Values"/>
