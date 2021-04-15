@@ -625,7 +625,7 @@ int PlayScene::applyScoreBonuses(const Nugget& eaten)
   assert(_eatHistorySize != Snake::longestPossibleCombo);
   _eatHistory[_eatHistorySize++] = eaten._classID;
 
-  if(!(havePossibleSameCombo() || havePossibleOrderCombo())){
+  if(!(havePossibleSameCombo() || havePossibleOrderCombo()))
     reduceEatHistory();
 
   int sum;
