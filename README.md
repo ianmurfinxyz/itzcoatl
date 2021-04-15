@@ -17,12 +17,19 @@ As is standard with Snake games the more you eat the more grow. This makes the g
 
 The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
 
-
-As is standard with snake games you play as a snake which must eat as many nuggets as possible whilst growing in length with each nugget eaten. In this version the snake does not collide with the world edges opting instead to wrap around to the other side as shown in the screenshot below. The only obstacle in the game is thus yourself with a single bite of your own body resulting in immediete game over.
-
 <p align="center">
   <img src="img/game_shot.png" alt="gameplay_screenshot"/>
 </p>
+
+### Eat Fast! Eat Smart! :thinking:
+
+Every time you bite a nugget, the speed timer is reset. Bite abother before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep an keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
+
+Eating smart means thinking nugget combos. There are 3 types of combo you can earn:
+1. Eat x3-5 of the same nugget, followed by a different nugget, and earn x3 of the different nuggets value.
+2. Eat x6 of the same nugget, and earn x6 of that nuggets value.
+3. Eat all nugget types in order of ascending value and earn x9 of the final nugget's (GOLD!) value. A whopping 630 points! :money_mouth_face:
+
 
 There are 7 varieties of nugget to eat in the game with each nugget having a unique score value as shown in the table below. Scores can be multiplied by eating nuggets in quick succession or by eating x3 of a single nugget type in sequence. The quick succession bonus increases with longer chains of quick eats. Eating a single nugget and then a second nugget before the quick bonus cooldown will boost the quick bonus to +10% giving an extra 10% to all future nuggets eaten. Continuing to eat nuggets before the quick cooldown will rack up the quick bonus up to a max of 250%. However if the cooldown drops to zero you lose all accumulated quick bonus and have to build it back up.
 
