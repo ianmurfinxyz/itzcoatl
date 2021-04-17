@@ -3,6 +3,10 @@
   <img src="img/itzcoatl_title.png" alt="Itzcoatl Title Banner"/>
 </p>
 
+![](https://img.shields.io/badge/platform-linux-informational)
+![](https://img.shields.io/badge/cpp-c%2B%2B11-ff69b4)
+[![TODOs](https://img.shields.io/badge/TODO-file-important)](/todo)
+
 ## What's this?
 
 Itzcoatl is an Aztec themed version of the game Snake :snake: made to test drive my game engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos.
