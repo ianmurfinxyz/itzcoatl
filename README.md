@@ -104,7 +104,7 @@ On Arch linux
 $ pacman -S sdl2 sdl2_mixer mesa
 $ make
 ```
-and on Debian:
+and on Ubuntu:
 
 ```shell
 $ apt install libsdl2-2.0-0 libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev libglx-mesa0
