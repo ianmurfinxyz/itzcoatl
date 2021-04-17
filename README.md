@@ -60,12 +60,12 @@ From the main menu you can select which snake you want to play as, view the high
 
 The controls are super simple. Use the arrow keys to steer mister snake in any which way you please, and the enter key, when on the menu, to select an option.
 
-Don't like these controls? You can change them with a small edit to snake.h; all controls are laid out in the controls configuration sections of the header starting line 86.
+Don't like these controls? :anguished: You can change them with a small edit to snake.h; all controls are laid out in the controls configuration sections of the header starting line 86.
 
 ```c++
-////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 // CONTROLS       
-////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
 static constexpr pxr::input::KeyCode moveLeftKey  {pxr::input::KEY_LEFT  };
 static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT };
@@ -74,11 +74,13 @@ static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN  };
 
 static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s     };
 
-static constexpr pxr::input::KeyCode menuUpKey     {pxr::input::KEY_UP   };
-static constexpr pxr::input::KeyCode menuDownKey   {pxr::input::KEY_DOWN };
-static constexpr pxr::input::KeyCode menuPressKey  {pxr::input::KEY_ENTER};
+static constexpr pxr::input::KeyCode menuUpKey    {pxr::input::KEY_UP   };
+static constexpr pxr::input::KeyCode menuDownKey  {pxr::input::KEY_DOWN };
+static constexpr pxr::input::KeyCode menuPressKey {pxr::input::KEY_ENTER};
 ```
 The key codes are in source/pixiretro/pxr_input.h.
+
+Whats the smooth toggle you may be wondering? :confused: It switches between an alternative drawing mode for the snake which makes the snake move smoother, at the cost of less pretty animations. I couldn't quite decide which mode I like best so I set the pretty animations to the default and added the toggle option. You can decide for yourself which you prefer. :thumbsup:
 
 ## Compilation
 
