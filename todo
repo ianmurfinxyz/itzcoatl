@@ -68,5 +68,5 @@ https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 - add sounds to the game state, specifically add a sound (like a dong?) when the speed timer 
   drops to zero. Add a sound when snake changes direction? Happens too often so would this be
   annoying? Perhaps a really subtle thud or tap.
-- have the game state switch back to the menu upon death
+- have the game state switch back to the menu upon death or even better the high score states.
 - add a youtube demonstration of the project on my (currently empty) pixrex channel.
