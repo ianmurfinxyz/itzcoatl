@@ -95,7 +95,7 @@ $ make
 and on Debian:
 
 ```shell
-$ apt install libsdl2-2.0-0 libsdl2-mixer-2.0-0 libglx-mesa0
+$ apt install libsdl2-2.0-0 libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev libglx-mesa0
 $ make
 ```
 ## Credits

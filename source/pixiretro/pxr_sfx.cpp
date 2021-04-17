@@ -131,7 +131,7 @@ Mix_Chunk* generateSineBeep(int waveFreq_hz, float waveDuration_s)
 {
   static_assert(std::numeric_limits<T>::is_integer);
 
-  float waveFreq_rad_per_s {waveFreq_hz * 2.f * M_PI};
+  float waveFreq_rad_per_s = waveFreq_hz * 2.f * M_PI;
   int sampleCount = sfxconfiguration._samplingFreq_hz * waveDuration_s;
   float samplePeriod_s = 1.f / sfxconfiguration._samplingFreq_hz;
   T* pcm = new T[sampleCount];
