@@ -15,7 +15,7 @@ The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizo
 
 ## Project State
 
-#### The Game is not yet fully complete. The high score states are not yet added and upon death the game will just stop doing anything. It hasn't crashed, it just ends like that! Professionalism is my middle name. :grinning: So to play again currently you have to close the game and start it up again.
+#### The Game is not yet fully complete. The high score states are not yet added and upon death the game will just stop doing anything. It hasn't crashed, it just ends like that! Professionalism is my middle name. :stuck_out_tongue_winking_eye: So to play again currently you have to close the game and start it up again.
 
 #### Currently the game will also only run on linux. At some point in the future I may work on getting it running on windows. I am also thinking of adding it to the AUR for arch users.
 
