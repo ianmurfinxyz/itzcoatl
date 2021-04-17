@@ -46,7 +46,7 @@ As a bonus (pun intended) the bonuses combine too, so if your speed bonus is max
 
 ## Menu
 
-From the main menu you can select which snake you want to play as, view the high scores table and start up a game. You chosen emperor can be seen slivering up and down sides. :snake:
+From the main menu you can select which snake you want to play as, view the high scores table and start up a game. You chosen emperor can be seen slivering up and down sides. :snake: A cylcing display also explains the rules and details the score bonuses you can earn.
 
 <p align="center">
   <img src="img/menu.gif" alt="Main Menu GIF"/>
