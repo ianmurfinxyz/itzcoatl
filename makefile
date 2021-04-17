@@ -1,29 +1,52 @@
 LDLIBS = -lSDL2 -lSDL2_mixer -lm -lGLX_mesa
 CXXFLAGS = -g -Wall -std=c++20
-SRC = main.cpp \
-			play_scene.cpp \
-			menu_scene.cpp \
-			snake.cpp \
-			pxr_bmp.cpp \
-			pxr_collision.cpp \
-			pxr_engine.cpp \
-			pxr_gfx.cpp \
-			pxr_hud.cpp \
-			pxr_input.cpp \
-			pxr_log.cpp \
-			pxr_particle.cpp \
-			pxr_rand.cpp \
-			pxr_rc.cpp \
-			pxr_sfx.cpp \
-			pxr_wav.cpp \
-			pxr_xml.cpp \
-			tinyxml2.cpp
-INC = pxr_bmp.h pxr_collision.h pxr_color.h pxr_engine.h pxr_game.h pxr_gfx.h pxr_hud.h \
-			pxr_input.h pxr_log.h pxr_mathutil.h pxr_particle.h pxr_rand.h pxr_rc.h pxr_rect.h \
-			pxr_sfx.h pxr_vec.h pxr_wav.h pxr_xml.h tinyxml2.h
 
-itzcoatl : $(SRC) $(INC)
-	$(CXX) $(CXXFLAGS) -o $@ $(SRC) $(LDLIBS)
+GSRC = source/main.cpp \
+			 source/play_scene.cpp \
+			 source/menu_scene.cpp \
+			 source/snake.cpp
+
+ESRC = source/pixiretro/pxr_bmp.cpp \
+			 source/pixiretro/pxr_collision.cpp \
+			 source/pixiretro/pxr_engine.cpp \
+			 source/pixiretro/pxr_gfx.cpp \
+			 source/pixiretro/pxr_hud.cpp \
+			 source/pixiretro/pxr_input.cpp \
+			 source/pixiretro/pxr_log.cpp \
+			 source/pixiretro/pxr_particle.cpp \
+			 source/pixiretro/pxr_rand.cpp \
+			 source/pixiretro/pxr_rc.cpp \
+			 source/pixiretro/pxr_sfx.cpp \
+			 source/pixiretro/pxr_wav.cpp \
+			 source/pixiretro/pxr_xml.cpp \
+			 source/pixiretro/tinyxml2.cpp
+
+GINC = source/play_scene.h \
+			 source/menu_scene.h \
+			 source/snake.h 
+
+EINC = source/pixiretro/pxr_bmp.h \
+			 source/pixiretro/pxr_collision.h \
+			 source/pixiretro/pxr_color.h \
+			 source/pixiretro/pxr_engine.h \
+			 source/pixiretro/pxr_game.h \
+			 source/pixiretro/pxr_gfx.h \
+			 source/pixiretro/pxr_hud.h \
+			 source/pixiretro/pxr_input.h \
+			 source/pixiretro/pxr_log.h \
+			 source/pixiretro/pxr_mathutil.h \
+			 source/pixiretro/pxr_particle.h \
+			 source/pixiretro/pxr_rand.h \
+			 source/pixiretro/pxr_rc.h \
+			 source/pixiretro/pxr_rect.h \
+			 source/pixiretro/pxr_sfx.h \
+			 source/pixiretro/pxr_vec.h \
+			 source/pixiretro/pxr_wav.h \
+			 source/pixiretro/pxr_xml.h \
+			 source/pixiretro/tinyxml2.h
+
+itzcoatl : $(GSRC) $(ESRC) $(GINC) $(EINC)
+	$(CXX) $(CXXFLAGS) -o $@ $(GSRC) $(ESRC) $(LDLIBS) -I source/pixiretro/
 
 .PHONY: clean
 clean:

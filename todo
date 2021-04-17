@@ -5,49 +5,65 @@
     #   ##### ####  #####
 
 [06-04-2021]
-- investigate the visual anomaly when wrapping in which the segments appear to seperate,
-  it must be a side effect of the wrap logic combined with the draw lerping.
-- draw a background
-- add some nuggets to eat
-- idea for scoring: can make different nuggets last for different durations, shorter lived 
+- [nah! prefer the non-smooth movement and made it the default anyway] investigate the visual 
+  anomaly when wrapping in which the smooth moving segments appear to seperate, it must be a 
+  side effect of the wrap logic combined with the draw lerping.
+- [DONE] draw a background
+- [DONE] add some nuggets to eat
+- [SKIP] idea for scoring: can make different nuggets last for different durations, shorter lived 
   nuggets can be worth more points, and can gain bonus points for collecting nuggets in quick
   succession. Thus the goal is to collect as many nuggets as fast as possible, prioritising
   those nuggets which are more valuable whilst balancing this against those which are closer.
   Since if a valuable nugget is far away you may want to beeline for it to get the score, but
   doing so may break your combo.
-- will want a UI/HUD that shows the combo timer and your score.
-- could unlock more snakes to play as by gaining higher scores.
-- like the idea of gold piling up on the edges of the map (outside the map) as you collect
+- [DONE] will want a UI/HUD that shows the combo timer and your score.
+- [DONE but without the score unlock] could unlock more snakes to play as by gaining higher scores.
+- [skip] like the idea of gold piling up on the edges of the map (outside the map) as you collect
   more points.
-- could also add power up nuggets which give you a boost to speed to help with combos.
-- add a cracking music score - some aztec themed stuff.
+- [skip] could also add power up nuggets which give you a boost to speed to help with combos.
+- [DONE] add a cracking music score - some aztec themed stuff.
 - sound effect for score/eating and dying etc.
-- menu and score reg/board states (no splash state).
-- strip out the old openal sfx module and replace it with a sdl_mixer module, the latter is 
+- [DONE MENU - DO SCORES] menu and score reg/board states (no splash state).
+- [DONE] strip out the old openal sfx module and replace it with a sdl_mixer module, the latter is 
   simpler to use and easier to install and distribute so people downloading the game will have
   an easier time compiling it. I also seem to have problems getting openal running on my system
   and don't want the headache.
 
 
-- add some LittleRobotSoundFactory music loops:
+- [DONE] add some LittleRobotSoundFactory music loops:
 https://freesound.org/people/LittleRobotSoundFactory/packs/18000/
 https://freesound.org/people/LittleRobotSoundFactory/packs/18177/?page=2#sound
-- jungle war drums mix seems like it would go well
+jungle war drums mix seems like it would go well
 https://freesound.org/people/LittleRobotSoundFactory/packs/18000/
 
 ancient people loop suits really well, use this one,
 https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 
-- add a music mixer module which will fade in/out a sequence of music loops.
-- the nuggets need to flash and time out.
-- think I need more nuggets so should increase the spawn number.
-- detect snake eating itself.
+- [DONE] add a music mixer module which will fade in/out a sequence of music loops.
+- [decided not to do this] the nuggets need to flash and time out.
+- [DONE] think I need more nuggets so should increase the spawn number.
+- [DONE] detect snake eating itself.
 - implement the flow of the play scene - do I want to instantly switch to another scene upon
   death or do a death state where some animtion or something plays? or maybe even just a short
   delay?
-- have added a blood block so when the snake bites itself I can sever the snake at that point,
+- [DONE] have added a blood block so when the snake bites itself I can sever the snake at that point,
   clear a few blocks either side, and set the ends to the blood block. Then spray out some
   nuggets via a particle like effect. Implement this!
 
 [09-04-2021]
-- once pixiretro engine is done compile it into a library and link against it.
+- [actually don't, keep the build super simple, and keep a local copy of the engine so I  dont 
+  have to worry about changes in the master branch breaking this game] once pixiretro engine is 
+  done compile it into a library and link against it.
+
+[17-04-2021]
+- [DONE] organise the project files.
+- tweak the menu to make small improvements - center the snake names, make the black snake box a
+  little bigger etc.
+- add sounds to the game state, specifically add a sound (like a dong?) when the speed timer 
+  drops to zero. Add a sound when snake changes direction? Happens too often so would this be
+  annoying? Perhaps a really subtle thud or tap.
+- have the game state switch back to the menu upon death
+- finish readme, need sections: menu, controls, compilation, add all attributes for sounds used.
+
+[TO DO LATER]
+- add the score states
