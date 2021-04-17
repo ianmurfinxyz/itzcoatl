@@ -73,3 +73,5 @@ https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 - make it possible to dynamically resize the window during play. This is entirely possible to do
   with my renderer which can handle this no problem by auto resizing the virtual pixels. I think it
   is currently being prevented due to the SDL flags I am passing to the create window function. Investigate!
+- setup a better music sequence for the game state, don't like the current one, the repeating dong noise is
+  annoying. Try the ancient people loop combined with the jungle drums and have each loop run longer.
