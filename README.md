@@ -84,7 +84,7 @@ Whats the smooth toggle you may be wondering? :confused: It switches between an 
 
 ## Compilation
 
-The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. So on whatever linux platform you are on just clone the repo, install the dependencies with your package manager and run make.
+The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. I have only tested the game on Arch and Ubuntu so I do not know if it will compile on other distros.
 
 So on arch:
 
