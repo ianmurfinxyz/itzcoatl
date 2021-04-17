@@ -46,7 +46,7 @@ As a bonus (pun intended) the bonuses combine too, so if your speed bonus is max
 
 ## Menu
 
-From the main menu you can select which snake you want to play as, view the high scores table and start up a game. You chosen emperor can be seen slivering up and down sides. :snake: A cylcing display also explains the rules and details the score bonuses you can earn.
+From the main menu you can select which snake you want to play as, view the high scores table and start up a game. Your chosen emperor can be seen slivering up and down the sides. :snake: A cylcing display also explains the game rules and details of the score bonuses you can earn.
 
 <p align="center">
   <img src="img/menu.gif" alt="Main Menu GIF"/>
@@ -56,7 +56,7 @@ From the main menu you can select which snake you want to play as, view the high
 
 The controls are super simple. Use the arrow keys to steer mister snake in any which way you please, and the enter key, when on the menu, to select an option.
 
-Don't like these controls? :anguished: You can change them with a small edit to snake.h; all controls are laid out in the controls configuration sections of the header starting line 86.
+Don't like these controls? :anguished: You can change them with a small edit to snake.h; all controls are laid out in the controls configuration section of the header starting line 86.
 
 ```c++
 ////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ static constexpr pxr::input::KeyCode menuUpKey    {pxr::input::KEY_UP   };
 static constexpr pxr::input::KeyCode menuDownKey  {pxr::input::KEY_DOWN };
 static constexpr pxr::input::KeyCode menuPressKey {pxr::input::KEY_ENTER};
 ```
-The key codes are in source/pixiretro/pxr_input.h.
+The key codes are in source/pixiretro/pxr_input.h. But you can pretty much guess them; all lowercase alpha characters are simply KEY_<lowercase_letter>. Which is like all you will want to know if you are seeking a WASD play setup.
 
 Whats the smooth toggle you may be wondering? :confused: It switches between an alternative drawing mode for the snake which makes the snake move smoother, at the cost of less pretty animations. I couldn't quite decide which mode I like best so I set the pretty animations to the default and added the toggle option. You can decide for yourself which you prefer. :thumbsup:
 
