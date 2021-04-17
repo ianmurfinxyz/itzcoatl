@@ -44,10 +44,6 @@ Eating smart means thinking nugget combos. There are 3 types of combo you can ea
 
 As a bonus (pun intended) the bonuses combine too, so if your speed bonus is maxed out at +200% and you eat one of each nugget type in order of value, that sweet gold bonus becomes 2010 points! :astonished::money_mouth_face::money_mouth_face: Is this broken! Who knows!? :upside_down_face:
 
-<p align="center">
-  <img src="img/nuggets.png" alt=""/>
-</p>
-
 ## Menu
 
 From the main menu you can select which snake you want to play as, view the high scores table and start up a game. You chosen emperor can be seen slivering up and down sides. :snake:
