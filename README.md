@@ -62,6 +62,10 @@ From the main menu you can select which snake you want to play as, view the high
   <img src="img/menu.gif" alt="Main Menu GIF"/>
 </p>
 
+## Configuration
+
+In the assets/rc/ directory is a file called engine.rc which contains configuration options that can be set. These include whether to run in fullscreen mode as well as the size of the window created upon booting the game. Currently there is no way to resize the window once it is created. This is on my todo list.
+
 ## Controls
 
 The controls are super simple. Use the arrow keys to steer mister snake in any which way you please, and the enter key, when on the menu, to select an option.
