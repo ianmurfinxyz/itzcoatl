@@ -48,10 +48,54 @@ As a bonus (pun intended) the bonuses combine too, so if your speed bonus is max
   <img src="img/nuggets.png" alt=""/>
 </p>
 
+## Menu
+
+From the main menu you can select which snake you want to play as, view the high scores table and start up a game. You chosen emperor can be seen slivering up and down sides. :snake:
+
+<p align="center">
+  <img src="img/menu.gif" alt="Main Menu GIF"/>
+</p>
+
 ## Controls
+
+The controls are super simple. Use the arrow keys to steer mister snake in any which way you please, and the enter key, when on the menu, to select an option.
+
+Don't like these controls? You can change them with a small edit to snake.h; all controls are laid out in the controls configuration sections of the header starting line 86.
+
+```c++
+////////////////////////////////////////////////////////////////////////////////////////////////
+// CONTROLS       
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+static constexpr pxr::input::KeyCode moveLeftKey  {pxr::input::KEY_LEFT  };
+static constexpr pxr::input::KeyCode moveRightKey {pxr::input::KEY_RIGHT };
+static constexpr pxr::input::KeyCode moveUpKey    {pxr::input::KEY_UP    };
+static constexpr pxr::input::KeyCode moveDownKey  {pxr::input::KEY_DOWN  };
+
+static constexpr pxr::input::KeyCode smoothToggle {pxr::input::KEY_s     };
+
+static constexpr pxr::input::KeyCode menuUpKey     {pxr::input::KEY_UP   };
+static constexpr pxr::input::KeyCode menuDownKey   {pxr::input::KEY_DOWN };
+static constexpr pxr::input::KeyCode menuPressKey  {pxr::input::KEY_ENTER};
+```
+The key codes are in source/pixiretro/pxr_input.h.
 
 ## Compilation
 
+The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. So on whatever linux platform you are on just install the dependencies with your package manager and run make.
+
+So on arch:
+
+```shell
+$ pacman -S sdl2 sdl2_mixer mesa
+$ make
+```
+and on Debian:
+
+```shell
+$ apt install sdl2 sdl2_mixer mesa
+$ make
+```
 ## Credits
 
 All work is my own with the exception of the sound effects and music which are all from freesound.org. Attributions are listed below.

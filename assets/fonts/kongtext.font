@@ -91,7 +91,7 @@
     <char ascii="118"  x="168" y="16"  width="6" height="5" xoffset="0" yoffset="0"  xadvance="7"/>
     <char ascii="119"  x="176" y="16"  width="7" height="5" xoffset="0" yoffset="0"  xadvance="8"/>
     <char ascii="120"  x="184" y="16"  width="6" height="5" xoffset="0" yoffset="0"  xadvance="7"/>
-    <char ascii="121"  x="192" y="16"  width="6" height="6" xoffset="0" yoffset="0"  xadvance="7"/>
+    <char ascii="121"  x="192" y="16"  width="6" height="6" xoffset="0" yoffset="-1"  xadvance="7"/>
     <char ascii="122"  x="200" y="16"  width="6" height="5" xoffset="0" yoffset="0"  xadvance="7"/>
     <char ascii="123"  x="208" y="16"  width="5" height="6" xoffset="0" yoffset="0"  xadvance="6"/>
     <char ascii="124"  x="216" y="16"  width="2" height="6" xoffset="0" yoffset="-1" xadvance="3"/>

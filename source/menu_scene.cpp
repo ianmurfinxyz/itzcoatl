@@ -524,7 +524,7 @@ void MenuScene::buildMenu()
     this
   );
   _buttons[BID_HISCORES].initialize(
-    Vector2i{77, 132},
+    Vector2i{72, 132},
     "HISCORES",
     &MenuScene::onHiscoresButtonPressed,
     this
@@ -579,15 +579,25 @@ void MenuScene::destroyDisplay()
 
 void MenuScene::addSnakeNameLabel(bool removeFirst)
 {
+  static constexpr int nameBoxWidth {90};
+  static constexpr int nameBoxX {55};
+  static constexpr int nameBoxY {101};
   if(removeFirst)
     _hud->removeLabel(_uidSnakeNameLabel);
 
+  std::string snakeName {Snake::snakeNames[_sk->getSnakeHero()]};
+  Vector2i textSize = gfx::calculateTextSize(snakeName, getMenuFontKey());
+  Vector2i position {
+    nameBoxX + ((nameBoxWidth - textSize._x) / 2),
+    105
+  };
+
   _uidSnakeNameLabel = _hud->addLabel(std::make_unique<HUD::TextLabel>(
-    Vector2i{61, 105},
+    position,
     Snake::snakeColors[_sk->getSnakeHero()],
     0.f, 
     HUD::IMMORTAL_LIFETIME,
-    Snake::snakeNames[_sk->getSnakeHero()],
+    snakeName,
     false,
     getMenuFontKey() 
   ));
