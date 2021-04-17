@@ -90,8 +90,6 @@ The full steps to compile are simply to clone this repo, install the dependencie
 
 On Arch linux
 
-So on arch:
-
 ```shell
 $ pacman -S sdl2 sdl2_mixer mesa
 $ make
