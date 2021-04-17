@@ -116,11 +116,12 @@ $ make
 
 All work is my own with the exception of the sound effects and music which are all from freesound.org. Attributions are listed below.
 
-https://freesound.org/people/craigsmith/sounds/479553/
-https://freesound.org/people/zagi2/sounds/194228/
-https://freesound.org/people/zagi2/sounds/352715/
-https://freesound.org/people/Mellau/sounds/506054/
+- https://freesound.org/people/craigsmith/sounds/479553/
+- https://freesound.org/people/zagi2/sounds/194228/
+- https://freesound.org/people/zagi2/sounds/352715/
+- https://freesound.org/people/Mellau/sounds/506054/
 
-The music is by LittleRobotSoundFactory on freesound: https://freesound.org/people/LittleRobotSoundFactory/
+The music is by LittleRobotSoundFactory on freesound: 
+- https://freesound.org/people/LittleRobotSoundFactory/
 
 Thanks to all the people who upload sounds, they were really helpful as I am useless at making sounds :smile:
