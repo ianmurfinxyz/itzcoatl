@@ -84,7 +84,11 @@ Whats the smooth toggle you may be wondering? :confused: It switches between an 
 
 ## Compilation
 
-The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. I have only tested the game on Arch and Ubuntu so I do not know if it will compile on other distros.
+The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. I have only tested the game on Arch and Ubuntu so I do not know if it will compile on other distros. I have used some C++17 features in the code too so you will need a compiler that supports modern C++. On ubuntu the latest version of GCC availible in the official repos (as of the date of writing 17-04-2021) does not so you will have to use clang on ubuntu. On Arch you can use GCC. I have created seperate makefiles for each platform. You will need to rename the one you need before running make.
+
+The full steps to compile are simply to clone this repo, install the dependencies with your package manager and run make with the makefile you need for your platform.
+
+On Arch linux
 
 So on arch:
 
@@ -96,6 +100,8 @@ and on Debian:
 
 ```shell
 $ apt install libsdl2-2.0-0 libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev libglx-mesa0
+$ mv makefile makefile_arch
+& mv makefile_ubuntu makefile
 $ make
 ```
 ## Credits
