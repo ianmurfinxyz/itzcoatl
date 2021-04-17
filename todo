@@ -70,3 +70,6 @@ https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
   annoying? Perhaps a really subtle thud or tap.
 - have the game state switch back to the menu upon death or even better the high score states.
 - add a youtube demonstration of the project on my (currently empty) pixrex channel.
+- make it possible to dynamically resize the window during play. This is entirely possible to do
+  with my renderer which can handle this no problem by auto resizing the virtual pixels. I think it
+  is currently being prevented due to the SDL flags I am passing to the create window function. Investigate!
