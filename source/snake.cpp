@@ -87,6 +87,12 @@ void Snake::nextSnakeHero()
   _snakeHero = static_cast<SnakeHero>(pxr::wrap<int>(_snakeHero + 1, SNAKE_ITZCOATL, SNAKE_COUNT - 1));
 }
 
+void Snake::addNuggetEaten(NuggetClassID classID, int count)
+{
+  assert(NUGGET_GOLD <= classID && classID <= NUGGET_AMETHYST);
+  _nuggetsEaten[classID] += count;
+}
+
 void Snake::loadSpritesheets()
 {
   for(int ssid {0}; ssid < SSID_COUNT; ++ssid)

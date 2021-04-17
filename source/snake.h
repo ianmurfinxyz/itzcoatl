@@ -620,7 +620,7 @@ public:
   int getScore() const {return _score;}
   int& getScoreReference() {return _score;}
   int& getNuggetsEatenReference(NuggetClassID classID){return _nuggetsEaten[classID];}
-  int addNuggetEaten(NuggetClassID classID, int count) {_nuggetsEaten[classID] += count;}
+  void addNuggetEaten(NuggetClassID classID, int count);
   int getNuggetsEaten(NuggetClassID classID) const {return _nuggetsEaten[classID];}
 
   HUD* getHUD() {return _hud;}
