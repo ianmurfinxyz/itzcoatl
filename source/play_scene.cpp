@@ -615,7 +615,10 @@ void PlayScene::reduceEatHistory()
 {
   if(_eatHistorySize <= 1) return;
   while(_eatHistorySize > 1 && !havePossibleOrderCombo()){
-    std::shift_left(_eatHistory.begin(), _eatHistory.begin() + _eatHistorySize, 1); 
+    //std::shift_left(_eatHistory.begin(), _eatHistory.begin() + _eatHistorySize, 1); 
+    for(int i {0}; i < _eatHistorySize - 1; ++i){
+      _eatHistory[i] = _eatHistory[i + 1];
+    }
     --_eatHistorySize;
   }
 }

@@ -2,6 +2,8 @@
 #define _PIXIRETRO_GFX_H_
 
 #include <string>
+#include <vector>
+#include <array>
 #include <cmath>
 
 #include "pxr_color.h"
