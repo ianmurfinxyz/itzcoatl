@@ -6,7 +6,7 @@
 ## What's this?
 
 ![](https://img.shields.io/badge/platform-linux-informational)
-![](https://img.shields.io/badge/cpp-c%2B%2B11-ff69b4)
+![](https://img.shields.io/badge/cpp-c%2B%2B17-ff69b4)
 [![TODOs](https://img.shields.io/badge/TODO-file-important)](/todo)
 
 Itzcoatl is an Aztec themed version of the game Snake :snake: made to test drive my game engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos.
@@ -84,9 +84,11 @@ Whats the smooth toggle you may be wondering? :confused: It switches between an 
 
 ## Compilation
 
-The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. I have only tested the game on Arch and Ubuntu so I do not know if it will compile on other distros.
+The engine has dependencies on SDL2, SDL2_mixer, and an opengl implementation such as mesa. I have only tested the game on Arch and Ubuntu so I do not know if it will compile on other distros. I have used some C++17 features in the code too so you will need a compiler that supports modern C++. On ubuntu the latest version of GCC availible in the official repos (as of the date of writing 17-04-2021) does not so you will have to use clang on ubuntu. On Arch you can use GCC. I have created seperate makefiles for each platform. You will need to rename the one you need before running make.
 
-So on arch:
+The full steps to compile are simply to clone this repo, install the dependencies with your package manager and run make with the makefile you need for your platform.
+
+On Arch linux
 
 ```shell
 $ pacman -S sdl2 sdl2_mixer mesa
@@ -96,6 +98,8 @@ and on Debian:
 
 ```shell
 $ apt install libsdl2-2.0-0 libsdl2-dev libsdl2-mixer-2.0-0 libsdl2-mixer-dev libglx-mesa0
+$ mv makefile makefile_arch
+$ mv makefile_ubuntu makefile
 $ make
 ```
 ## Credits
