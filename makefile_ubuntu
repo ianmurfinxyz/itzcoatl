@@ -50,4 +50,4 @@ itzcoatl : $(GSRC) $(ESRC) $(GINC) $(EINC)
 
 .PHONY: clean
 clean:
-	rm si *.o
+	rm itzcoatl *.o
