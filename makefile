@@ -1,5 +1,5 @@
 LDLIBS = -lSDL2 -lSDL2_mixer -lm -lGLX_mesa
-CXXFLAGS = -g -Wall -std=c++20
+CXXFLAGS = -Wall -std=c++20
 
 GSRC = source/main.cpp \
 			 source/play_scene.cpp \

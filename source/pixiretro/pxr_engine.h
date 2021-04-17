@@ -60,7 +60,7 @@ private:
   static constexpr float splashWaitDurationSeconds {1.0f};
 
   static constexpr Vector2i statsScreenResolution {500, 200};
-  static constexpr Vector2i pauseScreenResolution {100, 60};
+  static constexpr Vector2i pauseScreenResolution {128, 104};
 
   //
   // Engine reserves this resource name for the font it uses to output engine stats.
