@@ -57,13 +57,16 @@ https://freesound.org/people/LittleRobotSoundFactory/sounds/320998/
 
 [17-04-2021]
 - [DONE] organise the project files.
-- tweak the menu to make small improvements - center the snake names, make the black snake box a
+- [DONE] tweak the menu to make small improvements - center the snake names, make the black snake box a
   little bigger etc.
+- [DONE] finish readme, need sections: menu, controls, compilation, add all attributes for sounds used.
+- [DONE] get the game compiling on ubuntu
+
+[TO DO LATER]
+- add the score states
+- get the game compiling on windows.
 - add sounds to the game state, specifically add a sound (like a dong?) when the speed timer 
   drops to zero. Add a sound when snake changes direction? Happens too often so would this be
   annoying? Perhaps a really subtle thud or tap.
 - have the game state switch back to the menu upon death
-- finish readme, need sections: menu, controls, compilation, add all attributes for sounds used.
-
-[TO DO LATER]
-- add the score states
+- add a youtube demonstration of the project on my (currently empty) pixrex channel.
