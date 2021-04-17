@@ -74,7 +74,7 @@ static constexpr pxr::input::KeyCode menuUpKey    {pxr::input::KEY_UP   };
 static constexpr pxr::input::KeyCode menuDownKey  {pxr::input::KEY_DOWN };
 static constexpr pxr::input::KeyCode menuPressKey {pxr::input::KEY_ENTER};
 ```
-The key codes are in source/pixiretro/pxr_input.h. But you can pretty much guess them; all lowercase alpha characters are simply KEY_<lowercase_letter>. Which is like all you will want to know if you are seeking a WASD play setup.
+The key codes are in source/pixiretro/pxr_input.h. But you can pretty much guess them; all lowercase alpha characters are simply KEY_<lowercase_letter>. Which is likely all you will want to know if you are seeking a WASD play setup.
 
 Whats the smooth toggle you may be wondering? :confused: It switches between an alternative drawing mode for the snake which makes the snake move smoother, at the cost of less pretty animations. I couldn't quite decide which mode I like best so I set the pretty animations to the default and added the toggle option. You can decide for yourself which you prefer. :thumbsup:
 
