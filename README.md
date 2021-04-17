@@ -13,6 +13,10 @@ Itzcoatl is an Aztec themed version of the game Snake :snake: made to test drive
 
 The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc :sweat_smile: named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :stuck_out_tongue_winking_eye:) means "Obsidian Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist :stuck_out_tongue_closed_eyes:. I do know how to pronounce Montezuma though, its mont-ee-zooma ... thanks CIV! :grinning:
 
+## Project State
+
+#### The Game is not yet fully complete. The high score states are not yet added and upon death the game will just stop doing anything. It hasn't crashed, it just ends like that! Professionalism is my middle name. :grinning: So to play again currently you have to close the game and start it up again.
+
 ## How to Play :joystick:
 
 As is standard with Snake games the more you eat the more you grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :moneybag: Among other assorted valuables. The challenge is to max out your score before you grow so long and so hungry that you inevitably eat yourself! :scream: Oh, the humanity!
