@@ -12,7 +12,7 @@
 //         \|                                                                                   //
 //                                                                                              //
 // FILE: Snake.h                                                                                //
-// AUTHOR: Ian Murfin - github.com/pixrex                                                       //
+// AUTHOR: Ian Murfin - github.com/ianmurfinxyz                                                 //
 //                                                                                              //
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
