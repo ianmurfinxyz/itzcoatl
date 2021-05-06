@@ -283,6 +283,8 @@ void PlayScene::stepSnake()
     _snake[block]._row = _snake[block - 1]._row;
     _snake[block]._col = _snake[block - 1]._col;
   }
+
+  _currentMoveDirection = _nextMoveDirection;
   switch(_currentMoveDirection){
     case Snake::NORTH:
       _snake[SNAKE_HEAD_BLOCK]._row++;
@@ -308,7 +310,6 @@ void PlayScene::stepSnake()
       assert(0);
   }
 
-  _currentMoveDirection = _nextMoveDirection;
   updateSnakeBlockSpriteIDs();
 }
 
