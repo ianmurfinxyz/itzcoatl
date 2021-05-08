@@ -19,6 +19,8 @@ The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizo
 
 #### Currently the game will also only run on linux. At some point in the future I may work on getting it running on windows. I am also thinking of adding it to the AUR for arch users.
 
+#### JAVASCRIPT VERSION (WITH LIVE HOST) NOW AVAILIBLE: https://github.com/ianmurfinxyz/itzcoatl_js
+
 ## How to Play :joystick:
 
 As is standard with Snake games the more you eat the more you grow. This makes the game harder over time. What differs with Itzcoatl however is that mister snake resides in a world abundant with GOLD! :moneybag: ... among other assorted valuables. The challenge is to max out your score before you grow so long and so hungry that you inevitably eat yourself! :scream: Oh, the humanity!
