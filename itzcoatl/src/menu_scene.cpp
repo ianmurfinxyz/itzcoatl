@@ -178,7 +178,7 @@ void MenuScene::onEnter()
   drawBackground();
   _northwardSnake.reset();
   _southwardSnake.reset();
-  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_MENU));
+  sfx::playMusic(std::move(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_MENU)));
 }
 
 void MenuScene::onUpdate(double now, float dt)
