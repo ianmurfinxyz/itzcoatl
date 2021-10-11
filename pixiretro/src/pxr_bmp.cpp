@@ -10,9 +10,9 @@
 #include <cstring>
 #include <cassert>
 #include <sstream>
-#include "pxr_color.h"
-#include "pxr_bmp.h"
-#include "pxr_log.h"
+#include "../include/pxr_color.h"
+#include "../include/pxr_bmp.h"
+#include "../include/pxr_log.h"
 
 namespace pxr
 {

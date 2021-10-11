@@ -1,6 +1,6 @@
 #include <cassert>
-#include "pxr_collision.h"
-#include "pxr_bmp.h"
+#include "../include/pxr_collision.h"
+#include "../include/pxr_bmp.h"
 
 namespace pxr
 {

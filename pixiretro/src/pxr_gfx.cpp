@@ -12,13 +12,13 @@
 
 #include <chrono>
 
-#include "pxr_xml.h"
-#include "pxr_gfx.h"
-#include "pxr_vec.h"
-#include "pxr_rect.h"
-#include "pxr_color.h"
-#include "pxr_bmp.h"
-#include "pxr_log.h"
+#include "../include/pxr_xml.h"
+#include "../include/pxr_gfx.h"
+#include "../include/pxr_vec.h"
+#include "../include/pxr_rect.h"
+#include "../include/pxr_color.h"
+#include "../include/pxr_bmp.h"
+#include "../include/pxr_log.h"
 
 using namespace tinyxml2;
 using namespace pxr::io;

@@ -1,5 +1,5 @@
 #include <limits>
-#include "pxr_rand.h"
+#include "../include/pxr_rand.h"
 
 namespace pxr
 {

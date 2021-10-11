@@ -1,6 +1,6 @@
 #include <fstream>
-#include "pxr_wav.h"
-#include "pxr_log.h"
+#include "../include/pxr_wav.h"
+#include "../include/pxr_log.h"
 
 namespace pxr
 {

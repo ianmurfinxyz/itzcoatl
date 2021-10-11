@@ -4,8 +4,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "pxr_rc.h"
-#include "pxr_log.h"
+#include "../include/pxr_rc.h"
+#include "../include/pxr_log.h"
 
 namespace pxr
 {

@@ -1,5 +1,5 @@
 #include <cassert>
-#include "pxr_hud.h"
+#include "../include/pxr_hud.h"
 
 namespace pxr
 {

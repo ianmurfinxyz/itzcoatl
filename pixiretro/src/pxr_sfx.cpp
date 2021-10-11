@@ -5,9 +5,9 @@
 #include <vector>
 #include <algorithm>
 #include <SDL2/SDL_mixer.h>
-#include "pxr_sfx.h"
-#include "pxr_log.h"
-#include "pxr_wav.h"
+#include "../include/pxr_sfx.h"
+#include "../include/pxr_log.h"
+#include "../include/pxr_wav.h"
 
 #include <iostream>
 

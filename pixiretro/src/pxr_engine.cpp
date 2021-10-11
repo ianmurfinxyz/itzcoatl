@@ -3,14 +3,14 @@
 #include <sstream>
 #include <iomanip>
 #include <cassert>
-#include "pxr_engine.h"
-#include "pxr_log.h"
-#include "pxr_game.h"
-#include "pxr_input.h"
-#include "pxr_gfx.h"
-#include "pxr_sfx.h"
-#include "pxr_color.h"
-#include "pxr_rand.h"
+#include "../include/pxr_engine.h"
+#include "../include/pxr_log.h"
+#include "../include/pxr_game.h"
+#include "../include/pxr_input.h"
+#include "../include/pxr_gfx.h"
+#include "../include/pxr_sfx.h"
+#include "../include/pxr_color.h"
+#include "../include/pxr_rand.h"
 
 #include <iostream>
 

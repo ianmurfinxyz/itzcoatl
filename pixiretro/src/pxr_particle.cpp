@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cassert>
-#include "pxr_particle.h"
-#include "pxr_gfx.h"
+#include "../include/pxr_particle.h"
+#include "../include/pxr_gfx.h"
 
 namespace pxr
 {
