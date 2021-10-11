@@ -432,15 +432,17 @@ public:
   //----------------------------------------------------------------------------------------------
   //    loopID                 fadeIn   playDuration   fadeOut
   //----------------------------------------------------------------------------------------------
-    {{
-       {{MUSIC_JUNGLE_DRUMS_0}, 1.f,    25.f,           1.f  },
-       {{MUSIC_JUNGLE_DRUMS_1}, 1.f,    25.f,           1.f  },
-       {{MUSIC_JUNGLE_DRUMS_2}, 1.f,    25.f,           1.f  },
-       {{MUSIC_JUNGLE_DRUMS_3}, 1.f,    25.f,           1.f  }
+  {{
+       {MUSIC_JUNGLE_DRUMS_0, 1.f,    25.f,           1.f  },
+       {MUSIC_JUNGLE_DRUMS_1, 1.f,    25.f,           1.f  },
+       {MUSIC_JUNGLE_DRUMS_2, 1.f,    25.f,           1.f  },
+       {MUSIC_JUNGLE_DRUMS_3, 1.f,    25.f,           1.f  }
     }},
     {{
-       {{MUSIC_MENU_INTRO    }, 1.f,    24.f,           2.f  },
-       {{MUSIC_MENU_AMBIENCE }, 1.f,    999999999999.f, 2.f  }
+       {MUSIC_MENU_INTRO    , 1.f,    24.f,           2.f  },
+       {MUSIC_MENU_AMBIENCE , 1.f,    999999999999.f, 2.f  },
+       {MUSIC_MENU_AMBIENCE , 1.f,    999999999999.f, 2.f  },
+       {MUSIC_MENU_AMBIENCE , 1.f,    999999999999.f, 2.f  }
     }}
   }};
 

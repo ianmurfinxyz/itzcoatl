@@ -86,7 +86,7 @@ void PlayScene::onEnterPlaying()
 
   initializeSnake();
   initializeNuggets();
-  sfx::playMusic(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE));
+  sfx::playMusic(std::move(_sk->getMusicSequence(Snake::MUSIC_SEQUENCE_JUNGLE)));
 }
 
 void PlayScene::onUpdatePlaying(double now, float dt)

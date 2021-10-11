@@ -429,38 +429,39 @@ static void onMusicPlayError(ResourceKey_t musicKey)
   log::log(log::WARN, log::msg_sfx_fail_play_music, addendum);
 }
 
-static void playMusic__(ResourceKey_t musicKey, int loops)
+static void playMusic_(ResourceKey_t musicKey, int loops)
 {
   Mix_HaltMusic(); // to prevent the mixer play function blocking.
-  Mix_Music* music = findMusic(musicKey);
-  if(music == nullptr) return;
-  if(Mix_PlayMusic(music, loops) != 0) return onMusicPlayError(musicKey);
+  Mix_Music* found_music = findMusic(musicKey);
+  if(found_music == nullptr) return;
+  if(Mix_PlayMusic(found_music, loops) != 0) return onMusicPlayError(musicKey);
 }
 
-static void playMusicFadeIn__(ResourceKey_t musicKey, int loops, int fadeDuration_ms)
+static void playMusicFadeIn_(ResourceKey_t musicKey, int loops, int fadeDuration_ms)
 {
   Mix_HaltMusic(); // to prevent the mixer play function blocking.
-  Mix_Music* music = findMusic(musicKey);
-  if(music == nullptr) return;
-  if(Mix_FadeInMusic(music, loops, fadeDuration_ms) != 0) return onMusicPlayError(musicKey);
+  Mix_Music* found_music = findMusic(musicKey);
+  if(found_music == nullptr) return;
+  if(Mix_FadeInMusic(found_music, loops, fadeDuration_ms) != 0)
+      onMusicPlayError(musicKey);
 }
 
-static void stopMusic__()
+static void stopMusic_()
 {
   Mix_HaltMusic();
 }
 
-static void stopMusicFadeOut__(int fadeDuration_ms)
+static void stopMusicFadeOut_(int fadeDuration_ms)
 {
   Mix_FadeOutMusic(fadeDuration_ms);
 }
 
-static void pauseMusic__()
+static void pauseMusic_()
 {
   Mix_PauseMusic();
 }
 
-static void resumeMusic__()
+static void resumeMusic_()
 {
   Mix_ResumeMusic();
 }
@@ -513,7 +514,7 @@ void MusicSequencePlayer::stop()
     _currentNode = 0;
     _state = STOPPED;
     _sequence.clear();
-    stopMusic__();
+    stopMusic_();
   }
 }
 
@@ -521,7 +522,7 @@ void MusicSequencePlayer::pause()
 {
   if(_state == PLAYING){
     _state = PAUSED;
-    pauseMusic__();
+    pauseMusic_();
   }
 }
 
@@ -529,7 +530,7 @@ void MusicSequencePlayer::resume()
 {
   if(_state == PAUSED){
     _state = PLAYING;
-    resumeMusic__();
+    resumeMusic_();
   }
 }
 
@@ -542,18 +543,18 @@ void MusicSequencePlayer::playNode(const MusicSequenceNode* node)
 {
   bool result;
   if(node->_fadeInDuration_ms > 0.f)
-    playMusicFadeIn__(node->_musicKey, INFINITE_LOOPS, node->_fadeInDuration_ms);
+    playMusicFadeIn_(node->_musicKey, INFINITE_LOOPS, node->_fadeInDuration_ms);
   else
-    playMusic__(node->_musicKey, INFINITE_LOOPS);
+    playMusic_(node->_musicKey, INFINITE_LOOPS);
   _state = PLAYING;
 }
 
 void MusicSequencePlayer::stopNode(const MusicSequenceNode* node)
 {
   if(node->_fadeOutDuration_ms > 0.f) 
-    stopMusicFadeOut__(node->_fadeOutDuration_ms);
+    stopMusicFadeOut_(node->_fadeOutDuration_ms);
   else 
-    stopMusic__();
+    stopMusic_();
   _state = FADING_OUT;
 }
 
