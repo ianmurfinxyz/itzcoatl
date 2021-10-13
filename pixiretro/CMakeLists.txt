@@ -19,4 +19,4 @@ set(PXR_SOURCE
 
 add_library(pixiretro ${PXR_SOURCE})
 target_include_directories(pixiretro PUBLIC include)
-target_link_libraries(pixiretro -lSDL2 -lSDL2_mixer -lSDL2 -lm -lGLX_mesa)
+target_link_libraries(pixiretro -lSDL2 -lSDL2_mixer -lSDL2 -lGLX_mesa)
