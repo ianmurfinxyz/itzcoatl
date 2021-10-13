@@ -17,6 +17,12 @@ set(PXR_SOURCE
         src/pxr_xml.cpp
         src/tinyxml2.cpp)
 
+if(UBUNTU_LINUX)
+    set(EXTRA_LIBS -lGL -lstdc++)
+else()
+    set(EXTRA_LIBS -lGLX_mesa)
+endif()
+
 add_library(pixiretro ${PXR_SOURCE})
 target_include_directories(pixiretro PUBLIC include)
-target_link_libraries(pixiretro -lSDL2 -lSDL2_mixer -lSDL2 -lGLX_mesa)
+target_link_libraries(pixiretro -lSDL2 -lSDL2_mixer -lSDL2 ${EXTRA_LIBS})
