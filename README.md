@@ -5,21 +5,9 @@
 
 ## What's this?
 
-![](https://img.shields.io/badge/platform-linux-informational)
-![](https://img.shields.io/badge/cpp-c%2B%2B17-ff69b4)
-[![TODOs](https://img.shields.io/badge/TODO-file-important)](/todo)
-
 Itzcoatl is an Aztec themed version of the game Snake :snake: made to test drive my game engine Pixiretro. It features a main menu and a high scorer's leaderboard as well as the game itself. The gameplay consists of eating as many nuggets as you can as quickly as you can, gaining score bonuses for speed and nugget combos.
 
 The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc :sweat_smile: named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :stuck_out_tongue_winking_eye:) means "Obsidian Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist :stuck_out_tongue_closed_eyes:.
-
-## Project State
-
-#### The Game is not yet fully complete. The high score states are not yet added and upon death the game will just stop doing anything. It hasn't crashed, it just ends like that! Professionalism is my middle name. :stuck_out_tongue_winking_eye: So to play again currently you have to close the game and start it up again.
-
-#### Currently the game will also only run on linux. At some point in the future I may work on getting it running on windows. I am also thinking of adding it to the AUR for arch users.
-
-#### JAVASCRIPT VERSION (WITH LIVE HOST) NOW AVAILIBLE: https://github.com/ianmurfinxyz/itzcoatl_js
 
 ## How to Play :joystick:
 
@@ -67,6 +55,10 @@ From the main menu you can select which snake you want to play as, view the high
 ## Configuration
 
 In the assets/rc/ directory is a file called engine.rc which contains configuration options that can be set. These include whether to run in fullscreen mode as well as the size of the window created upon booting the game. Currently there is no way to resize the window once it is created. This is on my todo list.
+
+## Todo
+
+- Implement the high scores table scene so the player can view score history.
 
 ## Controls
 
