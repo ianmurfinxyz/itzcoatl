@@ -29,9 +29,9 @@ using namespace pxr;
 class Snake final : public pxr::Game
 {
 public:
-  static constexpr const char* name {"snake"};
-  static constexpr int versionMajor {0};
-  static constexpr int versionMinor {1};
+  static constexpr const char* name {"Itzcoatl"};
+  static constexpr int versionMajor {1};
+  static constexpr int versionMinor {0};
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // CONFIGURATION
