@@ -110,6 +110,13 @@ $ cmake .
 $ make
 ```
 
+to run the game:
+
+```shell
+$ cd game
+$ ./itzcoatl
+```
+
 ## Credits
 
 All work is my own with the exception of the sound effects and music which are all from freesound.org. Attributions are listed below.
