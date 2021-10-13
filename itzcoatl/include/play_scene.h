@@ -60,6 +60,7 @@ private:
   void initializeSnake();
   void initializeNuggets();
   void populateHUD();
+  void addGameOverToHUD();
   void clearHUD();
   void stepSnake();
   void growSnake();
@@ -120,6 +121,7 @@ private:
 
   HUD* _hud;
   std::array<HUD::uid_t, LID_COUNT> _uidLabels;
+  HUD::uid_t _uidGameOverLabel;
 
   State _currentState;
   State _nextState;
@@ -139,6 +141,7 @@ private:
   int _numNuggetsInWorld;
 
   float _stepClock_s;
+  float _gameOverClock_s;
 
   std::array<Snake::NuggetClassID, Snake::longestPossibleCombo> _eatHistory;
   int _eatHistorySize;

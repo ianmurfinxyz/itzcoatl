@@ -47,27 +47,27 @@ void MenuScene::Button::initialize(
 
 void MenuScene::Button::uninitialize()
 {
-  _menu->getHUD()->removeLabel(_uidLabel);
   _state = State::UNINITIALIZED;
+  _menu->getHUD()->removeLabel(_uidLabel);
 }
 
 void MenuScene::Button::onIdle()
 {
-  _menu->getHUD()->setLabelColor(_uidLabel, MenuScene::buttonIdleColor);
   _state = State::IDLE;
+  _menu->getHUD()->setLabelColor(_uidLabel, MenuScene::buttonIdleColor);
 }
 
 void MenuScene::Button::onHover()
 {
-  _menu->getHUD()->setLabelColor(_uidLabel, MenuScene::buttonHoverColor);
   _state = State::HOVERED;
+  _menu->getHUD()->setLabelColor(_uidLabel, MenuScene::buttonHoverColor);
 }
 
 void MenuScene::Button::onPress()
 {
+  _state = State::PRESSED;
   _menu->getHUD()->setLabelColor(_uidLabel, MenuScene::buttonPressedColor);
   (_menu->*_onPress)();
-  _state = State::PRESSED;
 }
 
 MenuScene::SnakeAnimation::SnakeAnimation() :

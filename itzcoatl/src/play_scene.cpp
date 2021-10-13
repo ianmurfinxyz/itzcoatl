@@ -3,8 +3,10 @@
 #include "../include/play_scene.h"
 #include "pxr_mathutil.h"
 #include "pxr_rand.h"
+#include "pxr_gfx.h"
 
 #include <iostream>
+#include <menu_scene.h>
 
 using namespace pxr;
 
@@ -22,14 +24,16 @@ bool PlayScene::onInit()
 {
   _sk = static_cast<Snake*>(_owner);
   _hud = _sk->getHUD();
+  drawForeground();
+  gfx::disableScreen(_sk->getScreenID(Snake::SCREEN_FOREGROUND));
   return true;
 }
 
 void PlayScene::onEnter()
 {
-  drawBackground();
-  drawForeground();
   _currentState = State::NONE;
+  drawBackground();
+  gfx::enableScreen(_sk->getScreenID(Snake::SCREEN_FOREGROUND));
   populateHUD();
   setNextState(State::PLAYING);
   switchState();
@@ -71,6 +75,8 @@ void PlayScene::onDraw(double now, float dt, const std::vector<gfx::ScreenID_t>&
 
 void PlayScene::onExit()
 {
+  gfx::disableScreen(_sk->getScreenID(Snake::SCREEN_FOREGROUND));
+  clearHUD();
   sfx::stopMusic();
 }
 
@@ -137,10 +143,16 @@ void PlayScene::onExitPlaying()
 void PlayScene::onEnterGameOver()
 {
   eatSnake();
+  addGameOverToHUD();
+  _gameOverClock_s = 0.f;
 }
 
 void PlayScene::onUpdateGameOver(double now, float dt)
 {
+  _gameOverClock_s += dt;
+  if(_gameOverClock_s > Snake::gameOverPeriod_s){
+    _sk->switchScene(MenuScene::name);
+  }
 }
 
 void PlayScene::handleGameOverInput()
@@ -271,6 +283,31 @@ void PlayScene::populateHUD()
   ));
 
   updateSpeedBar(0, false);
+}
+
+void PlayScene::addGameOverToHUD()
+{
+  auto txtSize = gfx::calculateTextSize("GAME OVER", _sk->getFontKey(Snake::FID_KONGTEXT));
+  auto txtPos = Vector2i{};
+  txtPos._x = (Snake::worldSize_rx._x / 2) - (txtSize._x / 2);
+  txtPos._y = (Snake::worldSize_rx._y / 2) - (txtSize._y / 2);
+  _uidGameOverLabel = _hud->addLabel(std::make_unique<HUD::TextLabel>(
+    txtPos,
+    Snake::scorePopupColor,
+    0.f,
+    HUD::IMMORTAL_LIFETIME,
+    std::string{"GAME OVER"},
+    false,
+    _sk->getFontKey(Snake::FID_KONGTEXT)
+  ));
+}
+
+void PlayScene::clearHUD()
+{
+  for(auto& uid : _uidLabels)
+    _hud->removeLabel(uid);
+
+  _hud->removeLabel(_uidGameOverLabel);
 }
 
 void PlayScene::stepSnake()
