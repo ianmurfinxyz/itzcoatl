@@ -9,7 +9,7 @@ Itzcoatl is an Aztec themed version of the game Snake :snake: made to test drive
 
 The game also features 8 playable snakes: Itzcoatl, Montezuma I, Axayacatl, Tizoc, Ahuitzotl, Montezuma II, Cuitlahuac and Cuauhtemoc :sweat_smile: named after the 8 Aztec emperors, just like the name of the game itself. Itzcoatl. The first emperor of the Aztec triple alliance. Which according to a webpage titled "122 fabulous Aztec baby names with meanings" (a highly reputable source :stuck_out_tongue_winking_eye:) means "Obsidian Serpent", which I felt was most fitting. So how do you pronounce any of these names? ... no idea! Please consult your local Aztecologist :stuck_out_tongue_closed_eyes:.
 
-*I did a youtube video playthrough is [here](https://www.youtube.com/watch?v=Z4GZ1OMBRqo).*
+**I did a youtube video playthrough [here](https://www.youtube.com/watch?v=Z4GZ1OMBRqo).**
 
 ## How to Play :joystick:
 
