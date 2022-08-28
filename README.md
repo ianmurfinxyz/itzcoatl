@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="readme_res/itzcoatl_title.png" alt="Itzcoatl Title Banner"/>
+  <img src="res/itzcoatl_title.png" alt="Itzcoatl Title Banner"/>
 </p>
 
 ## What's this?
@@ -18,7 +18,7 @@ As is standard with Snake games the more you eat the more you grow. This makes t
 The world contains 7 possible edible nuggets, in order of value: Gold, Silver, Obsidian, Ruby, Jade, Lapis, and Amethyst. You earn their value when you eat them. If you eat them with haste you earn speed bonuses, and if you eat them in particular orders you earn combo bonuses. But no matter what nugget you eat when, mister snake grows with every bite. To maximise score you need to be fussy with what you eat whilst also eating fast. You only get so many bites before mister snake gets really long! And the temptation to eat youself really hard to resist!
 
 <p align="center">
-  <img src="readme_res/gameplay.gif" alt="Gameplay GIF"/>
+  <img src="res/gameplay.gif" alt="Gameplay GIF"/>
 </p>
 
 ### Eat Fast! Eat Smart! :nerd_face:
@@ -26,13 +26,13 @@ The world contains 7 possible edible nuggets, in order of value: Gold, Silver, O
 Every time you bite a nugget, the speed timer is reset. Bite another before the timer expires and you earn a speed bonus. Bite more and your speed bonus racks up, and up and up to a max of +200% score, on top of the base value, for every nugget munched. But miss just a single speedy bite and your bonus drops all the way back to zilch. So you will want to keep a keen eye on the speed bar! You can find the speed bar on the HUD, along with your current speed bonus.
 
 <p align="center">
-  <img src="readme_res/hud.png" alt="Diagram of in-game HUD"/>
+  <img src="res/hud.png" alt="Diagram of in-game HUD"/>
 </p>
 
 The speed table below shows all the speed bonuses you can earn. The +20% bonus, for example, is earned by eating a nugget, then another before the speed timer expires, and then another again before the speed timer expires.
 
 <p align="center">
-  <img src="readme_res/speed_table.png" alt="Table of Speed Bonuses"/>
+  <img src="res/speed_table.png" alt="Table of Speed Bonuses"/>
 </p>
 
 Eating smart means thinking nugget combos. There are 3 types of combo you can earn:
@@ -41,7 +41,7 @@ Eating smart means thinking nugget combos. There are 3 types of combo you can ea
 3. Eat all nugget types in order of ascending value and earn x9 of the final nugget's value. The GOLD! nugget :moneybag:. A whopping 630 points! :money_mouth_face:
 
 <p align="center">
-  <img src="readme_res/nugget_table.png" alt="Table of Nugget Score Values"/>
+  <img src="res/nugget_table.png" alt="Table of Nugget Score Values"/>
 </p>
 
 As a bonus (pun intended) the bonuses combine too, so if your speed bonus is maxed out at +200% and you eat one of each nugget type in order of value, that sweet gold bonus becomes 2010 points! :astonished::money_mouth_face::money_mouth_face: Is this broken! Who knows!? :upside_down_face:
@@ -51,7 +51,7 @@ As a bonus (pun intended) the bonuses combine too, so if your speed bonus is max
 From the main menu you can select which snake you want to play as, view the high scores table and start up a game. Your chosen emperor can be seen slivering up and down the sides. :snake: A cylcing display also explains the game rules and details of the score bonuses you can earn.
 
 <p align="center">
-  <img src="readme_res/menu.gif" alt="Main Menu GIF"/>
+  <img src="res/menu.gif" alt="Main Menu GIF"/>
 </p>
 
 ## Configuration
