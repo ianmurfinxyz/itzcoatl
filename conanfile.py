@@ -1,4 +1,5 @@
 from conans import ConanFile, CMake
+import os
 
 class Itzcoatl(ConanFile):
 	name = "itzcoatl"
@@ -23,10 +24,13 @@ class Itzcoatl(ConanFile):
 
 	def build(self):
 		cmake = CMake(self)
-		cmake.verbose = True
 		cmake.configure()
 		cmake.build()
 
+	def export(self):
+		self.copy("README.md")
+		self.copy("assets/**/*", excludes="assets/**/*.xcf")
+
 	def package(self):
-		pass
-		#self.copy("*.lib", dst="lib")
+		self.copy("bin/itzcoatl", dst="", keep_path=False)
+		self.copy("assets/**/*")
